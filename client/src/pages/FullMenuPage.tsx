@@ -1,17 +1,24 @@
 import { useState } from 'react';
+import { useLocation } from 'wouter';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import ShoppingCart from '@/components/ShoppingCart';
+import { useCart } from '@/contexts/CartContext';
+import { Button } from '@/components/ui/button';
 import { menuItems } from '@/data/menuData';
 import { jealousForkMenuItems, jealousForkCategories } from '@/data/jealousForkmenuData';
 import { jealousBurgerMenuItems, jealousBurgerCategories } from '@/data/jealousBurgerMenuData';
 import { beverageMenuItems, beverageCategories } from '@/data/beverageMenuData';
 import SEOHead from '@/components/SEOHead';
+import { Plus } from 'lucide-react';
 
 type MenuType = 'featured' | 'jealous-fork' | 'jealous-burger' | 'beverages';
 
 export default function FullMenuPage() {
   const [selectedMenu, setSelectedMenu] = useState<MenuType>('featured');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const { addItem } = useCart();
+  const [, setLocation] = useLocation();
 
   // Get current time to determine which menu to show by default
   const currentHour = new Date().getHours();
@@ -200,7 +207,7 @@ export default function FullMenuPage() {
                       </div>
                     )}
                     
-                    <div className="mt-4">
+                    <div className="mt-4 flex items-center justify-between">
                       <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
                         item.category === 'pancakes' ? 'bg-blue-100 text-blue-800' :
                         item.category === 'burgers' ? 'bg-red-100 text-red-800' :
@@ -214,6 +221,23 @@ export default function FullMenuPage() {
                       }`}>
                         {item.category.charAt(0).toUpperCase() + item.category.slice(1).replace('-', ' ')}
                       </span>
+                      
+                      <Button
+                        onClick={() => {
+                          addItem({
+                            id: item.id,
+                            name: item.name,
+                            price: typeof item.price === 'number' ? item.price : parseFloat(item.price),
+                            category: item.category,
+                            description: item.description,
+                          });
+                        }}
+                        size="sm"
+                        className="ml-2"
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Add to Cart
+                      </Button>
                     </div>
                   </div>
                 </div>

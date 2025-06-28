@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import ShoppingCart from './ShoppingCart';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

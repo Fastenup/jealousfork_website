@@ -46,10 +46,26 @@ export class MemStorage implements IStorage {
     const id = this.currentOrderId++;
     const now = new Date();
     const order: Order = { 
-      ...insertOrder,
       id,
+      orderId: insertOrder.orderId,
+      paymentId: insertOrder.paymentId || null,
       status: (insertOrder.status || 'pending') as any,
-      deliveryNotes: insertOrder.deliveryNotes ?? null,
+      orderType: insertOrder.orderType,
+      subtotal: insertOrder.subtotal,
+      tax: insertOrder.tax,
+      deliveryFee: insertOrder.deliveryFee || '0',
+      total: insertOrder.total,
+      customerName: insertOrder.customerName,
+      customerEmail: insertOrder.customerEmail,
+      customerPhone: insertOrder.customerPhone,
+      deliveryAddress: insertOrder.deliveryAddress || null,
+      deliveryCity: insertOrder.deliveryCity || null,
+      deliveryState: insertOrder.deliveryState || null,
+      deliveryZipCode: insertOrder.deliveryZipCode || null,
+      deliveryPhone: insertOrder.deliveryPhone || null,
+      deliveryNotes: insertOrder.deliveryNotes || null,
+      items: insertOrder.items,
+      estimatedReadyTime: insertOrder.estimatedReadyTime || null,
       createdAt: now,
       updatedAt: now
     };
