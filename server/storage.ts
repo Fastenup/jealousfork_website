@@ -46,8 +46,10 @@ export class MemStorage implements IStorage {
     const id = this.currentOrderId++;
     const now = new Date();
     const order: Order = { 
-      ...insertOrder, 
+      ...insertOrder,
       id,
+      status: (insertOrder.status || 'pending') as any,
+      deliveryNotes: insertOrder.deliveryNotes ?? null,
       createdAt: now,
       updatedAt: now
     };

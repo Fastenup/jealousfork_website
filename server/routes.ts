@@ -41,8 +41,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   try {
     squareService = createSquareService();
-  } catch (error) {
-    console.warn('Square service not configured:', error.message);
+  } catch (error: any) {
+    console.warn('Square service not configured:', error?.message || 'Unknown error');
   }
 
   // Create order endpoint
@@ -102,7 +102,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         deliveryState: orderData.deliveryInfo?.state || null,
         deliveryZipCode: orderData.deliveryInfo?.zipCode || null,
         deliveryPhone: orderData.deliveryInfo?.phone || null,
-        deliveryNotes: orderData.deliveryInfo?.deliveryNotes || null,
+        deliveryNotes: orderData.deliveryInfo?.deliveryNotes ?? null,
         items: orderData.items,
         estimatedReadyTime,
       });
@@ -114,7 +114,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         estimatedReadyTime: order.estimatedReadyTime?.toISOString(),
         total: parseFloat(order.total),
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Order creation error:', error);
       
       if (error.name === 'ZodError') {
@@ -148,7 +148,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         estimatedReadyTime: order.estimatedReadyTime?.toISOString(),
         total: parseFloat(order.total),
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Get order error:', error);
       res.status(500).json({ 
         error: 'Failed to retrieve order.' 
