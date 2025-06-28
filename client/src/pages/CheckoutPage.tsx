@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,7 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const hasRedirected = useRef(false);
 
   // Square credentials - these will be environment variables
   const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || 'sandbox-sq0idb-66_cKzuPxPJDlSxVW4ThbA';
@@ -56,7 +57,8 @@ export default function CheckoutPage() {
     // Allow time for cart to load, then check if empty
     const timer = setTimeout(() => {
       setIsLoading(false);
-      if (cartState.items.length === 0) {
+      if (cartState.items.length === 0 && !hasRedirected.current) {
+        hasRedirected.current = true;
         setLocation('/full-menu');
       }
     }, 100);

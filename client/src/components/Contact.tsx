@@ -211,81 +211,64 @@ export default function Contact() {
         <div className="mt-16 bg-gray-50 rounded-3xl p-8 md:p-12">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-bold text-gray-900 mb-4">Visit Miami's Original Artisan Pancake Restaurant</h3>
-            <p className="text-xl text-gray-600">Serving Edgewater, Midtown, Wynwood, and Greater Miami</p>
+            <p className="text-xl text-gray-600">Serving Southwest Miami, Kendall, Westchester, and Greater Miami-Dade</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Business Info */}
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h4 className="font-bold text-lg text-gray-900 mb-4">Business Information</h4>
-              <div className="space-y-3 text-gray-700">
-                <p><strong>Name:</strong> Jealous Fork</p>
-                <p><strong>Address:</strong> 2000 N Bayshore Dr, Miami, FL 33137</p>
-                <p><strong>Phone:</strong> (305) 555-0123</p>
-                <p><strong>Email:</strong> info@jealousfork.com</p>
-                <p><strong>Established:</strong> 2018 (Food Truck), 2022 (Restaurant)</p>
+          {/* Service Areas - Updated for actual location */}
+          <div className="bg-white rounded-2xl p-8 shadow-sm">
+            <h4 className="font-bold text-2xl text-gray-900 mb-6 text-center">We Deliver To Your Neighborhood</h4>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div>
+                <h5 className="font-semibold text-gray-800 mb-3 text-lg">Close Proximity (Under 15 min)</h5>
+                <div className="space-y-1 text-gray-700">
+                  <p>• Westchester (5 min)</p>
+                  <p>• Olympia Heights (8 min)</p>
+                  <p>• Sunset (10 min)</p>
+                  <p>• Kendall Lakes (12 min)</p>
+                  <p>• Flagami (12 min)</p>
+                  <p>• Tamiami (14 min)</p>
+                </div>
               </div>
-            </div>
-            
-            {/* Service Areas */}
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h4 className="font-bold text-lg text-gray-900 mb-4">Service Areas</h4>
-              <div className="space-y-3">
-                <div>
-                  <h5 className="font-semibold text-gray-800 mb-1">Close Proximity (Under 20 min)</h5>
-                  <div className="grid grid-cols-2 gap-1 text-sm text-gray-700">
-                    <p>• Edgewater (1 min)</p>
-                    <p>• Midtown Miami (5 min)</p>
-                    <p>• Design District (6 min)</p>
-                    <p>• Wynwood (8 min)</p>
-                    <p>• Upper East Side (8 min)</p>
-                    <p>• Downtown Miami (12 min)</p>
-                    <p>• Brickell (18 min)</p>
-                  </div>
+              <div>
+                <h5 className="font-semibold text-gray-800 mb-3 text-lg">Greater Kendall Area (15-25 min)</h5>
+                <div className="space-y-1 text-gray-700">
+                  <p>• Kendall (15 min)</p>
+                  <p>• Kendall West (18 min)</p>
+                  <p>• The Hammocks (20 min)</p>
+                  <p>• Kendale Lakes (22 min)</p>
+                  <p>• Fontainebleau (22 min)</p>
+                  <p>• Westwood Lakes (24 min)</p>
                 </div>
-                <div>
-                  <h5 className="font-semibold text-gray-800 mb-1">Greater Miami-Dade (20-30 min)</h5>
-                  <div className="grid grid-cols-2 gap-1 text-sm text-gray-700">
-                    <p>• Little Havana (20 min)</p>
-                    <p>• Westchester (22 min)</p>
-                    <p>• Olympia Heights (24 min)</p>
-                    <p>• Sunset (25 min)</p>
-                    <p>• Coral Gables (25 min)</p>
-                    <p>• Westwood Lakes (26 min)</p>
-                    <p>• Tamiami (28 min)</p>
-                    <p>• Fontainebleau (28 min)</p>
-                  </div>
-                </div>
-                <div>
-                  <h5 className="font-semibold text-gray-800 mb-1">Extended Areas (30+ min)</h5>
-                  <div className="grid grid-cols-2 gap-1 text-sm text-gray-700">
-                    <p>• Kendale Lakes (30 min)</p>
-                    <p>• Kendall West (32 min)</p>
-                    <p>• Sweetwater (35 min)</p>
-                    <p>• Doral (38 min)</p>
-                    <p>• The Hammocks (40 min)</p>
-                    <p>• The Crossings (42 min)</p>
-                  </div>
+              </div>
+              <div>
+                <h5 className="font-semibold text-gray-800 mb-3 text-lg">Extended Miami-Dade (25+ min)</h5>
+                <div className="space-y-1 text-gray-700">
+                  <p>• Coral Gables (25 min)</p>
+                  <p>• Doral (28 min)</p>
+                  <p>• Sweetwater (30 min)</p>
+                  <p>• The Crossings (32 min)</p>
+                  <p>• Little Havana (35 min)</p>
+                  <p>• Pinecrest (38 min)</p>
                 </div>
               </div>
             </div>
             
-            {/* Specialties */}
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h4 className="font-bold text-lg text-gray-900 mb-4">Our Specialties</h4>
-              <div className="space-y-2 text-gray-700">
-                <p>• Instagram-worthy Artisan Pancakes</p>
-                <p>• Gourmet Burger Creations</p>
-                <p>• Craft Coffee & Specialty Beverages</p>
-                <p>• Vegan & Dietary Options</p>
-                <p>• Brunch & Breakfast Favorites</p>
-                <p>• From Food Truck to Fine Dining</p>
-                <p>• Serving Miami Since 2018</p>
+            {/* Delivery Info */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="grid md:grid-cols-2 gap-6 text-center">
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <div className="text-2xl font-bold text-gray-900 mb-2">$4.99</div>
+                  <div className="text-gray-600">Delivery Fee</div>
+                  <div className="text-sm text-gray-500 mt-1">All areas within 45 minutes</div>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <div className="text-2xl font-bold text-gray-900 mb-2">30-45 min</div>
+                  <div className="text-gray-600">Delivery Time</div>
+                  <div className="text-sm text-gray-500 mt-1">Fresh & hot guaranteed</div>
+                </div>
               </div>
             </div>
           </div>
-          
-          
         </div>
       </div>
     </section>
