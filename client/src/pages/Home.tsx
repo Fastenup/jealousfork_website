@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import MenuPreview from "@/components/MenuPreview";
 import Testimonials from "@/components/Testimonials";
+import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
@@ -21,6 +22,7 @@ export default function Home() {
       <About />
       <MenuPreview />
       <Testimonials />
+      <FAQ />
       <Contact />
       <Footer />
       
