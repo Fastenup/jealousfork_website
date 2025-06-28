@@ -35,11 +35,11 @@ export default function Navigation() {
       isScrolled ? 'bg-white/95 backdrop-blur-sm shadow-sm' : 'bg-white/80 backdrop-blur-sm'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16 lg:h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/">
-              <a className="font-playfair font-bold text-2xl text-gray-900 hover:text-gray-600 transition-colors">
+              <a className="font-playfair font-bold text-xl sm:text-2xl lg:text-3xl text-gray-900 hover:text-gray-600 transition-colors">
                 Jealous Fork
               </a>
             </Link>

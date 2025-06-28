@@ -285,32 +285,7 @@ export default function Contact() {
             </div>
           </div>
           
-          {/* Additional Local SEO Content */}
-          <div className="mt-8 p-6 bg-white rounded-xl shadow-sm">
-            <h4 className="font-bold text-lg text-gray-900 mb-4">Why Choose Jealous Fork?</h4>
-            <div className="grid md:grid-cols-2 gap-6 text-gray-700">
-              <div>
-                <p className="mb-3">
-                  <strong>Miami's Original Artisan Pancake Restaurant:</strong> Since our humble beginnings as a food truck in 2018, 
-                  we've grown into Miami's premier destination for Instagram-worthy pancakes and gourmet burgers.
-                </p>
-                <p className="mb-3">
-                  <strong>Conveniently Located in Edgewater:</strong> Our restaurant is perfectly positioned to serve Midtown Miami, 
-                  the Design District, Wynwood, and the greater Miami area with easy access and ample parking.
-                </p>
-              </div>
-              <div>
-                <p className="mb-3">
-                  <strong>Highly Rated by Customers:</strong> With outstanding reviews across Yelp (4.6/5), Google (4.7/5), 
-                  OpenTable (5.0/5), and Uber Eats (4.8/5), we're consistently rated as one of Miami's top breakfast destinations.
-                </p>
-                <p className="mb-3">
-                  <strong>Dual Operating Concept:</strong> Enjoy our Jealous Fork day menu (Tue-Sun 9AM-3PM) featuring artisan pancakes 
-                  and breakfast favorites, plus our Jealous Burger evening menu (Fri-Sat 5PM-9PM) with gourmet burgers.
-                </p>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </section>

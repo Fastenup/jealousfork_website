@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <>
       <SEOHead 
-        title="Jealous Fork - Artisan Pancakes & Burgers | Miami, FL"
-        description="Miami's first artisan pancake restaurant. Instagram-worthy pancakes, gourmet burgers, and exceptional dining experience in Miami, FL. Order online or make a reservation."
+        title="Jealous Fork - Florida's Best Pancakes & Burgers | Miami, FL"
+        description="Miami's original artisan pancake restaurant serving Florida's best pancakes, gourmet burgers, and exceptional dining experience. Located at 14417 SW 42nd St."
         canonical="https://jealousfork.com/"
         ogImage="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
       />

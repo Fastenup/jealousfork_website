@@ -23,7 +23,7 @@ export default function Hero() {
           <span className="text-gray-300">Artisan Pancakes</span>
         </h1>
         <p className="text-xl md:text-2xl mb-8 font-light">
-          From food truck to restaurant - Instagram-worthy pancakes & gourmet burgers
+          From food truck to restaurant - Florida's best pancakes & gourmet burgers
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button 
