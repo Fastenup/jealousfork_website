@@ -230,15 +230,43 @@ export default function Contact() {
             {/* Service Areas */}
             <div className="bg-white rounded-xl p-6 shadow-sm">
               <h4 className="font-bold text-lg text-gray-900 mb-4">Service Areas</h4>
-              <div className="space-y-2 text-gray-700">
-                <p>• Edgewater (1 min)</p>
-                <p>• Midtown Miami (5 min)</p>
-                <p>• Design District (6 min)</p>
-                <p>• Wynwood (8 min)</p>
-                <p>• Upper East Side (8 min)</p>
-                <p>• Downtown Miami (12 min)</p>
-                <p>• Brickell (18 min)</p>
-                <p>• And Greater Miami Area</p>
+              <div className="space-y-3">
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-1">Close Proximity (Under 20 min)</h5>
+                  <div className="grid grid-cols-2 gap-1 text-sm text-gray-700">
+                    <p>• Edgewater (1 min)</p>
+                    <p>• Midtown Miami (5 min)</p>
+                    <p>• Design District (6 min)</p>
+                    <p>• Wynwood (8 min)</p>
+                    <p>• Upper East Side (8 min)</p>
+                    <p>• Downtown Miami (12 min)</p>
+                    <p>• Brickell (18 min)</p>
+                  </div>
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-1">Greater Miami-Dade (20-30 min)</h5>
+                  <div className="grid grid-cols-2 gap-1 text-sm text-gray-700">
+                    <p>• Little Havana (20 min)</p>
+                    <p>• Westchester (22 min)</p>
+                    <p>• Olympia Heights (24 min)</p>
+                    <p>• Sunset (25 min)</p>
+                    <p>• Coral Gables (25 min)</p>
+                    <p>• Westwood Lakes (26 min)</p>
+                    <p>• Tamiami (28 min)</p>
+                    <p>• Fontainebleau (28 min)</p>
+                  </div>
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-1">Extended Areas (30+ min)</h5>
+                  <div className="grid grid-cols-2 gap-1 text-sm text-gray-700">
+                    <p>• Kendale Lakes (30 min)</p>
+                    <p>• Kendall West (32 min)</p>
+                    <p>• Sweetwater (35 min)</p>
+                    <p>• Doral (38 min)</p>
+                    <p>• The Hammocks (40 min)</p>
+                    <p>• The Crossings (42 min)</p>
+                  </div>
+                </div>
               </div>
             </div>
             
