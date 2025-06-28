@@ -125,16 +125,7 @@ export default function FAQ() {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="text-gray-600 mb-4">
-            Have a question not answered here?
-          </p>
-          <div className="space-y-2 text-sm text-gray-500">
-            <p>📞 Call us at (305) 555-FORK</p>
-            <p>📧 Email hello@jealousfork.com</p>
-            <p>📍 Visit us at 14417 SW 42nd St, Miami FL 33175</p>
-          </div>
-        </div>
+        
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { openResyWidget } from "./ResyWidget";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -92,14 +93,12 @@ export default function Navigation() {
           
           {/* CTA Button */}
           <div className="hidden md:block">
-            <a 
-              href="https://resy.com/cities/miami-fl/venues/jealous-fork"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button 
+              onClick={openResyWidget}
               className="bg-gray-900 text-white px-6 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors"
             >
               Reserve Table
-            </a>
+            </button>
           </div>
           
           {/* Mobile menu button */}
@@ -162,14 +161,15 @@ export default function Navigation() {
             >
               Contact
             </button>
-            <a 
-              href="https://resy.com/cities/miami-fl/venues/jealous-fork"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button 
+              onClick={() => {
+                openResyWidget();
+                setIsMenuOpen(false);
+              }}
               className="block px-3 py-2 text-base font-medium bg-gray-900 text-white rounded-lg mx-3 mt-4 text-center w-auto"
             >
               Reserve Table
-            </a>
+            </button>
           </div>
         </div>
       )}

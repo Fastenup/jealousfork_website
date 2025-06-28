@@ -1,3 +1,5 @@
+import { openResyWidget } from "./ResyWidget";
+
 export default function Hero() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -32,14 +34,12 @@ export default function Hero() {
           >
             View Menu
           </button>
-          <a 
-            href="https://resy.com/cities/miami-fl/venues/jealous-fork"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button 
+            onClick={openResyWidget}
             className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all"
           >
             Make Reservation
-          </a>
+          </button>
         </div>
       </div>
       

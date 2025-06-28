@@ -16,6 +16,33 @@ declare global {
   }
 }
 
+// Global function to open Resy widget
+export const openResyWidget = () => {
+  // Create a temporary hidden button to trigger the widget
+  const tempButton = document.createElement('a');
+  tempButton.href = 'https://resy.com/cities/miami-fl/venues/jealous-fork';
+  tempButton.id = 'temp-resy-button-' + Date.now();
+  tempButton.style.display = 'none';
+  document.body.appendChild(tempButton);
+  
+  if (window.resyWidget) {
+    window.resyWidget.addButton(tempButton, {
+      venueId: 90707,
+      apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+      replace: true
+    });
+    // Trigger click to open widget
+    tempButton.click();
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(tempButton);
+    }, 100);
+  } else {
+    // Fallback to direct link if widget not loaded
+    window.open('https://resy.com/cities/miami-fl/venues/jealous-fork', '_blank');
+  }
+};
+
 export default function ResyWidget({ className = "" }: ResyWidgetProps) {
   useEffect(() => {
     // Load Resy widget script if not already loaded
