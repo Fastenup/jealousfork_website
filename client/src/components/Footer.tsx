@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import ResyWidget from "./ResyWidget";
 
 export default function Footer() {
   const scrollToSection = (sectionId: string) => {
@@ -19,15 +20,8 @@ export default function Footer() {
           <p className="text-xl mb-8 text-gray-300">
             Book your table now or order online for pickup and delivery
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="https://resy.com/cities/miami-fl/venues/jealous-fork" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-gray-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-500 transition-all transform hover:scale-105"
-            >
-              Make Reservation
-            </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <ResyWidget className="mb-4 sm:mb-0" />
             <a 
               href="tel:(305)699-1430" 
               className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all"

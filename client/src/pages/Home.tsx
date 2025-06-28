@@ -29,7 +29,9 @@ export default function Home() {
       {/* Sticky CTA Buttons */}
       <div className="fixed bottom-4 right-4 z-40 flex flex-col gap-2">
         <a 
-          href="#reservation" 
+          href="https://resy.com/cities/miami-fl/venues/jealous-fork" 
+          target="_blank"
+          rel="noopener noreferrer"
           className="bg-warm-amber text-white p-4 rounded-full shadow-lg hover:bg-warm-amber/90 transition-all transform hover:scale-110"
           aria-label="Make a reservation"
         >

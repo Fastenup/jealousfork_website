@@ -127,12 +127,18 @@ Changelog:
   * Added comprehensive sitemap.xml and robots.txt for better crawling
   * Enhanced contact section with NAP consistency and local business info
   * Positioned restaurant as "Miami's original artisan pancake restaurant"
-- June 28, 2025: Expanded local area coverage to 25 Miami-Dade neighborhoods:
+- June 28, 2025: Expanded local area coverage to 33 Miami-Dade neighborhoods:
   * Added comprehensive suburban coverage including Kendall West, Kendale Lakes, Tamiami
   * Included Westchester, Sunset, Fontainebleau, Sweetwater, Doral areas
   * Extended reach to The Hammocks and The Crossings communities
   * Organized service areas by proximity: Close (under 20 min), Greater Miami-Dade (20-30 min), Extended (30+ min)
   * Updated sitemap and SEO strategy with expanded geographic targeting
+- June 28, 2025: Added comprehensive FAQ section and real Resy integration:
+  * Created expandable FAQ with 15 SEO-optimized questions covering hours, locations, menu, reservations
+  * Integrated actual Resy reservation widget with venue ID 90707 and API key
+  * Added FAQ navigation link to main menu and mobile menu
+  * Updated all reservation buttons to use real Resy booking system
+  * Enhanced user experience with dropdown functionality and comprehensive information
 ```
 
 ## User Preferences
