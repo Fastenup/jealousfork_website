@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -7,9 +8,31 @@ import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
-import { openResyWidget } from "@/components/ResyWidget";
 
 export default function Home() {
+  useEffect(() => {
+    // Initialize Resy widget for sticky button
+    const initStickyWidget = () => {
+      const stickyButton = document.getElementById('sticky-resy-button');
+      
+      if (window.resyWidget && stickyButton) {
+        window.resyWidget.addButton(stickyButton, {
+          venueId: 90707,
+          apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+          replace: true
+        });
+      }
+    };
+
+    // Check if Resy script is already loaded
+    if (window.resyWidget) {
+      initStickyWidget();
+    } else {
+      // Wait for script to load (loaded by other components)
+      setTimeout(initStickyWidget, 1000);
+    }
+  }, []);
+
   return (
     <>
       <SEOHead 
@@ -29,15 +52,16 @@ export default function Home() {
       
       {/* Sticky CTA Buttons */}
       <div className="fixed bottom-4 right-4 z-40 flex flex-col gap-2">
-        <button 
-          onClick={openResyWidget}
+        <a 
+          href="https://resy.com/cities/miami-fl/venues/jealous-fork"
+          id="sticky-resy-button"
           className="bg-warm-amber text-white p-4 rounded-full shadow-lg hover:bg-warm-amber/90 transition-all transform hover:scale-110"
           aria-label="Make a reservation"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>
-        </button>
+        </a>
         <a 
           href="tel:(305)699-1430" 
           className="bg-gray-900 text-white p-4 rounded-full shadow-lg hover:bg-gray-800 transition-all transform hover:scale-110"
