@@ -98,7 +98,7 @@ export default function Footer() {
                 <li>
                   <button 
                     onClick={() => scrollToSection('menu')}
-                    className="text-gray-400 hover:text-warm-amber transition-colors"
+                    className="text-gray-400 hover:text-gray-200 transition-colors"
                   >
                     Menu
                   </button>
@@ -106,14 +106,14 @@ export default function Footer() {
                 <li>
                   <button 
                     onClick={() => scrollToSection('contact')}
-                    className="text-gray-400 hover:text-warm-amber transition-colors"
+                    className="text-gray-400 hover:text-gray-200 transition-colors"
                   >
                     Contact
                   </button>
                 </li>
                 <li>
                   <Link href="/gallery">
-                    <a className="text-gray-400 hover:text-warm-amber transition-colors">Gallery</a>
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Gallery</a>
                   </Link>
                 </li>
               </ul>
@@ -125,27 +125,27 @@ export default function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link href="/near/south-beach">
-                    <a className="text-gray-400 hover:text-warm-amber transition-colors">South Beach</a>
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">South Beach</a>
                   </Link>
                 </li>
                 <li>
                   <Link href="/near/coral-gables">
-                    <a className="text-gray-400 hover:text-warm-amber transition-colors">Coral Gables</a>
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Coral Gables</a>
                   </Link>
                 </li>
                 <li>
                   <Link href="/near/coconut-grove">
-                    <a className="text-gray-400 hover:text-warm-amber transition-colors">Coconut Grove</a>
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Coconut Grove</a>
                   </Link>
                 </li>
                 <li>
                   <Link href="/near/brickell">
-                    <a className="text-gray-400 hover:text-warm-amber transition-colors">Brickell</a>
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Brickell</a>
                   </Link>
                 </li>
                 <li>
                   <Link href="/near/downtown-miami">
-                    <a className="text-gray-400 hover:text-warm-amber transition-colors">Downtown Miami</a>
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Downtown Miami</a>
                   </Link>
                 </li>
               </ul>
@@ -153,7 +153,7 @@ export default function Footer() {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Jealous Fork. All rights reserved. | <Link href="/privacy"><a className="hover:text-warm-amber transition-colors">Privacy Policy</a></Link> | <Link href="/terms"><a className="hover:text-warm-amber transition-colors">Terms of Service</a></Link></p>
+            <p>&copy; 2024 Jealous Fork. All rights reserved. | <Link href="/privacy"><a className="hover:text-gray-200 transition-colors">Privacy Policy</a></Link> | <Link href="/terms"><a className="hover:text-gray-200 transition-colors">Terms of Service</a></Link></p>
           </div>
         </div>
       </footer>

@@ -97,7 +97,11 @@ export default function Contact() {
                   </svg>
                   <div>
                     <p className="font-semibold">Hours</p>
-                    <p className="text-gray-600">Daily: 7:00 AM - 10:00 PM</p>
+                    <div className="text-gray-600">
+                      <p><strong>Jealous Fork:</strong> Tuesday - Sunday: 9:00 AM - 3:00 PM</p>
+                      <p><strong>Jealous Burger:</strong> Friday & Saturday: 5:00 PM - 9:00 PM</p>
+                      <p className="text-sm text-gray-500 mt-1">Closed Mondays</p>
+                    </div>
                   </div>
                 </div>
               </div>
