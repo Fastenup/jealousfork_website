@@ -113,7 +113,13 @@ This is a modern restaurant website for "Jealous Fork" - Miami's original artisa
 
 ```
 Changelog:
-- June 28, 2025. Initial setup
+- June 28, 2025: Initial setup with greyscale theme and Resy integration
+- June 28, 2025: Major menu system overhaul - Added comprehensive menu data from PDFs:
+  * Created separate menu systems for Jealous Fork (day menu) and Jealous Burger (evening menu)
+  * Added complete beverage menu with cocktails, coffee, beer, and wine
+  * Updated operating hours: JF (Tue-Sun 9AM-3PM), JB (Fri-Sat 5PM-9PM), Closed Mondays
+  * Created new FullMenuPage with smart time-based menu highlighting
+  * Updated navigation and contact information with dual operating schedules
 ```
 
 ## User Preferences

@@ -55,7 +55,7 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
         
         {!showAll && (
           <div className="text-center">
-            <Link href="/menu">
+            <Link href="/full-menu">
               <a className="inline-flex items-center bg-gray-900 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors">
                 View Full Menu
                 <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -64,6 +64,11 @@ export default function Navigation() {
               >
                 Menu
               </button>
+              <Link href="/full-menu">
+                <a className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
+                  Full Menu
+                </a>
+              </Link>
               <button 
                 onClick={() => scrollToSection('testimonials')}
                 className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
@@ -126,6 +131,11 @@ export default function Navigation() {
             >
               Menu
             </button>
+            <Link href="/full-menu">
+              <a className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left">
+                Full Menu
+              </a>
+            </Link>
             <button 
               onClick={() => scrollToSection('testimonials')}
               className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"

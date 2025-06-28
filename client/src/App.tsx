@@ -13,6 +13,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/menu/:slug?" component={MenuPage} />
+      <Route path="/full-menu" component={FullMenuPage} />
       <Route path="/near/:area" component={LocalPage} />
       <Route path="/gallery" component={Home} />
       <Route path="/about" component={Home} />

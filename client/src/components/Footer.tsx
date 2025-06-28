@@ -56,6 +56,14 @@ export default function Footer() {
               <p className="mt-4 text-gray-400 leading-relaxed">
                 Miami's original artisan pancake restaurant. From our humble beginnings as a food truck to our current restaurant, we continue to serve Instagram-worthy pancakes and gourmet burgers with passion and creativity.
               </p>
+              <div className="mt-6 p-4 bg-gray-800 rounded-lg">
+                <h4 className="font-semibold text-white mb-2">Hours</h4>
+                <div className="text-gray-300 text-sm space-y-1">
+                  <p><strong>Jealous Fork:</strong> Tue-Sun 9:00 AM - 3:00 PM</p>
+                  <p><strong>Jealous Burger:</strong> Fri-Sat 5:00 PM - 9:00 PM</p>
+                  <p className="text-gray-400">Closed Mondays</p>
+                </div>
+              </div>
               <div className="flex space-x-4 mt-6">
                 <a href="https://www.instagram.com/jealousfork" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-200 transition-colors" aria-label="Instagram">
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
