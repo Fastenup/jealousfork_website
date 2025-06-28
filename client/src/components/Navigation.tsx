@@ -5,7 +5,7 @@ import ShoppingCart from './ShoppingCart';
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,8 +93,9 @@ export default function Navigation() {
             </div>
           </div>
           
-          {/* CTA Button */}
-          <div className="hidden lg:block">
+          {/* Cart and CTA Button */}
+          <div className="hidden lg:flex items-center gap-4">
+            <ShoppingCart onCheckout={() => setLocation('/checkout')} />
             <button 
               onClick={() => scrollToSection('contact')}
               className="bg-gray-900 text-white px-4 xl:px-6 py-2 rounded-full text-sm xl:text-base font-medium hover:bg-gray-800 transition-colors"
@@ -103,8 +104,9 @@ export default function Navigation() {
             </button>
           </div>
           
-          {/* Mobile menu button */}
-          <div className="lg:hidden">
+          {/* Mobile cart and menu button */}
+          <div className="lg:hidden flex items-center gap-2">
+            <ShoppingCart onCheckout={() => setLocation('/checkout')} />
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-md transition-colors"
