@@ -37,7 +37,7 @@ export default function Navigation() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/">
-              <a className="font-playfair font-bold text-2xl text-gray-900 hover:text-warm-amber transition-colors">
+              <a className="font-playfair font-bold text-2xl text-gray-900 hover:text-gray-600 transition-colors">
                 Jealous Fork
               </a>
             </Link>
@@ -48,31 +48,31 @@ export default function Navigation() {
             <div className="ml-10 flex items-baseline space-x-8">
               <button 
                 onClick={() => scrollToSection('home')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-warm-amber transition-colors"
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 Home
               </button>
               <button 
                 onClick={() => scrollToSection('about')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-warm-amber transition-colors"
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 About
               </button>
               <button 
                 onClick={() => scrollToSection('menu')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-warm-amber transition-colors"
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 Menu
               </button>
               <button 
                 onClick={() => scrollToSection('testimonials')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-warm-amber transition-colors"
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 Reviews
               </button>
               <button 
                 onClick={() => scrollToSection('contact')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-warm-amber transition-colors"
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 Contact
               </button>

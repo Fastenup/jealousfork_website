@@ -41,7 +41,7 @@ export default function LocalPage() {
           
           <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
             <h1 className="font-playfair text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              Best Pancakes in<br>
+              Best Pancakes in<br />
               <span className="text-warm-amber">{areaInfo.name}</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 font-light">
