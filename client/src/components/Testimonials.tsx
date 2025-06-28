@@ -31,7 +31,7 @@ export default function Testimonials() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-            What People Are <span className="text-warm-amber">Saying</span>
+            What People Are <span className="text-gray-600">Saying</span>
           </h2>
           <p className="text-xl text-gray-600">Loved by foodies and influencers across the country</p>
         </div>

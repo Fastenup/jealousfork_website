@@ -83,7 +83,7 @@ export default function Navigation() {
           <div className="hidden md:block">
             <button 
               onClick={() => scrollToSection('reservation')}
-              className="bg-warm-amber text-white px-6 py-2 rounded-full font-medium hover:bg-warm-amber/90 transition-colors"
+              className="bg-gray-900 text-white px-6 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors"
             >
               Reserve Table
             </button>
@@ -110,37 +110,37 @@ export default function Navigation() {
           <div className="px-2 pt-2 pb-3 space-y-1">
             <button 
               onClick={() => scrollToSection('home')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-warm-amber w-full text-left"
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
             >
               Home
             </button>
             <button 
               onClick={() => scrollToSection('about')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-warm-amber w-full text-left"
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
             >
               About
             </button>
             <button 
               onClick={() => scrollToSection('menu')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-warm-amber w-full text-left"
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
             >
               Menu
             </button>
             <button 
               onClick={() => scrollToSection('testimonials')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-warm-amber w-full text-left"
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
             >
               Reviews
             </button>
             <button 
               onClick={() => scrollToSection('contact')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-warm-amber w-full text-left"
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
             >
               Contact
             </button>
             <button 
               onClick={() => scrollToSection('reservation')}
-              className="block px-3 py-2 text-base font-medium bg-warm-amber text-white rounded-lg mx-3 mt-4 text-center w-auto"
+              className="block px-3 py-2 text-base font-medium bg-gray-900 text-white rounded-lg mx-3 mt-4 text-center w-auto"
             >
               Reserve Table
             </button>

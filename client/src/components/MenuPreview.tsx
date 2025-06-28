@@ -13,7 +13,7 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-            Our Signature <span className="text-warm-amber">Creations</span>
+            Our Signature <span className="text-gray-600">Creations</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             From Instagram-worthy pancakes to gourmet burgers, every dish is crafted with passion and artisan attention to detail.
@@ -36,15 +36,15 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
               <div className="p-6">
                 <Link href={`/menu/${item.slug}`}>
                   <a>
-                    <h3 className="font-playfair text-2xl font-semibold mb-2 hover:text-warm-amber transition-colors">
+                    <h3 className="font-playfair text-2xl font-semibold mb-2 hover:text-gray-600 transition-colors">
                       {item.name}
                     </h3>
                   </a>
                 </Link>
                 <p className="text-gray-600 mb-4">{item.description}</p>
                 <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold text-warm-amber">${item.price}</span>
-                  <button className="bg-warm-amber text-white px-4 py-2 rounded-full font-medium hover:bg-warm-amber/90 transition-colors">
+                  <span className="text-2xl font-bold text-gray-900">${item.price}</span>
+                  <button className="bg-gray-900 text-white px-4 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors">
                     Order Now
                   </button>
                 </div>

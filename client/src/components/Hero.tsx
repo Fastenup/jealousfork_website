@@ -20,7 +20,7 @@ export default function Hero() {
       <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
         <h1 className="font-playfair text-5xl md:text-7xl font-bold mb-6 leading-tight">
           Miami's Original<br />
-          <span className="text-warm-amber">Artisan Pancakes</span>
+          <span className="text-gray-300">Artisan Pancakes</span>
         </h1>
         <p className="text-xl md:text-2xl mb-8 font-light">
           From food truck to restaurant - Instagram-worthy pancakes & gourmet burgers
@@ -28,7 +28,7 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button 
             onClick={() => scrollToSection('menu')}
-            className="bg-warm-amber text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-warm-amber/90 transition-all transform hover:scale-105"
+            className="bg-gray-900 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-all transform hover:scale-105"
           >
             View Menu
           </button>

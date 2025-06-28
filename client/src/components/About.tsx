@@ -5,7 +5,7 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-              From Food Truck to <span className="text-warm-amber">Culinary Destination</span>
+              From Food Truck to <span className="text-gray-600">Culinary Destination</span>
             </h2>
             <p className="text-lg text-gray-600 mb-6 leading-relaxed">
               After the tremendous success of Jealous Fork, the first artisan pancake food truck in the country, best friends Joaquin Ortiz and Henrik Telle needed more space. Their rise was evident by the line that consistently stretched around the block.
@@ -15,11 +15,11 @@ export default function About() {
             </p>
             <div className="grid sm:grid-cols-2 gap-6">
               <div className="text-center p-6 bg-gray-50 rounded-xl">
-                <div className="text-3xl font-bold text-warm-amber mb-2">4.5★</div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">4.5★</div>
                 <div className="text-gray-600">Yelp Rating</div>
               </div>
               <div className="text-center p-6 bg-gray-50 rounded-xl">
-                <div className="text-3xl font-bold text-warm-amber mb-2">461</div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">461</div>
                 <div className="text-gray-600">Reviews</div>
               </div>
             </div>
