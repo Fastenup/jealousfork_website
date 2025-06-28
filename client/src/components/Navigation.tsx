@@ -15,42 +15,7 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    // Load Resy widget script
-    const script = document.createElement('script');
-    script.src = 'https://widgets.resy.com/embed.js';
-    script.async = true;
-    
-    script.onload = () => {
-      // Initialize widget on mobile button
-      const mobileButton = document.getElementById('mobile-resy-button');
-      const desktopButton = document.getElementById('desktop-resy-button');
-      
-      if (window.resyWidget && mobileButton) {
-        window.resyWidget.addButton(mobileButton, {
-          venueId: 90707,
-          apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
-          replace: true
-        });
-      }
-      
-      if (window.resyWidget && desktopButton) {
-        window.resyWidget.addButton(desktopButton, {
-          venueId: 90707,
-          apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
-          replace: true
-        });
-      }
-    };
-    
-    document.head.appendChild(script);
-    
-    return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-    };
-  }, []);
+
 
   const scrollToSection = (sectionId: string) => {
     if (location !== '/') {
@@ -129,13 +94,12 @@ export default function Navigation() {
           
           {/* CTA Button */}
           <div className="hidden md:block">
-            <a 
-              href="https://resy.com/cities/miami-fl/venues/jealous-fork"
-              id="desktop-resy-button"
+            <button 
+              onClick={() => scrollToSection('contact')}
               className="bg-gray-900 text-white px-6 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors"
             >
               Reserve Table
-            </a>
+            </button>
           </div>
           
           {/* Mobile menu button */}
@@ -198,14 +162,15 @@ export default function Navigation() {
             >
               Contact
             </button>
-            <a 
-              href="https://resy.com/cities/miami-fl/venues/jealous-fork"
-              id="mobile-resy-button"
-              onClick={() => setIsMenuOpen(false)}
+            <button 
+              onClick={() => {
+                scrollToSection('contact');
+                setIsMenuOpen(false);
+              }}
               className="block px-3 py-2 text-base font-medium bg-gray-900 text-white rounded-lg mx-3 mt-4 text-center w-auto"
             >
               Reserve Table
-            </a>
+            </button>
           </div>
         </div>
       )}

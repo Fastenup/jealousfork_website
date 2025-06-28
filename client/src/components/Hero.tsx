@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 export default function Hero() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -7,42 +5,6 @@ export default function Hero() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
-  useEffect(() => {
-    // Load Resy widget script for Hero button
-    const script = document.createElement('script');
-    script.src = 'https://widgets.resy.com/embed.js';
-    script.async = true;
-    
-    script.onload = () => {
-      const heroButton = document.getElementById('hero-resy-button');
-      
-      if (window.resyWidget && heroButton) {
-        window.resyWidget.addButton(heroButton, {
-          venueId: 90707,
-          apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
-          replace: true
-        });
-      }
-    };
-    
-    // Only add script if it doesn't already exist
-    if (!document.querySelector('script[src="https://widgets.resy.com/embed.js"]')) {
-      document.head.appendChild(script);
-    } else {
-      // Script already exists, just initialize widget
-      setTimeout(() => {
-        const heroButton = document.getElementById('hero-resy-button');
-        if (window.resyWidget && heroButton) {
-          window.resyWidget.addButton(heroButton, {
-            venueId: 90707,
-            apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
-            replace: true
-          });
-        }
-      }, 100);
-    }
-  }, []);
 
   return (
     <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -70,13 +32,12 @@ export default function Hero() {
           >
             View Menu
           </button>
-          <a 
-            href="https://resy.com/cities/miami-fl/venues/jealous-fork"
-            id="hero-resy-button"
+          <button 
+            onClick={() => scrollToSection('contact')}
             className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all"
           >
             Make Reservation
-          </a>
+          </button>
         </div>
       </div>
       
