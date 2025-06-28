@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { openResyWidget } from "./ResyWidget";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,6 +13,43 @@ export default function Navigation() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Load Resy widget script
+    const script = document.createElement('script');
+    script.src = 'https://widgets.resy.com/embed.js';
+    script.async = true;
+    
+    script.onload = () => {
+      // Initialize widget on mobile button
+      const mobileButton = document.getElementById('mobile-resy-button');
+      const desktopButton = document.getElementById('desktop-resy-button');
+      
+      if (window.resyWidget && mobileButton) {
+        window.resyWidget.addButton(mobileButton, {
+          venueId: 90707,
+          apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+          replace: true
+        });
+      }
+      
+      if (window.resyWidget && desktopButton) {
+        window.resyWidget.addButton(desktopButton, {
+          venueId: 90707,
+          apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+          replace: true
+        });
+      }
+    };
+    
+    document.head.appendChild(script);
+    
+    return () => {
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
+    };
   }, []);
 
   const scrollToSection = (sectionId: string) => {
