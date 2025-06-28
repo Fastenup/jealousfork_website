@@ -33,7 +33,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
           </SheetTitle>
         </SheetHeader>
         
-        <div className="flex flex-col h-full mt-6">
+        <div className="flex flex-col h-[calc(100vh-120px)] mt-6">
           {state.items.length === 0 ? (
             <div className="flex-1 flex items-center justify-center text-center">
               <div>
@@ -44,7 +44,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
             </div>
           ) : (
             <>
-              <div className="flex-1 overflow-y-auto space-y-4">
+              <div className="flex-1 overflow-y-auto space-y-4 pb-4">
                 {state.items.map((item) => (
                   <Card key={item.id} className="p-4">
                     <div className="flex items-start gap-3">
@@ -98,7 +98,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                 ))}
               </div>
               
-              <div className="border-t pt-4 space-y-2">
+              <div className="flex-shrink-0 border-t pt-4 space-y-2 bg-white">
                 <div className="flex justify-between text-sm">
                   <span>Subtotal:</span>
                   <span>${state.subtotal.toFixed(2)}</span>
