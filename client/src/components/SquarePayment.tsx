@@ -51,7 +51,8 @@ export default function SquarePayment({
               tokenize: async () => ({
                 status: 'OK',
                 token: 'mock_token_' + Date.now()
-              })
+              }),
+              destroy: () => console.log('Mock card destroyed')
             })
           };
           
@@ -101,7 +102,7 @@ export default function SquarePayment({
     }
 
     return () => {
-      if (card) {
+      if (card && typeof card.destroy === 'function') {
         card.destroy();
       }
     };
