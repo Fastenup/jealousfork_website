@@ -14,7 +14,7 @@ export default function Footer() {
       <section id="reservation" className="py-16 md:py-24 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6">
-            Ready to Experience <span className="text-warm-amber">Jealous Fork</span>?
+            Ready to Experience <span className="text-gray-300">Jealous Fork</span>?
           </h2>
           <p className="text-xl mb-8 text-gray-300">
             Book your table now or order online for pickup and delivery
@@ -24,7 +24,7 @@ export default function Footer() {
               href="https://resy.com/cities/miami-fl/jealous-fork" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="bg-warm-amber text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-warm-amber/90 transition-all transform hover:scale-105"
+              className="bg-gray-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-500 transition-all transform hover:scale-105"
             >
               Make Reservation
             </a>
