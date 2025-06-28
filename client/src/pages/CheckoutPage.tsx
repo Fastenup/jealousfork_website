@@ -37,8 +37,16 @@ export default function CheckoutPage() {
   const [showPayment, setShowPayment] = useState(false);
 
   // Square credentials - these will be environment variables
-  const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || 'sandbox-sq0idp-YOUR_APP_ID';
-  const SQUARE_LOCATION_ID = import.meta.env.VITE_SQUARE_LOCATION_ID || 'YOUR_LOCATION_ID';
+  const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || 'sandbox-sq0idb-66_cKzuPxPJDlSxVW4ThbA';
+  const SQUARE_LOCATION_ID = import.meta.env.VITE_SQUARE_LOCATION_ID || 'LHCTHGJ8GT1NP';
+  
+  // Debug logging
+  console.log('Square Environment Variables:', {
+    VITE_SQUARE_APPLICATION_ID: import.meta.env.VITE_SQUARE_APPLICATION_ID,
+    VITE_SQUARE_LOCATION_ID: import.meta.env.VITE_SQUARE_LOCATION_ID,
+    resolved_app_id: SQUARE_APPLICATION_ID,
+    resolved_location_id: SQUARE_LOCATION_ID
+  });
 
   useEffect(() => {
     // Set delivery fee based on order type

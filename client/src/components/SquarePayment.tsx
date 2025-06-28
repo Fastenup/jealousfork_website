@@ -33,6 +33,9 @@ export default function SquarePayment({
   useEffect(() => {
     const initializeSquare = async () => {
       try {
+        setIsLoading(true);
+        console.log('Initializing Square with:', { applicationId, locationId });
+        
         // Load Square Web Payments SDK
         if (!window.Square) {
           const script = document.createElement('script');
@@ -64,7 +67,9 @@ export default function SquarePayment({
       }
     };
 
-    initializeSquare();
+    if (applicationId && locationId && cardRef.current) {
+      initializeSquare();
+    }
 
     return () => {
       if (card) {
