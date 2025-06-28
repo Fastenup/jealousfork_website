@@ -1,4 +1,22 @@
 User-agent: *
 Allow: /
 
+# Priority pages for crawling
+Allow: /full-menu
+Allow: /near/
+
+# Social media and review platforms
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Sitemap location
 Sitemap: https://jealousfork.com/sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1

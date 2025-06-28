@@ -120,6 +120,13 @@ Changelog:
   * Updated operating hours: JF (Tue-Sun 9AM-3PM), JB (Fri-Sat 5PM-9PM), Closed Mondays
   * Created new FullMenuPage with smart time-based menu highlighting
   * Updated navigation and contact information with dual operating schedules
+- June 28, 2025: Comprehensive SEO and visibility enhancements:
+  * Added review ratings display (Yelp 4.6, Google 4.7, OpenTable 5.0, Uber 4.8)
+  * Updated local areas with accurate Miami neighborhoods and distances
+  * Created structured data (JSON-LD) for local business and menu schema
+  * Added comprehensive sitemap.xml and robots.txt for better crawling
+  * Enhanced contact section with NAP consistency and local business info
+  * Positioned restaurant as "Miami's original artisan pancake restaurant"
 ```
 
 ## User Preferences

@@ -206,6 +206,84 @@ export default function Contact() {
             ></iframe>
           </div>
         </div>
+        
+        {/* Local Business Information - Enhanced for SEO */}
+        <div className="mt-16 bg-gray-50 rounded-3xl p-8 md:p-12">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">Visit Miami's Original Artisan Pancake Restaurant</h3>
+            <p className="text-xl text-gray-600">Serving Edgewater, Midtown, Wynwood, and Greater Miami</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Business Info */}
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h4 className="font-bold text-lg text-gray-900 mb-4">Business Information</h4>
+              <div className="space-y-3 text-gray-700">
+                <p><strong>Name:</strong> Jealous Fork</p>
+                <p><strong>Address:</strong> 2000 N Bayshore Dr, Miami, FL 33137</p>
+                <p><strong>Phone:</strong> (305) 555-0123</p>
+                <p><strong>Email:</strong> info@jealousfork.com</p>
+                <p><strong>Established:</strong> 2018 (Food Truck), 2022 (Restaurant)</p>
+              </div>
+            </div>
+            
+            {/* Service Areas */}
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h4 className="font-bold text-lg text-gray-900 mb-4">Service Areas</h4>
+              <div className="space-y-2 text-gray-700">
+                <p>• Edgewater (1 min)</p>
+                <p>• Midtown Miami (5 min)</p>
+                <p>• Design District (6 min)</p>
+                <p>• Wynwood (8 min)</p>
+                <p>• Upper East Side (8 min)</p>
+                <p>• Downtown Miami (12 min)</p>
+                <p>• Brickell (18 min)</p>
+                <p>• And Greater Miami Area</p>
+              </div>
+            </div>
+            
+            {/* Specialties */}
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h4 className="font-bold text-lg text-gray-900 mb-4">Our Specialties</h4>
+              <div className="space-y-2 text-gray-700">
+                <p>• Instagram-worthy Artisan Pancakes</p>
+                <p>• Gourmet Burger Creations</p>
+                <p>• Craft Coffee & Specialty Beverages</p>
+                <p>• Vegan & Dietary Options</p>
+                <p>• Brunch & Breakfast Favorites</p>
+                <p>• From Food Truck to Fine Dining</p>
+                <p>• Serving Miami Since 2018</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Additional Local SEO Content */}
+          <div className="mt-8 p-6 bg-white rounded-xl shadow-sm">
+            <h4 className="font-bold text-lg text-gray-900 mb-4">Why Choose Jealous Fork?</h4>
+            <div className="grid md:grid-cols-2 gap-6 text-gray-700">
+              <div>
+                <p className="mb-3">
+                  <strong>Miami's Original Artisan Pancake Restaurant:</strong> Since our humble beginnings as a food truck in 2018, 
+                  we've grown into Miami's premier destination for Instagram-worthy pancakes and gourmet burgers.
+                </p>
+                <p className="mb-3">
+                  <strong>Conveniently Located in Edgewater:</strong> Our restaurant is perfectly positioned to serve Midtown Miami, 
+                  the Design District, Wynwood, and the greater Miami area with easy access and ample parking.
+                </p>
+              </div>
+              <div>
+                <p className="mb-3">
+                  <strong>Highly Rated by Customers:</strong> With outstanding reviews across Yelp (4.6/5), Google (4.7/5), 
+                  OpenTable (5.0/5), and Uber Eats (4.8/5), we're consistently rated as one of Miami's top breakfast destinations.
+                </p>
+                <p className="mb-3">
+                  <strong>Dual Operating Concept:</strong> Enjoy our Jealous Fork day menu (Tue-Sun 9AM-3PM) featuring artisan pancakes 
+                  and breakfast favorites, plus our Jealous Burger evening menu (Fri-Sat 5PM-9PM) with gourmet burgers.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
