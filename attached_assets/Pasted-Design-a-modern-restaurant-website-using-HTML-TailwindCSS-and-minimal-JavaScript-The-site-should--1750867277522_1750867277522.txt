@@ -1,0 +1,39 @@
+Design a modern restaurant website using HTML, TailwindCSS, and minimal JavaScript. The site should be optimized for SEO and modeled after best practices from Owner.com. Key features:
+
+1. **Home Page ("/")**:
+   - Hero section with mouth-watering food image and a clear CTA ("Order Now", "Book a Table")
+   - Smooth scroll sections: About, Menu Preview, Testimonials, Map, Contact
+   - Structured data using JSON-LD for Local Business
+   - SEO meta tags, Open Graph, and Twitter Card support
+
+2. **Menu Items**:
+   - For each menu item (e.g., "/menu/margherita-pizza", "/menu/vegan-burger"):
+     - Use clean URLs
+     - All URLs should render the main page with the item name in the query params or metadata
+     - Example: visiting `/menu/margherita-pizza` renders the home page but helps for SEO indexing and ad tracking
+
+3. **Local Pages for Surrounding Areas**:
+   - Create static pages for surrounding neighborhoods and cities (e.g., "/near/south-beach", "/near/coral-gables", etc.)
+   - Each page has SEO copy with local keywords, but they all load the main homepage layout
+   - Help rank for searches like “best pizza in [area]” or “healthy food near [area]”
+
+4. **Technical SEO**:
+   - Use canonical URLs pointing to "/"
+   - Preload critical assets
+   - Use lazy loading for images
+   - Schema.org for menu and business info
+   - Sitemap.xml and robots.txt setup
+   - Lighthouse performance score > 90
+
+5. **Design & UX**:
+   - Fully responsive (mobile-first)
+   - Use TailwindCSS for a sleek aesthetic (rounded corners, drop shadows, hover states)
+   - Animations using Framer Motion or simple Tailwind transitions
+   - Fixed nav bar with scroll-to-section functionality
+
+6. **Contact & Conversion**:
+   - Contact form with validation (no backend needed)
+   - Google Maps embed with store location
+   - Sticky CTA buttons for delivery/reservation
+
+Use only client-side code (no backend). Pages should be fast, SEO-optimized, and funnel all traffic to the main experience with tracked deep links.
