@@ -35,18 +35,13 @@ export default function CheckoutPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Square credentials - these will be environment variables
   const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || 'sandbox-sq0idb-66_cKzuPxPJDlSxVW4ThbA';
   const SQUARE_LOCATION_ID = import.meta.env.VITE_SQUARE_LOCATION_ID || 'LHCTHGJ8GT1NP';
   
-  // Debug logging
-  console.log('Square Environment Variables:', {
-    VITE_SQUARE_APPLICATION_ID: import.meta.env.VITE_SQUARE_APPLICATION_ID,
-    VITE_SQUARE_LOCATION_ID: import.meta.env.VITE_SQUARE_LOCATION_ID,
-    resolved_app_id: SQUARE_APPLICATION_ID,
-    resolved_location_id: SQUARE_LOCATION_ID
-  });
+
 
   useEffect(() => {
     // Set delivery fee based on order type
@@ -58,10 +53,15 @@ export default function CheckoutPage() {
   }, [orderType, setDeliveryFee]);
 
   useEffect(() => {
-    // Redirect if cart is empty
-    if (cartState.items.length === 0) {
-      setLocation('/full-menu');
-    }
+    // Allow time for cart to load, then check if empty
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      if (cartState.items.length === 0) {
+        setLocation('/full-menu');
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [cartState.items.length, setLocation]);
 
   const validateForm = () => {
@@ -138,6 +138,22 @@ export default function CheckoutPage() {
       variant: 'destructive',
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="container mx-auto px-4 py-8 pt-24">
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading checkout...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (cartState.items.length === 0) {
     return null; // Will redirect via useEffect

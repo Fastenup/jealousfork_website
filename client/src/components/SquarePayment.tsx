@@ -34,15 +34,12 @@ export default function SquarePayment({
     const initializeSquare = async () => {
       try {
         setIsLoading(true);
-        console.log('Initializing Square with:', { applicationId, locationId });
-        
         // For sandbox mode, we'll use mock payment functionality
         // This allows testing without requiring Square SDK to load
         if (applicationId.includes('sandbox')) {
-          console.log('Using sandbox mode - mock payment system');
           
           // Simulate Square loading delay
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise(resolve => setTimeout(resolve, 500));
           
           // Create mock payment instance
           const mockPayments = {
