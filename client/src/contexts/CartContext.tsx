@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
 import { CartItem } from '@/services/squareService';
 
 interface CartState {
@@ -114,13 +114,35 @@ function cartReducer(state: CartState, action: CartAction): CartState {
   }
 }
 
-const initialState: CartState = {
-  items: [],
-  isOpen: false,
-  subtotal: 0,
-  tax: 0,
-  deliveryFee: 0,
-  total: 0,
+const STORAGE_KEY = 'jealous-fork-cart';
+
+const getInitialState = (): CartState => {
+  if (typeof window !== 'undefined') {
+    try {
+      const savedCart = localStorage.getItem(STORAGE_KEY);
+      if (savedCart) {
+        const parsed = JSON.parse(savedCart);
+        const totals = calculateTotals(parsed.items || [], parsed.deliveryFee || 0);
+        return {
+          items: parsed.items || [],
+          isOpen: false,
+          deliveryFee: parsed.deliveryFee || 0,
+          ...totals,
+        };
+      }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+    }
+  }
+  
+  return {
+    items: [],
+    isOpen: false,
+    subtotal: 0,
+    tax: 0,
+    deliveryFee: 0,
+    total: 0,
+  };
 };
 
 interface CartContextType {
@@ -138,7 +160,21 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [state, dispatch] = useReducer(cartReducer, getInitialState());
+
+  // Save to localStorage whenever cart state changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          items: state.items,
+          deliveryFee: state.deliveryFee,
+        }));
+      } catch (error) {
+        console.error('Error saving cart to localStorage:', error);
+      }
+    }
+  }, [state.items, state.deliveryFee]);
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
     dispatch({ type: 'ADD_ITEM', payload: item });

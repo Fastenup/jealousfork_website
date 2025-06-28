@@ -1,5 +1,6 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { menuItems } from "@/data/menuData";
+import { useCart } from "@/contexts/CartContext";
 
 interface MenuPreviewProps {
   showAll?: boolean;
@@ -7,6 +8,19 @@ interface MenuPreviewProps {
 
 export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
   const displayItems = showAll ? menuItems : menuItems.slice(0, 6);
+  const { addItem } = useCart();
+  const [, setLocation] = useLocation();
+
+  const handleOrderNow = (item: typeof menuItems[0]) => {
+    addItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      category: item.category,
+      description: item.description
+    });
+    setLocation('/full-menu');
+  };
 
   return (
     <section id="menu" className="py-16 md:py-24 bg-gray-50">
@@ -44,7 +58,10 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
                 <p className="text-gray-600 mb-4">{item.description}</p>
                 <div className="flex justify-between items-center">
                   <span className="text-2xl font-bold text-gray-900">${item.price}</span>
-                  <button className="bg-gray-900 text-white px-4 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors">
+                  <button 
+                    onClick={() => handleOrderNow(item)}
+                    className="bg-gray-900 text-white px-4 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors"
+                  >
                     Order Now
                   </button>
                 </div>
