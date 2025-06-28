@@ -170,6 +170,13 @@
 - "brunch restaurant Tamiami corridor"
 - "breakfast near Westwood Lakes Miami"
 - "artisan pancakes Olympia Heights"
+- "best breakfast Westchester Miami"
+- "pancakes near Sunset Florida"
+- "family brunch Fontainebleau"
+- "breakfast restaurant Sweetwater Miami"
+- "artisan pancakes Doral Florida"
+- "weekend brunch The Hammocks"
+- "family breakfast The Crossings"
 
 ## Competitive Analysis Targets
 
