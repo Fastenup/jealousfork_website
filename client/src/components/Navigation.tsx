@@ -46,46 +46,46 @@ export default function Navigation() {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+          <div className="hidden lg:block">
+            <div className="ml-10 flex items-baseline space-x-4 xl:space-x-8">
               <button 
                 onClick={() => scrollToSection('home')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 Home
               </button>
               <button 
                 onClick={() => scrollToSection('about')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 About
               </button>
               <button 
                 onClick={() => scrollToSection('menu')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 Menu
               </button>
               <Link href="/full-menu">
-                <a className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
+                <a className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors">
                   Full Menu
                 </a>
               </Link>
               <button 
                 onClick={() => scrollToSection('testimonials')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 Reviews
               </button>
               <button 
                 onClick={() => scrollToSection('faq')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 FAQ
               </button>
               <button 
                 onClick={() => scrollToSection('contact')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 Contact
               </button>
@@ -93,24 +93,24 @@ export default function Navigation() {
           </div>
           
           {/* CTA Button */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <button 
               onClick={() => scrollToSection('contact')}
-              className="bg-gray-900 text-white px-6 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors"
+              className="bg-gray-900 text-white px-4 xl:px-6 py-2 rounded-full text-sm xl:text-base font-medium hover:bg-gray-800 transition-colors"
             >
               Reserve Table
             </button>
           </div>
           
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-warm-amber p-2"
+              className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-md transition-colors"
               aria-label="Toggle menu"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
               </svg>
             </button>
           </div>
@@ -119,46 +119,67 @@ export default function Navigation() {
       
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-t">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+        <div className="lg:hidden bg-white/95 backdrop-blur-sm border-t shadow-lg">
+          <div className="px-4 pt-4 pb-6 space-y-2">
             <button 
-              onClick={() => scrollToSection('home')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
+              onClick={() => {
+                scrollToSection('home');
+                setIsMenuOpen(false);
+              }}
+              className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left rounded-lg transition-colors"
             >
               Home
             </button>
             <button 
-              onClick={() => scrollToSection('about')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
+              onClick={() => {
+                scrollToSection('about');
+                setIsMenuOpen(false);
+              }}
+              className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left rounded-lg transition-colors"
             >
               About
             </button>
             <button 
-              onClick={() => scrollToSection('menu')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
+              onClick={() => {
+                scrollToSection('menu');
+                setIsMenuOpen(false);
+              }}
+              className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left rounded-lg transition-colors"
             >
               Menu
             </button>
             <Link href="/full-menu">
-              <span className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left cursor-pointer">
+              <span 
+                onClick={() => setIsMenuOpen(false)}
+                className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left cursor-pointer rounded-lg transition-colors"
+              >
                 Full Menu
               </span>
             </Link>
             <button 
-              onClick={() => scrollToSection('testimonials')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
+              onClick={() => {
+                scrollToSection('testimonials');
+                setIsMenuOpen(false);
+              }}
+              className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left rounded-lg transition-colors"
             >
               Reviews
             </button>
             <button 
-              onClick={() => scrollToSection('faq')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
+              onClick={() => {
+                scrollToSection('faq');
+                setIsMenuOpen(false);
+              }}
+              className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left rounded-lg transition-colors"
             >
               FAQ
             </button>
             <button 
-              onClick={() => scrollToSection('contact')}
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 w-full text-left"
+              onClick={() => {
+                scrollToSection('contact');
+                setIsMenuOpen(false);
+              }}
+              className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left rounded-lg transition-colors"
             >
               Contact
             </button>
@@ -167,7 +188,7 @@ export default function Navigation() {
                 scrollToSection('contact');
                 setIsMenuOpen(false);
               }}
-              className="block px-3 py-2 text-base font-medium bg-gray-900 text-white rounded-lg mx-3 mt-4 text-center w-auto"
+              className="block px-4 py-3 text-base font-medium bg-gray-900 text-white rounded-lg mt-4 text-center hover:bg-gray-800 transition-colors"
             >
               Reserve Table
             </button>

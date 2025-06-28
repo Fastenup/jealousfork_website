@@ -8,6 +8,8 @@ import Home from "@/pages/Home";
 import MenuPage from "@/pages/MenuPage";
 import FullMenuPage from "@/pages/FullMenuPage";
 import LocalPage from "@/pages/LocalPage";
+import PrivacyPage from "@/pages/PrivacyPage";
+import TermsPage from "@/pages/TermsPage";
 
 function Router() {
   return (
