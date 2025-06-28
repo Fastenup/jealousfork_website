@@ -20,8 +20,8 @@ function Router() {
       <Route path="/near/:area" component={LocalPage} />
       <Route path="/gallery" component={Home} />
       <Route path="/about" component={Home} />
-      <Route path="/privacy" component={Home} />
-      <Route path="/terms" component={Home} />
+      <Route path="/privacy" component={PrivacyPage} />
+      <Route path="/terms" component={TermsPage} />
       <Route component={Home} />
     </Switch>
   );
