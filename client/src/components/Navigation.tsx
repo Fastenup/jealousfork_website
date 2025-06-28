@@ -92,12 +92,14 @@ export default function Navigation() {
           
           {/* CTA Button */}
           <div className="hidden md:block">
-            <button 
-              onClick={() => scrollToSection('reservation')}
+            <a 
+              href="https://resy.com/cities/miami-fl/venues/jealous-fork"
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-gray-900 text-white px-6 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors"
             >
               Reserve Table
-            </button>
+            </a>
           </div>
           
           {/* Mobile menu button */}
@@ -160,12 +162,14 @@ export default function Navigation() {
             >
               Contact
             </button>
-            <button 
-              onClick={() => scrollToSection('reservation')}
+            <a 
+              href="https://resy.com/cities/miami-fl/venues/jealous-fork"
+              target="_blank"
+              rel="noopener noreferrer"
               className="block px-3 py-2 text-base font-medium bg-gray-900 text-white rounded-lg mx-3 mt-4 text-center w-auto"
             >
               Reserve Table
-            </button>
+            </a>
           </div>
         </div>
       )}

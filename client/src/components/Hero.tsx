@@ -32,12 +32,14 @@ export default function Hero() {
           >
             View Menu
           </button>
-          <button 
-            onClick={() => scrollToSection('reservation')}
+          <a 
+            href="https://resy.com/cities/miami-fl/venues/jealous-fork"
+            target="_blank"
+            rel="noopener noreferrer"
             className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all"
           >
             Make Reservation
-          </button>
+          </a>
         </div>
       </div>
       
