@@ -28,11 +28,10 @@ export default function MenuPage() {
         ogImage={menuItem?.image || "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"}
       />
       <Navigation />
-      
       <main className="pt-16">
         {menuItem ? (
           /* Individual Menu Item Page */
-          <section className="py-16 md:py-24 bg-gray-50">
+          (<section className="py-16 md:py-24 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div>
@@ -54,7 +53,7 @@ export default function MenuPage() {
                     ${menuItem.price}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <button className="bg-warm-amber text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-warm-amber/90 transition-all">
+                    <button className="text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-warm-amber/90 transition-all bg-[#000000e3]">
                       Order Now
                     </button>
                     <a 
@@ -67,10 +66,10 @@ export default function MenuPage() {
                 </div>
               </div>
             </div>
-          </section>
+          </section>)
         ) : (
           /* Full Menu Page */
-          <section className="py-16 md:py-24 bg-white">
+          (<section className="py-16 md:py-24 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
                 <h1 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-gray-900">
@@ -81,12 +80,11 @@ export default function MenuPage() {
                 </p>
               </div>
             </div>
-          </section>
+          </section>)
         )}
         
         <MenuPreview showAll={!menuItem} />
       </main>
-      
       <Footer />
     </>
   );
