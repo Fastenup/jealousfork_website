@@ -14,11 +14,15 @@ export interface IStorage {
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
+  private orders: Map<string, Order>;
   currentId: number;
+  currentOrderId: number;
 
   constructor() {
     this.users = new Map();
+    this.orders = new Map();
     this.currentId = 1;
+    this.currentOrderId = 1;
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -36,6 +40,37 @@ export class MemStorage implements IStorage {
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
     return user;
+  }
+
+  async createOrder(insertOrder: InsertOrder): Promise<Order> {
+    const id = this.currentOrderId++;
+    const now = new Date();
+    const order: Order = { 
+      ...insertOrder, 
+      id,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.orders.set(order.orderId, order);
+    return order;
+  }
+
+  async getOrder(orderId: string): Promise<Order | undefined> {
+    return this.orders.get(orderId);
+  }
+
+  async updateOrderStatus(orderId: string, status: string): Promise<Order | undefined> {
+    const order = this.orders.get(orderId);
+    if (order) {
+      const updatedOrder: Order = {
+        ...order,
+        status: status as any,
+        updatedAt: new Date()
+      };
+      this.orders.set(orderId, updatedOrder);
+      return updatedOrder;
+    }
+    return undefined;
   }
 }
 
