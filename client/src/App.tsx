@@ -1,0 +1,36 @@
+import { Switch, Route } from "wouter";
+import { queryClient } from "./lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import Home from "@/pages/Home";
+import MenuPage from "@/pages/MenuPage";
+import LocalPage from "@/pages/LocalPage";
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/menu/:slug?" component={MenuPage} />
+      <Route path="/near/:area" component={LocalPage} />
+      <Route path="/gallery" component={Home} />
+      <Route path="/about" component={Home} />
+      <Route path="/privacy" component={Home} />
+      <Route path="/terms" component={Home} />
+      <Route component={Home} />
+    </Switch>
+  );
+}
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Router />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
+
+export default App;
