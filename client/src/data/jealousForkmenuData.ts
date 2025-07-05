@@ -117,7 +117,7 @@ export const jealousForkMenuItems: JealousForkMenuItem[] = [
     description: "\"Everything\", Smoked Salmon, Hollandaise Crèma, Red Onion, Capers, Fresh Dill",
     price: 15,
     category: "pancakes",
-    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=center"
+    image: "/images/food/viking-telle.jpg"
   },
   {
     id: 12,
@@ -144,7 +144,7 @@ export const jealousForkMenuItems: JealousForkMenuItem[] = [
     description: "Banana Custard, Smoked Maple Syrup, Walnut Butter",
     price: 16,
     category: "pancakes",
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=center"
+    image: "/images/food/banana-walnut-smoked-maple.jpg"
   },
   {
     id: 15,
@@ -153,7 +153,7 @@ export const jealousForkMenuItems: JealousForkMenuItem[] = [
     description: "Whipped Ricotta, Coffee Syrup, Crushed Espresso, Crèma Blanca",
     price: 15,
     category: "pancakes",
-    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=center"
+    image: "/images/food/brunch-and-still-hungover.jpg"
   },
   {
     id: 16,

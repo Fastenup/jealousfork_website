@@ -93,7 +93,7 @@ export const jealousBurgerMenuItems: JealousBurgerMenuItem[] = [
     description: "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese",
     price: 16,
     category: "burgers",
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop&crop=center"
+    image: "/images/food/jesse-james-burger.jpg"
   },
   {
     id: 10,
