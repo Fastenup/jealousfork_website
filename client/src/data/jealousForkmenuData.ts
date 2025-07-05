@@ -126,7 +126,7 @@ export const jealousForkMenuItems: JealousForkMenuItem[] = [
     description: "Crushed Oreos, Chocolate Chips, Oreo Whipped Cream, Chocolate Ganache",
     price: 17,
     category: "pancakes",
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=center"
+    image: "/images/food/oreo-chocolate-chip.jpg"
   },
   {
     id: 13,
@@ -135,7 +135,7 @@ export const jealousForkMenuItems: JealousForkMenuItem[] = [
     description: "Reese's Cups, Nutter Butter Whipped Cream, Peanut Butter Maple Syrup",
     price: 17,
     category: "pancakes",
-    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=center"
+    image: "/images/food/peanut-butter-maple.jpg"
   },
   {
     id: 14,
@@ -162,7 +162,7 @@ export const jealousForkMenuItems: JealousForkMenuItem[] = [
     description: "Homemade Lemon Curd, Blueberry Syrup, Ricotta Crèma",
     price: 16,
     category: "pancakes",
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=center"
+    image: "/images/food/lemon-curd-blueberry.jpg"
   },
   {
     id: 17,
