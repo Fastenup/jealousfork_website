@@ -30,7 +30,7 @@ export default function Home() {
       <div className="fixed bottom-4 right-4 z-40 flex flex-col gap-2">
         <button 
           onClick={() => {
-            const element = document.getElementById('contact');
+            const element = document.getElementById('reservations');
             if (element) {
               element.scrollIntoView({ behavior: 'smooth' });
             }

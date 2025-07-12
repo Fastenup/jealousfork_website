@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Contact() {
@@ -10,6 +10,38 @@ export default function Contact() {
     message: ''
   });
   const { toast } = useToast();
+
+  // Initialize Resy widget
+  useEffect(() => {
+    // Load Resy widget script if not already loaded
+    if (!document.querySelector('script[src="https://widgets.resy.com/embed.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://widgets.resy.com/embed.js';
+      script.async = true;
+      document.head.appendChild(script);
+      
+      script.onload = () => {
+        initializeWidget();
+      };
+    } else {
+      // Script already loaded, initialize widget
+      initializeWidget();
+    }
+
+    function initializeWidget() {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        const button = document.getElementById('resyButton-P9CmnE96lqIg1Nk1WphHD');
+        if (button && (window as any).resyWidget) {
+          (window as any).resyWidget.addButton(button, {
+            venueId: 90707,
+            apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+            replace: true
+          });
+        }
+      }, 100);
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,6 +139,20 @@ export default function Contact() {
               </div>
             </div>
             
+            {/* Map */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-[400px]">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.7280444847775!2d-80.43037368508314!3d25.729462283679888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b92e2e4ad5f5%3A0x123456789abcdef!2s14417%20SW%2042nd%20St%2C%20Miami%2C%20FL%2033175!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus" 
+                width="100%" 
+                height="100%" 
+                style={{border:0}} 
+                allowFullScreen={true}
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Jealous Fork Location"
+              ></iframe>
+            </div>
+            
             {/* Contact Form */}
             <div className="bg-white p-8 rounded-2xl shadow-lg">
               <h3 className="font-playfair text-2xl font-semibold mb-6">Send Us a Message</h3>
@@ -191,20 +237,6 @@ export default function Contact() {
               </form>
             </div>
           </div>
-          
-          {/* Map */}
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-full min-h-[500px]">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.7280444847775!2d-80.43037368508314!3d25.729462283679888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b92e2e4ad5f5%3A0x123456789abcdef!2s14417%20SW%2042nd%20St%2C%20Miami%2C%20FL%2033175!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus" 
-              width="100%" 
-              height="100%" 
-              style={{border:0}} 
-              allowFullScreen={true}
-              loading="lazy" 
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Jealous Fork Location"
-            ></iframe>
-          </div>
         </div>
         
         {/* Local Business Information - Enhanced for SEO */}
@@ -267,6 +299,23 @@ export default function Contact() {
                   <div className="text-sm text-gray-500 mt-1">Fresh & hot guaranteed</div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Resy Reservation Widget Section */}
+        <div id="reservations" className="mt-16 bg-white rounded-3xl p-8 md:p-12 shadow-lg">
+          <div className="text-center">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">Make a Reservation</h3>
+            <p className="text-xl text-gray-600 mb-8">Book your table directly through Resy</p>
+            <div className="flex justify-center">
+              <a 
+                href="https://resy.com/cities/miami-fl/venues/jealous-fork" 
+                id="resyButton-P9CmnE96lqIg1Nk1WphHD"
+                className="inline-block bg-gray-900 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors"
+              >
+                Book your Jealous Fork reservation on Resy
+              </a>
             </div>
           </div>
         </div>

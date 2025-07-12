@@ -33,7 +33,7 @@ export default function Hero() {
             View Menu
           </button>
           <button 
-            onClick={() => scrollToSection('contact')}
+            onClick={() => scrollToSection('reservations')}
             className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all"
           >
             Make Reservation
