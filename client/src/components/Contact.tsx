@@ -103,55 +103,58 @@ export default function Contact() {
           <div className="space-y-8">
             <div className="bg-white p-8 rounded-2xl shadow-lg">
               <h3 className="font-playfair text-2xl font-semibold mb-6">Contact Information</h3>
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <svg className="w-6 h-6 text-gray-900 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  </svg>
-                  <div>
-                    <p className="font-semibold">Address</p>
-                    <p className="text-gray-600">14417 SW 42nd Street, Miami, FL 33175</p>
+              <div className="grid lg:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <svg className="w-6 h-6 text-gray-900 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <div>
+                      <p className="font-semibold">Address</p>
+                      <p className="text-gray-600">14417 SW 42nd Street, Miami, FL 33175</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-6 h-6 text-gray-900 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                  </svg>
-                  <div>
-                    <p className="font-semibold">Phone</p>
-                    <p className="text-gray-600">(305) 699-1430</p>
+                  <div className="flex items-center">
+                    <svg className="w-6 h-6 text-gray-900 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                    </svg>
+                    <div>
+                      <p className="font-semibold">Phone</p>
+                      <p className="text-gray-600">(305) 699-1430</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-6 h-6 text-gray-900 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  <div>
-                    <p className="font-semibold">Hours</p>
-                    <div className="text-gray-600">
-                      <p><strong>Jealous Fork:</strong> Tuesday - Sunday: 9:00 AM - 3:00 PM</p>
-                      <p><strong>Jealous Burger:</strong> Friday & Saturday: 5:00 PM - 9:00 PM</p>
-                      <p className="text-sm text-gray-500 mt-1">Closed Mondays</p>
+                  <div className="flex items-center">
+                    <svg className="w-6 h-6 text-gray-900 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                      <p className="font-semibold">Hours</p>
+                      <div className="text-gray-600">
+                        <p><strong>Jealous Fork:</strong> Tuesday - Sunday: 9:00 AM - 3:00 PM</p>
+                        <p><strong>Jealous Burger:</strong> Friday & Saturday: 5:00 PM - 9:00 PM</p>
+                        <p className="text-sm text-gray-500 mt-1">Closed Mondays</p>
+                      </div>
                     </div>
                   </div>
                 </div>
+                
+                {/* Map - Right Side */}
+                <div className="bg-gray-100 rounded-xl overflow-hidden h-[300px]">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.7280444847775!2d-80.43037368508314!3d25.729462283679888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b92e2e4ad5f5%3A0x123456789abcdef!2s14417%20SW%2042nd%20St%2C%20Miami%2C%20FL%2033175!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus" 
+                    width="100%" 
+                    height="100%" 
+                    style={{border:0}} 
+                    allowFullScreen={true}
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Jealous Fork Location"
+                  ></iframe>
+                </div>
               </div>
             </div>
-            
-            {/* Map */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-[400px]">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.7280444847775!2d-80.43037368508314!3d25.729462283679888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b92e2e4ad5f5%3A0x123456789abcdef!2s14417%20SW%2042nd%20St%2C%20Miami%2C%20FL%2033175!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus" 
-                width="100%" 
-                height="100%" 
-                style={{border:0}} 
-                allowFullScreen={true}
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Jealous Fork Location"
-              ></iframe>
-            </div>
+
             
             {/* Contact Form */}
             <div className="bg-white p-8 rounded-2xl shadow-lg">
