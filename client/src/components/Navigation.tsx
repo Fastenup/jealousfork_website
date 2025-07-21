@@ -119,7 +119,6 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-      
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="lg:hidden bg-white/95 backdrop-blur-sm border-t shadow-lg">
@@ -148,9 +147,7 @@ export default function Navigation() {
                 setIsMenuOpen(false);
               }}
               className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left rounded-lg transition-colors"
-            >
-              Menu
-            </button>
+            >Featured Items</button>
             <Link href="/full-menu">
               <span 
                 onClick={() => setIsMenuOpen(false)}
