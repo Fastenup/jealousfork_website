@@ -16,7 +16,7 @@ export default function About() {
             <div className="grid sm:grid-cols-2 gap-6">
               <div className="text-center p-6 bg-gray-50 rounded-xl">
                 <div className="text-3xl font-bold text-gray-900 mb-2">4.7★</div>
-                <div className="text-gray-600">Yelp Rating</div>
+                <div className="text-gray-600">Google Rating</div>
               </div>
               <div className="text-center p-6 bg-gray-50 rounded-xl">
                 <div className="text-3xl font-bold text-gray-900 mb-2">461</div>
