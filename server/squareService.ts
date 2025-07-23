@@ -1,28 +1,4 @@
-// Import Square SDK with fallback for development
-let Square: any;
-try {
-  Square = require('squareup');
-} catch (error) {
-  console.warn('Square SDK not available, using mock implementation');
-  Square = {
-    Client: class MockClient {
-      constructor() {}
-      catalogApi = {
-        listCatalog: () => Promise.resolve({ result: { objects: [] } })
-      };
-      inventoryApi = {
-        batchRetrieveInventoryQuantities: () => Promise.resolve({ result: { quantities: [] } })
-      };
-      paymentsApi = {
-        createPayment: () => Promise.resolve({ result: { payment: { id: 'mock', status: 'COMPLETED' } } })
-      };
-    },
-    Environment: {
-      Sandbox: 'sandbox',
-      Production: 'production'
-    }
-  };
-}
+import { SquareClient } from 'square';
 
 // Create Square service instance using environment variables
 export function createSquareService() {
@@ -51,40 +27,39 @@ interface SquareConfig {
 
 export class SquareService {
   private config: SquareConfig;
-  private client: any;
+  private client: SquareClient;
 
   constructor(config: SquareConfig) {
     this.config = config;
-    // Create Square client with proper environment handling
-    const environment = config.environment === 'sandbox' || config.accessToken.includes('sandbox') 
+    
+    // Determine environment from access token
+    const environment = config.accessToken.startsWith('sandbox') || config.environment === 'sandbox' 
       ? 'sandbox' 
       : 'production';
     
     try {
-      this.client = new Square.Client({
-        accessToken: config.accessToken,
-        environment: environment === 'sandbox' ? Square.Environment.Sandbox : Square.Environment.Production,
+      this.client = new SquareClient({
+        token: config.accessToken,
+        environment: environment,
       });
     } catch (error) {
-      console.warn('Failed to initialize Square client:', error);
-      this.client = new Square.Client(); // Use mock client
+      console.error('Failed to initialize Square client:', error);
+      throw new Error('Square API initialization failed');
     }
   }
 
   // Get all menu items from Square Catalog
   async getCatalogItems() {
     try {
-      if (!this.client) {
-        throw new Error('Square client not initialized');
-      }
+      const response = await this.client.catalog.list({
+        types: 'ITEM'
+      });
       
-      const { result } = await this.client.catalogApi.listCatalog(undefined, 'ITEM');
-      
-      if (!result.objects) {
+      if (!response.result.objects) {
         return [];
       }
 
-      return result.objects.map((item: any) => {
+      return response.result.objects.map((item: any) => {
         const itemData = item.itemData;
         const firstVariation = itemData?.variations?.[0];
         const price = firstVariation?.itemVariationData?.priceMoney?.amount || 0;
@@ -115,19 +90,15 @@ export class SquareService {
   // Get inventory counts for items
   async getInventoryCounts(catalogItemIds: string[]) {
     try {
-      if (!this.client) {
-        throw new Error('Square client not initialized');
-      }
-      
-      const { result } = await this.client.inventoryApi.batchRetrieveInventoryQuantities({
+      const response = await this.client.inventory.batchRetrieveQuantities({
         catalogObjectIds: catalogItemIds,
         locationIds: [this.config.locationId]
       });
 
       const inventoryMap = new Map();
       
-      if (result.quantities) {
-        result.quantities.forEach((quantity: any) => {
+      if (response.result.quantities) {
+        response.result.quantities.forEach((quantity: any) => {
           if (quantity.catalogObjectId) {
             inventoryMap.set(quantity.catalogObjectId, {
               available: parseInt(quantity.quantity || '0'),

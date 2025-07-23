@@ -139,6 +139,15 @@ Changelog:
   * Added FAQ navigation link to main menu and mobile menu
   * Updated all reservation buttons to use real Resy booking system
   * Enhanced user experience with dropdown functionality and comprehensive information
+- July 23, 2025: Complete Square API integration with dynamic menu management:
+  * Implemented modern Square Node.js SDK with proper authentication
+  * Added real-time menu loading from Square Catalog API
+  * Integrated inventory tracking with live stock level updates
+  * Created featured items system with exactly 6 items (including out-of-stock as requested)
+  * Enabled automatic price synchronization from Square dashboard
+  * Built fallback system using static menu when Square API unavailable
+  * Added visual indicators showing live vs static menu status
+  * Ensures seamless integration across homepage, menu pages, and checkout
 ```
 
 ## User Preferences

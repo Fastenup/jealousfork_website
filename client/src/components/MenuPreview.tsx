@@ -8,11 +8,26 @@ interface MenuPreviewProps {
 }
 
 export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
-  const displayItems = showAll ? menuItems : menuItems.slice(0, 6);
+  // Always show exactly 6 featured items on homepage (including out-of-stock)
+  const featuredItems = menuItems.filter(item => item.featured).slice(0, 6);
+  const displayItems = showAll ? menuItems : featuredItems;
   const { addItem } = useCart();
   const [, setLocation] = useLocation();
 
   const handleOrderNow = (item: typeof menuItems[0]) => {
+    if (!item.inStock) {
+      // Still allow adding out-of-stock items to cart with notification
+      addItem({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        category: item.category,
+        description: item.description
+      });
+      setLocation('/full-menu');
+      return;
+    }
+    
     addItem({
       id: item.id,
       name: item.name,
@@ -37,6 +52,7 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
         
         <DynamicMenuDisplay 
           onAddToCart={handleOrderNow}
+          maxItems={6}
         />
         
         {!showAll && (

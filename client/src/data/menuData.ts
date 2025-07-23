@@ -6,9 +6,12 @@ export interface MenuItem {
   price: number;
   image: string;
   category: 'pancakes' | 'burgers' | 'breakfast';
+  featured: boolean;
+  inStock: boolean;
+  squareId?: string;
 }
 
-// Featured items from our different menus for the preview section
+// Featured items for homepage preview (exactly 6 items, includes some out-of-stock)
 export const menuItems: MenuItem[] = [
   {
     id: 1,
@@ -16,52 +19,64 @@ export const menuItems: MenuItem[] = [
     slug: "chocolate-oreo-chip-pancakes",
     description: "Crushed Oreos, Chocolate Chips, Oreo Whipped Cream, Chocolate Ganache",
     price: 17,
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=center",
-    category: "pancakes"
+    image: "/Jesse James Burger web_1751726904658.jpg",
+    category: "pancakes",
+    featured: true,
+    inStock: true
   },
   {
     id: 2,
-    name: "The Devil's Advocate",
-    slug: "devils-advocate-burger",
-    description: "Smokehouse Chili, Cheddar Cheese, Hot Hot Shake First, Fried Egg",
-    price: 17,
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop&crop=center",
-    category: "burgers"
+    name: "Jesse James Burger",
+    slug: "jesse-james-burger",
+    description: "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese",
+    price: 16,
+    image: "/Jesse James Burger web_1751726904658.jpg",
+    category: "burgers",
+    featured: true,
+    inStock: false // Out of stock but still featured
   },
   {
     id: 3,
-    name: "Lobster Roll",
-    slug: "lobster-roll-featured",
-    description: "Brioche, Smoked Paprika Remoulade, Fresh Dill, Old Bay-Truffle Chips",
-    price: 34,
-    image: "https://images.unsplash.com/photo-1559847844-5315695dadae?w=400&h=300&fit=crop&crop=center",
-    category: "breakfast"
+    name: "Peanut Butter Maple Pancakes",
+    slug: "peanut-butter-maple-pancakes",
+    description: "Reese's Cups, Nutter Butter Whipped Cream, Peanut Butter Maple Syrup",
+    price: 17,
+    image: "/Peanut Butter Maple Web_1751734772054.jpg",
+    category: "pancakes",
+    featured: true,
+    inStock: true
   },
   {
     id: 4,
-    name: "Peanut Butter Cup Pancakes",
-    slug: "peanut-butter-cup-pancakes-featured",
-    description: "Reese's Cups, Nutter Butter Whipped Cream, Peanut Butter Maple Syrup",
-    price: 17,
-    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=center",
-    category: "pancakes"
+    name: "Brunch And Still Hungover",
+    slug: "brunch-still-hungover",
+    description: "Smoked Salmon, Avocado, Capers, Everything Bagel Seasoning",
+    price: 19,
+    image: "/Brunch And Still Hungover web_1751726904716.jpg",
+    category: "breakfast",
+    featured: true,
+    inStock: false // Out of stock but still featured
   },
   {
     id: 5,
-    name: "Jesse James Burger",
-    slug: "jesse-james-burger-featured",
-    description: "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese",
+    name: "Banana Walnut Smoked Maple",
+    slug: "banana-walnut-smoked-maple",
+    description: "Candied Walnuts, Banana Foster, Smoked Maple Syrup, Cinnamon Butter",
     price: 16,
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop&crop=center",
-    category: "burgers"
+    image: "/Banana Walnut Smoked Maple Web_1751726904724.jpg",
+    category: "pancakes",
+    featured: true,
+    inStock: true
   },
   {
     id: 6,
-    name: "Billionaire Brunch Bites",
-    slug: "billionaire-brunch-bites-featured",
-    description: "Filet Mignon Tips, \"Donuts\", Cornichon, White Truffle",
-    price: 17,
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop&crop=center",
-    category: "breakfast"
+    name: "Viking Telle",
+    slug: "viking-telle",
+    description: "Crispy Pancetta, Poached Eggs, Hollandaise, Truffle Oil",
+    price: 22,
+    image: "/Viking Telle Web_1751726904731.jpg",
+    category: "breakfast",
+    featured: true,
+    inStock: true
   }
 ];

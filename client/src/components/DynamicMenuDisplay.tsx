@@ -36,14 +36,13 @@ function MenuItemCard({ item, onAddToCart }: MenuItemProps) {
         
         <button 
           onClick={() => onAddToCart(item)}
-          disabled={!item.inStock}
           className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
             item.inStock 
               ? 'bg-gray-900 text-white hover:bg-gray-800' 
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-yellow-600 text-white hover:bg-yellow-700'
           }`}
         >
-          {item.inStock ? 'Add to Cart' : 'Out of Stock'}
+          {item.inStock ? 'Add to Cart' : 'Order (Out of Stock)'}
         </button>
       </div>
     </div>
@@ -53,9 +52,10 @@ function MenuItemCard({ item, onAddToCart }: MenuItemProps) {
 interface DynamicMenuDisplayProps {
   category?: string;
   onAddToCart: (item: any) => void;
+  maxItems?: number;
 }
 
-export default function DynamicMenuDisplay({ category, onAddToCart }: DynamicMenuDisplayProps) {
+export default function DynamicMenuDisplay({ category, onAddToCart, maxItems }: DynamicMenuDisplayProps) {
   const { data: squareItems, isLoading, error } = useSquareMenu();
   const [menuItems, setMenuItems] = useState(jealousForkMenuItems);
   const [isUsingSquareAPI, setIsUsingSquareAPI] = useState(false);
@@ -66,17 +66,21 @@ export default function DynamicMenuDisplay({ category, onAddToCart }: DynamicMen
       const convertedItems = squareItems.map(convertSquareItemToLegacy);
       setMenuItems(convertedItems);
       setIsUsingSquareAPI(true);
-    } else if (!isLoading && error) {
-      // Fallback to static menu data
+    } else if (!isLoading) {
+      // Fallback to static menu data (always available)
       setMenuItems(jealousForkMenuItems);
       setIsUsingSquareAPI(false);
     }
   }, [squareItems, isLoading, error]);
 
-  // Filter by category if specified
-  const filteredItems = category 
+  // Filter by category if specified, then limit items if maxItems is set
+  let filteredItems = category 
     ? menuItems.filter(item => item.category === category)
     : menuItems;
+    
+  if (maxItems) {
+    filteredItems = filteredItems.slice(0, maxItems);
+  }
 
   if (isLoading) {
     return (
