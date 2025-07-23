@@ -52,7 +52,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.json({ 
           success: false, 
           error: 'Square service not available',
-          details: 'Service not initialized'
+          details: 'Service not initialized - check credentials'
         });
       }
 
@@ -60,14 +60,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         success: true,
         message: 'Square API connection successful',
-        locations: locations?.slice(0, 2) // Limit response size
+        locations: locations?.slice(0, 2),
+        lastSync: new Date().toISOString(),
+        environment: process.env.SQUARE_ACCESS_TOKEN?.startsWith('sandbox') ? 'sandbox' : 'production'
       });
     } catch (error: any) {
       console.error('Square test error:', error);
       res.json({
         success: false,
         error: error.message,
-        details: error.toString()
+        details: error.toString(),
+        lastAttempt: new Date().toISOString()
+      });
+    }
+  });
+
+  // Get Square API sync status
+  app.get('/api/square-status', async (req, res) => {
+    try {
+      const status = {
+        serviceAvailable: !!squareService,
+        environment: process.env.SQUARE_ACCESS_TOKEN?.startsWith('sandbox') ? 'sandbox' : 'production',
+        lastCheck: new Date().toISOString(),
+        syncFrequency: 'Real-time API calls (no caching)',
+        credentialsConfigured: !!(process.env.SQUARE_ACCESS_TOKEN && process.env.SQUARE_APPLICATION_ID && process.env.SQUARE_LOCATION_ID)
+      };
+
+      if (squareService) {
+        try {
+          const testResult = await squareService.testConnection();
+          status.apiWorking = true;
+          status.locationCount = testResult?.length || 0;
+        } catch (error) {
+          status.apiWorking = false;
+          status.lastError = error.message;
+        }
+      }
+
+      res.json(status);
+    } catch (error: any) {
+      res.status(500).json({
+        error: 'Failed to check Square status',
+        message: error.message
       });
     }
   });

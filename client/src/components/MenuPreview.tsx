@@ -1,7 +1,9 @@
 import { Link, useLocation } from "wouter";
-import { menuItems } from "@/data/menuData";
+import { featuredItemsConfig, getFeaturedItems } from "@/data/featuredItems";
 import { useCart } from "@/contexts/CartContext";
-import DynamicMenuDisplay from "@/components/DynamicMenuDisplay";
+import SquareStatusIndicator from "@/components/SquareStatusIndicator";
+import FeaturedItemsAdmin from "@/components/FeaturedItemsAdmin";
+import { useState } from "react";
 
 interface MenuPreviewProps {
   showAll?: boolean;
@@ -9,12 +11,13 @@ interface MenuPreviewProps {
 
 export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
   // Always show exactly 6 featured items on homepage (including out-of-stock)
-  const featuredItems = menuItems.filter(item => item.featured).slice(0, 6);
-  const displayItems = showAll ? menuItems : featuredItems;
+  const featuredItems = getFeaturedItems();
+  const displayItems = showAll ? featuredItemsConfig : featuredItems;
   const { addItem } = useCart();
   const [, setLocation] = useLocation();
+  const [showAdmin, setShowAdmin] = useState(false);
 
-  const handleOrderNow = (item: typeof menuItems[0]) => {
+  const handleOrderNow = (item: typeof featuredItemsConfig[0]) => {
     if (!item.inStock) {
       // Still allow adding out-of-stock items to cart with notification
       addItem({
@@ -45,9 +48,18 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-gray-900">
             Our Signature <span className="text-gray-600">Creations</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
             From Instagram-worthy pancakes to gourmet burgers, every dish is crafted with passion and artisan attention to detail.
           </p>
+          <div className="flex flex-col items-center gap-4">
+            <SquareStatusIndicator />
+            <button
+              onClick={() => setShowAdmin(true)}
+              className="text-sm text-gray-500 hover:text-gray-700 transition-colors underline"
+            >
+              Manage Featured Items
+            </button>
+          </div>
         </div>
         
         {/* Show exactly 6 featured items with static fallback */}
@@ -100,6 +112,10 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
               </a>
             </Link>
           </div>
+        )}
+        
+        {showAdmin && (
+          <FeaturedItemsAdmin onClose={() => setShowAdmin(false)} />
         )}
       </div>
     </section>
