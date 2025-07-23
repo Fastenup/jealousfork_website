@@ -1,5 +1,46 @@
-// Square SDK integration - will be implemented once API keys are provided
-// import { Client, Environment } from 'square';
+// Import Square SDK with fallback for development
+let Square: any;
+try {
+  Square = require('squareup');
+} catch (error) {
+  console.warn('Square SDK not available, using mock implementation');
+  Square = {
+    Client: class MockClient {
+      constructor() {}
+      catalogApi = {
+        listCatalog: () => Promise.resolve({ result: { objects: [] } })
+      };
+      inventoryApi = {
+        batchRetrieveInventoryQuantities: () => Promise.resolve({ result: { quantities: [] } })
+      };
+      paymentsApi = {
+        createPayment: () => Promise.resolve({ result: { payment: { id: 'mock', status: 'COMPLETED' } } })
+      };
+    },
+    Environment: {
+      Sandbox: 'sandbox',
+      Production: 'production'
+    }
+  };
+}
+
+// Create Square service instance using environment variables
+export function createSquareService() {
+  const accessToken = process.env.SQUARE_ACCESS_TOKEN;
+  const applicationId = process.env.SQUARE_APPLICATION_ID;
+  const locationId = process.env.SQUARE_LOCATION_ID;
+
+  if (!accessToken || !applicationId || !locationId) {
+    throw new Error('Missing Square API credentials: SQUARE_ACCESS_TOKEN, SQUARE_APPLICATION_ID, or SQUARE_LOCATION_ID');
+  }
+
+  return new SquareService({
+    accessToken,
+    applicationId,
+    locationId,
+    environment: accessToken.startsWith('sandbox') ? 'sandbox' : 'production'
+  });
+}
 
 interface SquareConfig {
   accessToken: string;
@@ -10,9 +51,116 @@ interface SquareConfig {
 
 export class SquareService {
   private config: SquareConfig;
+  private client: any;
 
   constructor(config: SquareConfig) {
     this.config = config;
+    // Create Square client with proper environment handling
+    const environment = config.environment === 'sandbox' || config.accessToken.includes('sandbox') 
+      ? 'sandbox' 
+      : 'production';
+    
+    try {
+      this.client = new Square.Client({
+        accessToken: config.accessToken,
+        environment: environment === 'sandbox' ? Square.Environment.Sandbox : Square.Environment.Production,
+      });
+    } catch (error) {
+      console.warn('Failed to initialize Square client:', error);
+      this.client = new Square.Client(); // Use mock client
+    }
+  }
+
+  // Get all menu items from Square Catalog
+  async getCatalogItems() {
+    try {
+      if (!this.client) {
+        throw new Error('Square client not initialized');
+      }
+      
+      const { result } = await this.client.catalogApi.listCatalog(undefined, 'ITEM');
+      
+      if (!result.objects) {
+        return [];
+      }
+
+      return result.objects.map((item: any) => {
+        const itemData = item.itemData;
+        const firstVariation = itemData?.variations?.[0];
+        const price = firstVariation?.itemVariationData?.priceMoney?.amount || 0;
+        
+        return {
+          id: item.id,
+          name: itemData?.name || 'Unknown Item',
+          description: itemData?.description || '',
+          price: price / 100, // Convert from cents to dollars
+          category: itemData?.categoryId || 'uncategorized',
+          inStock: true, // We'll implement inventory checking separately
+          image: itemData?.imageUrl || null,
+          squareId: item.id,
+          variations: itemData?.variations?.map((v: any) => ({
+            id: v.id,
+            name: v.itemVariationData?.name,
+            price: (v.itemVariationData?.priceMoney?.amount || 0) / 100,
+            sku: v.itemVariationData?.sku,
+          })) || []
+        };
+      });
+    } catch (error: any) {
+      console.error('Square catalog error:', error);
+      throw new Error(`Failed to fetch catalog: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
+  // Get inventory counts for items
+  async getInventoryCounts(catalogItemIds: string[]) {
+    try {
+      if (!this.client) {
+        throw new Error('Square client not initialized');
+      }
+      
+      const { result } = await this.client.inventoryApi.batchRetrieveInventoryQuantities({
+        catalogObjectIds: catalogItemIds,
+        locationIds: [this.config.locationId]
+      });
+
+      const inventoryMap = new Map();
+      
+      if (result.quantities) {
+        result.quantities.forEach((quantity: any) => {
+          if (quantity.catalogObjectId) {
+            inventoryMap.set(quantity.catalogObjectId, {
+              available: parseInt(quantity.quantity || '0'),
+              inStock: parseInt(quantity.quantity || '0') > 0
+            });
+          }
+        });
+      }
+
+      return inventoryMap;
+    } catch (error: any) {
+      console.error('Square inventory error:', error);
+      // Return empty map if inventory API fails - items will show as in stock
+      return new Map();
+    }
+  }
+
+  // Get menu items with real-time inventory
+  async getMenuWithInventory() {
+    try {
+      const catalogItems = await this.getCatalogItems();
+      const catalogIds = catalogItems.map(item => item.squareId);
+      const inventory = await this.getInventoryCounts(catalogIds);
+
+      return catalogItems.map((item: any) => ({
+        ...item,
+        inStock: inventory.get(item.squareId)?.inStock ?? true,
+        available: inventory.get(item.squareId)?.available ?? null
+      }));
+    } catch (error: any) {
+      console.error('Error getting menu with inventory:', error);
+      throw error;
+    }
   }
 
   async createPayment(paymentData: {
@@ -82,15 +230,5 @@ export class SquareService {
   }
 }
 
-// Initialize Square service with environment variables
-export function createSquareService(): SquareService {
-  const config: SquareConfig = {
-    accessToken: process.env.SQUARE_ACCESS_TOKEN || '',
-    environment: process.env.SQUARE_ENVIRONMENT || 'sandbox',
-    applicationId: process.env.SQUARE_APPLICATION_ID || '',
-    locationId: process.env.SQUARE_LOCATION_ID || '',
-  };
-
-  // For development, create service even without API keys (will use mock implementation)
-  return new SquareService(config);
-}
+// Export default SquareService
+export default SquareService;

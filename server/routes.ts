@@ -45,6 +45,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.warn('Square service not configured:', error?.message || 'Unknown error');
   }
 
+  // Get dynamic menu from Square Catalog API
+  app.get('/api/menu', async (req, res) => {
+    try {
+      if (!squareService) {
+        return res.status(503).json({ 
+          error: 'Square API not configured. Using static menu data.' 
+        });
+      }
+
+      const menuItems = await squareService.getMenuWithInventory();
+      res.json({ success: true, items: menuItems });
+    } catch (error: any) {
+      console.error('Menu API error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch menu',
+        message: error?.message || 'Unknown error'
+      });
+    }
+  });
+
+  // Get specific menu category
+  app.get('/api/menu/:category', async (req, res) => {
+    try {
+      if (!squareService) {
+        return res.status(503).json({ 
+          error: 'Square API not configured.' 
+        });
+      }
+
+      const { category } = req.params;
+      const allItems = await squareService.getMenuWithInventory();
+      const categoryItems = allItems.filter((item: any) => 
+        item.category.toLowerCase() === category.toLowerCase()
+      );
+      
+      res.json({ success: true, items: categoryItems, category });
+    } catch (error: any) {
+      console.error('Category menu API error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch category menu',
+        message: error?.message || 'Unknown error'
+      });
+    }
+  });
+
+  // Get inventory status for specific items
+  app.post('/api/inventory/check', async (req, res) => {
+    try {
+      if (!squareService) {
+        return res.status(503).json({ 
+          error: 'Square API not configured.' 
+        });
+      }
+
+      const { itemIds } = req.body;
+      if (!itemIds || !Array.isArray(itemIds)) {
+        return res.status(400).json({ error: 'itemIds array required' });
+      }
+
+      const inventory = await squareService.getInventoryCounts(itemIds);
+      const inventoryStatus = Object.fromEntries(inventory);
+      
+      res.json({ success: true, inventory: inventoryStatus });
+    } catch (error: any) {
+      console.error('Inventory check API error:', error);
+      res.status(500).json({ 
+        error: 'Failed to check inventory',
+        message: error?.message || 'Unknown error'
+      });
+    }
+  });
+
   // Create order endpoint
   app.post('/api/orders', async (req, res) => {
     try {
