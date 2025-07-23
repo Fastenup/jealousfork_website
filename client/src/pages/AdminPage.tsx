@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import AdminLogin from '@/components/AdminLogin';
 import FeaturedItemsAdmin from '@/components/FeaturedItemsAdmin';
 import SquareStatusIndicator from '@/components/SquareStatusIndicator';
+import SquareMenuManager from '@/components/SquareMenuManager';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -183,15 +184,15 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Featured Items Management */}
+        {/* Square Menu Synchronization */}
         <div className="mt-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Featured Items Management</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Menu Synchronization</h2>
             <p className="text-gray-600 text-sm mb-6">
-              Control which items appear as featured on the homepage. Changes apply immediately.
+              Sync featured items with Square catalog for real-time pricing, stock status, and ordering.
             </p>
             
-            <FeaturedItemsAdmin onClose={() => {}} embedded={true} />
+            <SquareMenuManager />
           </div>
         </div>
       </div>

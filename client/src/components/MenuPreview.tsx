@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { featuredItemsConfig, getFeaturedItems } from "@/data/featuredItems";
+import { featuredItemsConfig, getFeaturedItemsSync } from "@/data/featuredItems";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
 
@@ -9,7 +9,7 @@ interface MenuPreviewProps {
 
 export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
   // Always show exactly 6 featured items on homepage (including out-of-stock)
-  const featuredItems = getFeaturedItems();
+  const featuredItems = getFeaturedItemsSync();
   const displayItems = showAll ? featuredItemsConfig : featuredItems;
   const { addItem } = useCart();
   const [, setLocation] = useLocation();

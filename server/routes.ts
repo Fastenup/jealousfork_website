@@ -418,6 +418,147 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.join(process.cwd(), 'public', 'robots.txt'));
   });
 
+  // Featured items management endpoints
+  app.get('/api/featured-items', async (req, res) => {
+    try {
+      const { storage } = await import('./storage');
+      const items = await storage.getFeaturedItems();
+      res.json({ items });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to fetch featured items', message: error.message });
+    }
+  });
+
+  app.post('/api/featured-items/sync', async (req, res) => {
+    try {
+      const { SquareMenuSyncService } = await import('./squareMenuSync');
+      const { storage } = await import('./storage');
+      
+      const syncService = new SquareMenuSyncService();
+      const featuredItems = await storage.getFeaturedItems();
+      
+      // Convert featured items to LocalMenuItem format for sync
+      const localItems = featuredItems.map(item => ({
+        localId: item.localId,
+        squareId: item.squareId,
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        category: item.category,
+        image: item.image,
+        featured: item.featured,
+        inStock: item.inStock,
+        lastSync: item.lastSync
+      }));
+
+      const syncResult = await syncService.syncMenuItems(localItems);
+      
+      // Update featured items with sync results
+      const updatedFeatured = syncResult.syncedItems.map(item => ({
+        localId: item.localId,
+        squareId: item.squareId,
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        category: item.category,
+        image: item.image,
+        featured: item.featured,
+        inStock: item.inStock,
+        lastSync: item.lastSync,
+        displayOrder: featuredItems.find(f => f.localId === item.localId)?.displayOrder || 0
+      }));
+
+      await storage.setFeaturedItems(updatedFeatured);
+
+      res.json({
+        success: true,
+        syncedItems: syncResult.syncedItems,
+        availableItems: syncResult.availableSquareItems,
+        errors: syncResult.errors
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to sync featured items', message: error.message });
+    }
+  });
+
+  app.post('/api/featured-items/add-square-item', async (req, res) => {
+    try {
+      const { squareId, localId } = req.body;
+      const { SquareMenuSyncService } = await import('./squareMenuSync');
+      const { storage } = await import('./storage');
+      
+      if (!squareId || !localId) {
+        return res.status(400).json({ error: 'squareId and localId are required' });
+      }
+
+      const syncService = new SquareMenuSyncService();
+      const allSquareItems = await syncService.fetchSquareMenuItems();
+      const squareItem = allSquareItems.find(item => item.id === squareId);
+      
+      if (!squareItem) {
+        return res.status(404).json({ error: 'Square item not found' });
+      }
+
+      const featuredItems = await storage.getFeaturedItems();
+      
+      // Check if we already have 6 featured items
+      const currentFeatured = featuredItems.filter(item => item.featured);
+      if (currentFeatured.length >= 6) {
+        return res.status(400).json({ error: 'Maximum 6 featured items allowed' });
+      }
+
+      // Create new featured item from Square item
+      const newFeaturedItem = {
+        localId,
+        squareId: squareItem.id,
+        name: squareItem.name,
+        description: squareItem.description,
+        price: squareItem.price,
+        category: squareItem.category,
+        image: squareItem.imageUrl || `https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=800&q=80`,
+        featured: true,
+        inStock: squareItem.inStock,
+        displayOrder: currentFeatured.length + 1
+      };
+
+      await storage.addFeaturedItem(newFeaturedItem);
+      
+      res.json({
+        success: true,
+        item: newFeaturedItem
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to add Square item as featured', message: error.message });
+    }
+  });
+
+  app.delete('/api/featured-items/:localId', async (req, res) => {
+    try {
+      const { localId } = req.params;
+      const { storage } = await import('./storage');
+      
+      await storage.removeFeaturedItem(parseInt(localId));
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to remove featured item', message: error.message });
+    }
+  });
+
+  app.patch('/api/featured-items/:localId/stock', async (req, res) => {
+    try {
+      const { localId } = req.params;
+      const { inStock } = req.body;
+      const { storage } = await import('./storage');
+      
+      await storage.updateItemStock(parseInt(localId), inStock);
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to update item stock', message: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

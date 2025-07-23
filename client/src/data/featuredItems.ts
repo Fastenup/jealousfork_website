@@ -92,7 +92,21 @@ export const featuredItemsConfig: FeaturedItemConfig[] = [
 ];
 
 // Helper functions for featured item management
-export function getFeaturedItems(): FeaturedItemConfig[] {
+// Updated to work with Square API synchronization
+export async function getFeaturedItems() {
+  try {
+    const response = await fetch('/api/featured-items');
+    const data = await response.json();
+    return data.items?.filter((item: any) => item.featured) || [];
+  } catch (error) {
+    console.error('Failed to fetch featured items:', error);
+    // Fallback to static config
+    return featuredItemsConfig.filter(item => item.featured);
+  }
+}
+
+// Synchronous version for components that need immediate data
+export function getFeaturedItemsSync(): FeaturedItemConfig[] {
   return featuredItemsConfig.filter(item => item.featured).slice(0, 6);
 }
 
