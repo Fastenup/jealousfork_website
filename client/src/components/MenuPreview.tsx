@@ -50,10 +50,44 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
           </p>
         </div>
         
-        <DynamicMenuDisplay 
-          onAddToCart={handleOrderNow}
-          maxItems={6}
-        />
+        {/* Show exactly 6 featured items with static fallback */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {displayItems.map((item, index) => (
+            <div key={index} className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ${!item.inStock ? 'opacity-75' : ''}`}>
+              <img 
+                src={item.image} 
+                alt={item.name} 
+                className="w-full h-48 object-cover"
+                loading="lazy"
+              />
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-3">
+                  <h3 className="font-playfair text-xl font-semibold text-gray-900">{item.name}</h3>
+                  <span className="text-2xl font-bold text-gray-900">${item.price}</span>
+                </div>
+                <p className="text-gray-600 mb-4 leading-relaxed">{item.description}</p>
+                
+                {/* Stock Status */}
+                {!item.inStock && (
+                  <div className="mb-4 px-3 py-2 bg-red-100 text-red-800 rounded-lg text-sm font-medium">
+                    Out of Stock - Still Available to Order
+                  </div>
+                )}
+                
+                <button 
+                  onClick={() => handleOrderNow(item)}
+                  className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
+                    item.inStock 
+                      ? 'bg-gray-900 text-white hover:bg-gray-800' 
+                      : 'bg-yellow-600 text-white hover:bg-yellow-700'
+                  }`}
+                >
+                  {item.inStock ? 'Add to Cart' : 'Order (Out of Stock)'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
         
         {!showAll && (
           <div className="text-center">

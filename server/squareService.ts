@@ -7,15 +7,21 @@ export function createSquareService() {
   const locationId = process.env.SQUARE_LOCATION_ID;
 
   if (!accessToken || !applicationId || !locationId) {
-    throw new Error('Missing Square API credentials: SQUARE_ACCESS_TOKEN, SQUARE_APPLICATION_ID, or SQUARE_LOCATION_ID');
+    console.warn('Square API credentials missing. Required: SQUARE_ACCESS_TOKEN, SQUARE_APPLICATION_ID, SQUARE_LOCATION_ID');
+    return null;
   }
 
-  return new SquareService({
-    accessToken,
-    applicationId,
-    locationId,
-    environment: accessToken.startsWith('sandbox') ? 'sandbox' : 'production'
-  });
+  try {
+    return new SquareService({
+      accessToken,
+      applicationId,
+      locationId,
+      environment: accessToken.startsWith('sandbox') ? 'sandbox' : 'production'
+    });
+  } catch (error) {
+    console.error('Failed to create Square service:', error);
+    return null;
+  }
 }
 
 interface SquareConfig {
@@ -39,27 +45,43 @@ export class SquareService {
     
     try {
       this.client = new SquareClient({
-        token: config.accessToken,
-        environment: environment,
+        accessToken: config.accessToken,
+        environment: environment
       });
+      console.log('Square client initialized successfully for environment:', environment);
     } catch (error) {
       console.error('Failed to initialize Square client:', error);
       throw new Error('Square API initialization failed');
     }
   }
 
+  // Test Square API connection
+  async testConnection() {
+    try {
+      console.log('Testing Square API connection...');
+      const { result } = await this.client.locationsApi.listLocations();
+      console.log('Square locations response:', result);
+      return result.locations || [];
+    } catch (error: any) {
+      console.error('Square connection test failed:', error);
+      throw new Error(`Square API connection failed: ${error.message}`);
+    }
+  }
+
   // Get all menu items from Square Catalog
   async getCatalogItems() {
     try {
-      const response = await this.client.catalog.list({
-        types: 'ITEM'
-      });
+      console.log('Attempting to fetch catalog items...');
+      const { result } = await this.client.catalogApi.listCatalog(
+        undefined, // cursor for pagination
+        "ITEM"     // types filter
+      );
       
-      if (!response.result.objects) {
+      if (!result.objects) {
         return [];
       }
 
-      return response.result.objects.map((item: any) => {
+      return result.objects.map((item: any) => {
         const itemData = item.itemData;
         const firstVariation = itemData?.variations?.[0];
         const price = firstVariation?.itemVariationData?.priceMoney?.amount || 0;
@@ -90,15 +112,19 @@ export class SquareService {
   // Get inventory counts for items
   async getInventoryCounts(catalogItemIds: string[]) {
     try {
-      const response = await this.client.inventory.batchRetrieveQuantities({
+      if (catalogItemIds.length === 0) {
+        return new Map();
+      }
+      
+      const { result } = await this.client.inventoryApi.batchRetrieveInventoryQuantities({
         catalogObjectIds: catalogItemIds,
         locationIds: [this.config.locationId]
       });
 
       const inventoryMap = new Map();
       
-      if (response.result.quantities) {
-        response.result.quantities.forEach((quantity: any) => {
+      if (result.quantities) {
+        result.quantities.forEach((quantity: any) => {
           if (quantity.catalogObjectId) {
             inventoryMap.set(quantity.catalogObjectId, {
               available: parseInt(quantity.quantity || '0'),

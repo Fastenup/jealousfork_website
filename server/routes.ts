@@ -45,6 +45,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.warn('Square service not configured:', error?.message || 'Unknown error');
   }
 
+  // Test Square API connection
+  app.post('/api/test-square', async (req, res) => {
+    try {
+      if (!squareService) {
+        return res.json({ 
+          success: false, 
+          error: 'Square service not available',
+          details: 'Service not initialized'
+        });
+      }
+
+      const locations = await squareService.testConnection();
+      res.json({
+        success: true,
+        message: 'Square API connection successful',
+        locations: locations?.slice(0, 2) // Limit response size
+      });
+    } catch (error: any) {
+      console.error('Square test error:', error);
+      res.json({
+        success: false,
+        error: error.message,
+        details: error.toString()
+      });
+    }
+  });
+
   // Get dynamic menu from Square Catalog API
   app.get('/api/menu', async (req, res) => {
     try {
