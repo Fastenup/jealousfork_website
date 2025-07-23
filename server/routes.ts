@@ -141,10 +141,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get menu items with working Square API integration
+  // Get all menu items with Square API integration and sync
   app.get('/api/menu', async (req, res) => {
     try {
-      // Try direct Square API call for catalog
+      const { SquareMenuSyncService } = await import('./squareMenuSync');
+      const { storage } = await import('./storage');
+      
+      // Get current featured items for reference
+      const featuredItems = await storage.getFeaturedItems();
+      
+      // Try Square sync service
+      try {
+        const syncService = new SquareMenuSyncService();
+        const allSquareItems = await syncService.fetchSquareMenuItems();
+        
+        // Sync featured items with latest Square data
+        const localItems = featuredItems.map(item => ({
+          localId: item.localId,
+          squareId: item.squareId,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          category: item.category,
+          image: item.image,
+          featured: item.featured,
+          inStock: item.inStock,
+          lastSync: item.lastSync
+        }));
+
+        const syncResult = await syncService.syncMenuItems(localItems);
+        
+        // Update storage with synced data
+        const updatedFeatured = syncResult.syncedItems.map(item => ({
+          localId: item.localId,
+          squareId: item.squareId,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          category: item.category,
+          image: item.image,
+          featured: item.featured,
+          inStock: item.inStock,
+          lastSync: item.lastSync,
+          displayOrder: featuredItems.find(f => f.localId === item.localId)?.displayOrder || 0
+        }));
+
+        await storage.setFeaturedItems(updatedFeatured);
+        
+        return res.json({
+          items: allSquareItems,
+          source: 'square-sync',
+          count: allSquareItems.length,
+          featuredSynced: syncResult.syncedItems.length
+        });
+      } catch (syncError) {
+        console.log('Square sync failed, trying direct API:', syncError);
+      }
+      
+      // Fallback to direct Square API call
       try {
         const accessToken = process.env.SQUARE_ACCESS_TOKEN;
         const environment = accessToken?.startsWith('sandbox') ? 'sandbox' : 'production';
@@ -179,31 +233,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }) || [];
           
           return res.json({ items, source: 'square-direct', count: items.length });
-        } else {
-          console.log('Square direct API failed, status:', response.status);
         }
       } catch (directError) {
-        console.log('Direct Square API failed, trying SDK...');
+        console.log('Direct Square API also failed');
       }
       
-      // Fallback to SDK
-      if (squareService) {
-        const menuItems = await squareService.getCatalogItems();
-        res.json({ items: menuItems, source: 'square-sdk' });
-      } else {
-        // Return static menu as fallback
-        const staticMenu = [
-          {
-            id: 'static-1',
-            name: 'Chocolate Oreo Chip Pancakes',
-            description: 'Crushed Oreos, Chocolate Chips, Oreo Whipped Cream, Chocolate Ganache',
-            price: 17,
-            category: 'pancakes',
-            inStock: true
-          }
-        ];
-        res.json({ items: staticMenu, source: 'static' });
-      }
+      // Final fallback to static menu
+      const staticMenu = [
+        {
+          id: 'static-1',
+          name: 'Chocolate Oreo Chip Pancakes',
+          description: 'Crushed Oreos, Chocolate Chips, Oreo Whipped Cream, Chocolate Ganache',
+          price: 17,
+          category: 'pancakes',
+          inStock: true
+        }
+      ];
+      res.json({ items: staticMenu, source: 'static' });
     } catch (error: any) {
       console.error('Menu fetch error:', error);
       res.status(500).json({

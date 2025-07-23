@@ -1,19 +1,36 @@
 import { Link, useLocation } from "wouter";
-import { featuredItemsConfig, getFeaturedItemsSync } from "@/data/featuredItems";
+import { featuredItemsConfig } from "@/data/featuredItems";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface MenuPreviewProps {
   showAll?: boolean;
 }
 
 export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
-  // Always show exactly 6 featured items on homepage (including out-of-stock)
-  const featuredItems = getFeaturedItemsSync();
-  const displayItems = showAll ? featuredItemsConfig : featuredItems;
   const { addItem } = useCart();
   const [, setLocation] = useLocation();
-  // Admin features moved to /admin route
+
+  // Fetch real-time featured items from API
+  const { data: featuredData, isLoading } = useQuery({
+    queryKey: ['/api/featured-items'],
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
+
+  // Use real-time data when available, fallback to static config
+  const featuredItems = featuredData?.items || featuredItemsConfig.filter(item => item.featured);
+  const displayItems = showAll ? featuredItemsConfig : featuredItems;
+
+  // Show loading state when fetching real-time data
+  if (isLoading && !featuredData) {
+    return (
+      <div className="text-center py-12">
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+        <p className="mt-4 text-gray-600">Loading featured items...</p>
+      </div>
+    );
+  }
 
   const handleOrderNow = (item: typeof featuredItemsConfig[0]) => {
     if (!item.inStock) {

@@ -1,259 +1,171 @@
-import { useState } from 'react';
-import { useLocation } from 'wouter';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
-import ShoppingCart from '@/components/ShoppingCart';
-import { useCart } from '@/contexts/CartContext';
-import { Button } from '@/components/ui/button';
-import { menuItems } from '@/data/menuData';
-import { jealousForkMenuItems, jealousForkCategories } from '@/data/jealousForkmenuData';
-import { jealousBurgerMenuItems, jealousBurgerCategories } from '@/data/jealousBurgerMenuData';
-import { beverageMenuItems, beverageCategories } from '@/data/beverageMenuData';
 import SEOHead from '@/components/SEOHead';
-import { Plus } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 
-type MenuType = 'featured' | 'jealous-fork' | 'jealous-burger' | 'beverages';
+interface MenuItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  inStock: boolean;
+}
 
 export default function FullMenuPage() {
-  const [selectedMenu, setSelectedMenu] = useState<MenuType>('featured');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const { addItem } = useCart();
-  const [, setLocation] = useLocation();
-
-  // Get current time to determine which menu to show by default
-  const currentHour = new Date().getHours();
-  const currentDay = new Date().getDay(); // 0 = Sunday, 5 = Friday, 6 = Saturday
-  const isJealousForkTime = currentHour >= 9 && currentHour < 15 && currentDay !== 1; // 9 AM - 3 PM, not Monday
-  const isJealousBurgerTime = (currentHour >= 17 && currentHour < 21) && (currentDay === 5 || currentDay === 6); // Fri/Sat 5-9 PM
-
-  const getMenuData = () => {
-    switch (selectedMenu) {
-      case 'jealous-fork':
-        return {
-          items: jealousForkMenuItems,
-          categories: jealousForkCategories,
-          title: 'Jealous Fork Menu',
-          subtitle: 'Tuesday - Sunday: 9:00 AM - 3:00 PM',
-          description: 'Award-winning pancakes, signature sandwiches, and brunch favorites'
-        };
-      case 'jealous-burger':
-        return {
-          items: jealousBurgerMenuItems,
-          categories: jealousBurgerCategories,
-          title: 'Jealous Burger Menu',
-          subtitle: 'Friday & Saturday: 5:00 PM - 9:00 PM',
-          description: 'Gourmet burgers and evening favorites'
-        };
-      case 'beverages':
-        return {
-          items: beverageMenuItems,
-          categories: beverageCategories,
-          title: 'Beverages & Coffee',
-          subtitle: 'Available during all operating hours',
-          description: 'Craft cocktails, specialty coffee, beer & wine'
-        };
-      default:
-        return {
-          items: menuItems,
-          categories: [
-            { id: 'all', name: 'Featured Items', description: 'Our most popular dishes' },
-            { id: 'pancakes', name: 'Pancakes', description: 'Sweet breakfast favorites' },
-            { id: 'burgers', name: 'Burgers', description: 'Gourmet burger selections' },
-            { id: 'breakfast', name: 'Breakfast', description: 'Morning specialties' }
-          ],
-          title: 'Featured Menu',
-          subtitle: 'Our most popular dishes',
-          description: 'Highlighting the best from both our day and evening menus'
-        };
-    }
-  };
-
-  const { items, categories, title, subtitle, description } = getMenuData();
+  const [activeCategory, setActiveCategory] = useState('all');
   
-  const filteredItems = selectedCategory === 'all' 
-    ? items 
-    : items.filter(item => item.category === selectedCategory);
+  // Fetch all menu items with real-time Square sync
+  const { data: menuData, isLoading, error } = useQuery({
+    queryKey: ['/api/menu'],
+    refetchInterval: 60000, // Refresh every minute for menu updates
+  });
+
+  const menuItems: MenuItem[] = menuData?.items || [];
+  const categories = ['all', ...new Set(menuItems.map(item => item.category))];
+  
+  const filteredItems = activeCategory === 'all' 
+    ? menuItems 
+    : menuItems.filter(item => item.category === activeCategory);
+
+  const handleAddToCart = (item: MenuItem) => {
+    addItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: 1,
+      squareId: item.id,
+      inStock: item.inStock
+    });
+  };
 
   return (
     <>
-      <SEOHead
-        title="Full Menu - Jealous Fork | Miami's Premier Pancake Restaurant"
-        description="Explore our complete menu of award-winning pancakes, gourmet burgers, and specialty beverages. Made fresh daily with premium ingredients in Miami, FL."
-        canonical="/full-menu"
-        keywords="pancakes menu, burgers, breakfast, Miami restaurant menu, artisan pancakes, cocktails, coffee"
+      <SEOHead 
+        title="Full Menu - Jealous Fork Miami"
+        description="Browse our complete menu of artisan pancakes, gourmet burgers, and breakfast specialties. Real-time pricing and availability."
       />
       
-      <Navigation />
-      
-      <main className="pt-16">
-        <div className="min-h-screen bg-white">
-          {/* Header */}
-          <div className="bg-gray-50 py-16">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <h1 className="font-playfair text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-                {title}
-              </h1>
-              <p className="text-xl text-gray-600 mb-4">
-                {subtitle}
-              </p>
-              <p className="text-lg text-gray-500 leading-relaxed">
-                {description}
-              </p>
-              
-              {/* Operating Hours Notice */}
-              <div className="mt-8 p-4 bg-gray-100 rounded-lg inline-block">
-                <div className="text-sm text-gray-700">
-                  <p><strong>Jealous Fork:</strong> Tuesday - Sunday: 9:00 AM - 3:00 PM</p>
-                  <p><strong>Jealous Burger:</strong> Friday & Saturday: 5:00 PM - 9:00 PM</p>
-                  <p className="text-gray-500 mt-1">Closed Mondays</p>
-                </div>
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        
+        {/* Hero Section */}
+        <section className="bg-black text-white py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              Our Complete Menu
+            </h1>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Real-time menu with current pricing and availability
+            </p>
+            {menuData?.source && (
+              <div className="mt-4 text-sm text-green-400">
+                Live sync with Square: {menuData.source} • {menuData.count} items
               </div>
-            </div>
+            )}
           </div>
+        </section>
 
-          {/* Menu Content */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            {/* Menu Type Selector */}
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              {[
-                { id: 'featured', label: 'Featured Items', available: true },
-                { id: 'jealous-fork', label: 'Jealous Fork Menu', available: true, highlight: isJealousForkTime },
-                { id: 'jealous-burger', label: 'Jealous Burger Menu', available: true, highlight: isJealousBurgerTime },
-                { id: 'beverages', label: 'Beverages & Coffee', available: true }
-              ].map((menu) => (
-                <button
-                  key={menu.id}
-                  onClick={() => {
-                    setSelectedMenu(menu.id as MenuType);
-                    setSelectedCategory('all');
-                  }}
-                  className={`px-6 py-3 rounded-full font-semibold transition-colors relative ${
-                    selectedMenu === menu.id
-                      ? 'bg-gray-900 text-white'
-                      : menu.highlight
-                      ? 'bg-gray-600 text-white hover:bg-gray-700'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {menu.label}
-                  {menu.highlight && (
-                    <span className="absolute -top-1 -right-1 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                      OPEN
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-
+        {/* Menu Categories */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Category Filter */}
             <div className="flex flex-wrap justify-center gap-4 mb-12">
               {categories.map((category) => (
                 <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`px-6 py-3 rounded-full font-semibold transition-colors ${
-                    selectedCategory === category.id
-                      ? 'bg-gray-700 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-6 py-3 rounded-full text-sm font-medium transition-colors ${
+                    activeCategory === category
+                      ? 'bg-black text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
                   }`}
                 >
-                  {category.name}
+                  {category === 'all' ? 'All Items' : category.charAt(0).toUpperCase() + category.slice(1)}
                 </button>
               ))}
             </div>
 
-            {/* Menu Items Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredItems.map((item) => (
-                <div key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-                  <div className="aspect-w-16 aspect-h-12">
-                    <img 
-                      src={item.image} 
-                      alt={item.name}
-                      className="w-full h-48 object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="font-playfair text-xl font-semibold text-gray-900">
-                        {item.name}
-                      </h3>
-                      <span className="font-bold text-gray-900 text-lg">
-                        ${typeof item.price === 'number' ? item.price : item.price}
-                      </span>
-                    </div>
-                    <p className="text-gray-600 leading-relaxed">
-                      {item.description}
-                    </p>
-                    
-                    {/* Dietary indicators for Jealous Fork items */}
-                    {'dietary' in item && item.dietary && (
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {item.dietary.map((diet) => (
-                          <span key={diet} className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                            {diet === 'gluten-free-option' ? 'GF Option' : diet === 'vegan' ? 'Vegan' : diet}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    
-                    {/* Beverage type indicators */}
-                    {'type' in item && item.type && (
-                      <div className="mt-3">
-                        <span className="inline-block px-3 py-1 bg-gray-100 text-gray-800 text-sm rounded-full">
-                          {item.type}
-                        </span>
-                      </div>
-                    )}
-                    
-                    <div className="mt-4 flex items-center justify-between">
-                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                        item.category === 'pancakes' ? 'bg-blue-100 text-blue-800' :
-                        item.category === 'burgers' ? 'bg-red-100 text-red-800' :
-                        item.category === 'starters' ? 'bg-purple-100 text-purple-800' :
-                        item.category === 'sandwiches' ? 'bg-orange-100 text-orange-800' :
-                        item.category === 'cocktails' ? 'bg-pink-100 text-pink-800' :
-                        item.category === 'coffee' ? 'bg-yellow-100 text-yellow-800' :
-                        item.category === 'beer' ? 'bg-amber-100 text-amber-800' :
-                        item.category === 'wine' ? 'bg-red-100 text-red-800' :
-                        'bg-green-100 text-green-800'
-                      }`}>
-                        {item.category.charAt(0).toUpperCase() + item.category.slice(1).replace('-', ' ')}
-                      </span>
-                      
-                      <Button
-                        onClick={() => {
-                          addItem({
-                            id: item.id,
-                            name: item.name,
-                            price: typeof item.price === 'number' ? item.price : parseFloat(item.price),
-                            category: item.category,
-                            description: item.description,
-                          });
-                        }}
-                        size="sm"
-                        className="ml-2"
-                      >
-                        <Plus className="h-4 w-4 mr-1" />
-                        Add to Cart
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {filteredItems.length === 0 && (
+            {/* Loading State */}
+            {isLoading && (
               <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No items found in this category.</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                <p className="mt-4 text-gray-600">Loading menu items...</p>
+              </div>
+            )}
+
+            {/* Error State */}
+            {error && (
+              <div className="text-center py-12">
+                <p className="text-red-600">Failed to load menu items. Please try again.</p>
+              </div>
+            )}
+
+            {/* Menu Items Grid */}
+            {!isLoading && !error && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredItems.map((item) => (
+                  <div key={item.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                            {item.name}
+                          </h3>
+                          <p className="text-gray-600 text-sm leading-relaxed">
+                            {item.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl font-bold text-green-600">
+                            ${item.price}
+                          </span>
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            item.inStock
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {item.inStock ? 'In Stock' : 'Out of Stock'}
+                          </span>
+                        </div>
+
+                        <button
+                          onClick={() => handleAddToCart(item)}
+                          disabled={!item.inStock}
+                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                            item.inStock
+                              ? 'bg-black text-white hover:bg-gray-800'
+                              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          }`}
+                        >
+                          {item.inStock ? 'Add to Cart' : 'Unavailable'}
+                        </button>
+                      </div>
+
+                      {/* Square ID for ordering reference */}
+                      <div className="mt-3 text-xs text-gray-400">
+                        Item ID: {item.id.slice(-8)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Empty State */}
+            {!isLoading && !error && filteredItems.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-600">No items found in this category.</p>
               </div>
             )}
           </div>
-        </div>
-      </main>
-      
-      <Footer />
+        </section>
+      </div>
     </>
   );
 }
