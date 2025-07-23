@@ -3,9 +3,10 @@ import { featuredItemsConfig, setItemFeatured, setItemStock } from '@/data/featu
 
 interface FeaturedItemsAdminProps {
   onClose: () => void;
+  embedded?: boolean;
 }
 
-export default function FeaturedItemsAdmin({ onClose }: FeaturedItemsAdminProps) {
+export default function FeaturedItemsAdmin({ onClose, embedded = false }: FeaturedItemsAdminProps) {
   const [items, setItems] = useState(featuredItemsConfig);
 
   const handleToggleFeatured = (itemId: number) => {
@@ -19,6 +20,63 @@ export default function FeaturedItemsAdmin({ onClose }: FeaturedItemsAdminProps)
   };
 
   const featuredCount = items.filter(item => item.featured).length;
+
+  if (embedded) {
+    return (
+      <div className="w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {items.map((item) => {
+            const isFeatured = item.featured;
+            const featuredCount = items.filter(i => i.featured).length;
+
+            return (
+              <div key={item.id} className="border border-gray-200 rounded-lg p-4">
+                <div className="aspect-video bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                
+                <h3 className="font-semibold text-gray-900 mb-1">{item.name}</h3>
+                <p className="text-sm text-gray-600 mb-3 line-clamp-2">{item.description}</p>
+                
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-lg font-bold text-green-600">${item.price}</span>
+                  <div className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={item.inStock}
+                        onChange={(e) => handleToggleStock(item.id, e.target.checked)}
+                        className="rounded border-gray-300"
+                      />
+                      In Stock
+                    </label>
+                  </div>
+                </div>
+                
+                <button
+                  onClick={() => handleToggleFeatured(item.id)}
+                  disabled={!isFeatured && featuredCount >= 6}
+                  className={`w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isFeatured
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : featuredCount >= 6
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {isFeatured ? 'Remove from Featured' : 'Add to Featured'}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">

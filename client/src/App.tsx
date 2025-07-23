@@ -13,6 +13,7 @@ import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
 import CheckoutPage from "@/pages/CheckoutPage";
 import OrderConfirmationPage from "@/pages/OrderConfirmationPage";
+import AdminPage from "@/pages/AdminPage";
 
 function Router() {
   return (
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/terms" component={TermsPage} />
       <Route path="/checkout" component={CheckoutPage} />
       <Route path="/order-confirmation/:orderId" component={OrderConfirmationPage} />
+      <Route path="/admin" component={AdminPage} />
       <Route component={Home} />
     </Switch>
   );

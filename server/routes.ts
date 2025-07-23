@@ -141,22 +141,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get dynamic menu from Square Catalog API
+  // Get menu items with working Square API integration
   app.get('/api/menu', async (req, res) => {
     try {
-      if (!squareService) {
-        return res.status(503).json({ 
-          error: 'Square API not configured. Using static menu data.' 
+      // Try direct Square API call for catalog
+      try {
+        const accessToken = process.env.SQUARE_ACCESS_TOKEN;
+        const environment = accessToken?.startsWith('sandbox') ? 'sandbox' : 'production';
+        const baseUrl = environment === 'sandbox' 
+          ? 'https://connect.squareupsandbox.com' 
+          : 'https://connect.squareup.com';
+        
+        const response = await fetch(`${baseUrl}/v2/catalog/list?types=ITEM`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Square-Version': '2024-06-04',
+            'Content-Type': 'application/json'
+          }
         });
+        
+        if (response.ok) {
+          const data = await response.json();
+          const items = data.objects?.map((item: any) => {
+            const itemData = item.item_data;
+            const firstVariation = itemData?.variations?.[0];
+            const price = firstVariation?.item_variation_data?.price_money?.amount || 0;
+            
+            return {
+              id: item.id,
+              name: itemData?.name || 'Unknown Item',
+              description: itemData?.description || '',
+              price: price / 100,
+              category: itemData?.category_id || 'uncategorized',
+              inStock: true
+            };
+          }) || [];
+          
+          return res.json({ items, source: 'square-direct', count: items.length });
+        } else {
+          console.log('Square direct API failed, status:', response.status);
+        }
+      } catch (directError) {
+        console.log('Direct Square API failed, trying SDK...');
       }
-
-      const menuItems = await squareService.getMenuWithInventory();
-      res.json({ success: true, items: menuItems });
+      
+      // Fallback to SDK
+      if (squareService) {
+        const menuItems = await squareService.getCatalogItems();
+        res.json({ items: menuItems, source: 'square-sdk' });
+      } else {
+        // Return static menu as fallback
+        const staticMenu = [
+          {
+            id: 'static-1',
+            name: 'Chocolate Oreo Chip Pancakes',
+            description: 'Crushed Oreos, Chocolate Chips, Oreo Whipped Cream, Chocolate Ganache',
+            price: 17,
+            category: 'pancakes',
+            inStock: true
+          }
+        ];
+        res.json({ items: staticMenu, source: 'static' });
+      }
     } catch (error: any) {
-      console.error('Menu API error:', error);
-      res.status(500).json({ 
+      console.error('Menu fetch error:', error);
+      res.status(500).json({
         error: 'Failed to fetch menu',
-        message: error?.message || 'Unknown error'
+        message: error.message
       });
     }
   });

@@ -1,9 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { featuredItemsConfig, getFeaturedItems } from "@/data/featuredItems";
 import { useCart } from "@/contexts/CartContext";
-import SquareStatusIndicator from "@/components/SquareStatusIndicator";
-import FeaturedItemsAdmin from "@/components/FeaturedItemsAdmin";
-import AdminLogin from "@/components/AdminLogin";
 import { useState } from "react";
 
 interface MenuPreviewProps {
@@ -16,35 +13,7 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
   const displayItems = showAll ? featuredItemsConfig : featuredItems;
   const { addItem } = useCart();
   const [, setLocation] = useLocation();
-  const [showAdmin, setShowAdmin] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Admin password (in production, this should be environment variable)
-  const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'jealous2025';
-
-  const handleAdminLogin = (password: string): boolean => {
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      setShowLogin(false);
-      setShowAdmin(true);
-      return true;
-    }
-    return false;
-  };
-
-  const handleAdminLogout = () => {
-    setIsAuthenticated(false);
-    setShowAdmin(false);
-  };
-
-  const handleManageClick = () => {
-    if (isAuthenticated) {
-      setShowAdmin(true);
-    } else {
-      setShowLogin(true);
-    }
-  };
+  // Admin features moved to /admin route
 
   const handleOrderNow = (item: typeof featuredItemsConfig[0]) => {
     if (!item.inStock) {
@@ -81,13 +50,7 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
             From Instagram-worthy pancakes to gourmet burgers, every dish is crafted with passion and artisan attention to detail.
           </p>
           <div className="flex flex-col items-center gap-4">
-            <SquareStatusIndicator />
-            <button
-              onClick={handleManageClick}
-              className="text-sm text-gray-500 hover:text-gray-700 transition-colors underline"
-            >
-              {isAuthenticated ? 'Manage Featured Items' : 'Admin Login'}
-            </button>
+            {/* Admin features moved to /admin - no longer shown on main page */}
           </div>
         </div>
         
@@ -143,18 +106,7 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
           </div>
         )}
         
-        {showLogin && (
-          <AdminLogin 
-            onLogin={handleAdminLogin}
-            onCancel={() => setShowLogin(false)}
-          />
-        )}
-        
-        {showAdmin && isAuthenticated && (
-          <FeaturedItemsAdmin 
-            onClose={handleAdminLogout}
-          />
-        )}
+        {/* Admin modals removed - now handled at /admin route */}
       </div>
     </section>
   );
