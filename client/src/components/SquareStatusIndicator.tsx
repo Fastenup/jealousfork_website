@@ -57,7 +57,7 @@ export default function SquareStatusIndicator() {
   const getStatusText = () => {
     if (!status.credentialsConfigured) return 'Square Not Configured';
     if (!status.serviceAvailable) return 'Square Service Unavailable';
-    if (status.apiWorking) return `Square API Connected (${status.environment})`;
+    if (status.apiWorking) return `Square API Connected (${status.environment}) - ${status.method || 'Direct'}`;
     return 'Square API Error';
   };
 
@@ -79,6 +79,7 @@ export default function SquareStatusIndicator() {
         <div>Sync: {status.syncFrequency}</div>
         <div>Last Check: {new Date(status.lastCheck).toLocaleTimeString()}</div>
         {status.locationCount && <div>Locations: {status.locationCount}</div>}
+        {status.method && <div>Method: {status.method}</div>}
         {status.lastError && (
           <div className="text-red-600 mt-1">Error: {status.lastError}</div>
         )}

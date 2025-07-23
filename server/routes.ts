@@ -45,33 +45,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.warn('Square service not configured:', error?.message || 'Unknown error');
   }
 
-  // Test Square API connection
+  // Test Square API connection with direct API call
   app.post('/api/test-square', async (req, res) => {
     try {
-      if (!squareService) {
-        return res.json({ 
-          success: false, 
-          error: 'Square service not available',
-          details: 'Service not initialized - check credentials'
-        });
-      }
-
-      const locations = await squareService.testConnection();
+      // Try direct API call first
+      const { testSquareAPIDirect } = await import('./squareTest');
+      const directResult = await testSquareAPIDirect();
+      
       res.json({
         success: true,
-        message: 'Square API connection successful',
-        locations: locations?.slice(0, 2),
-        lastSync: new Date().toISOString(),
-        environment: process.env.SQUARE_ACCESS_TOKEN?.startsWith('sandbox') ? 'sandbox' : 'production'
+        message: 'Square API connection successful (direct)',
+        ...directResult,
+        lastSync: new Date().toISOString()
       });
-    } catch (error: any) {
-      console.error('Square test error:', error);
-      res.json({
-        success: false,
-        error: error.message,
-        details: error.toString(),
-        lastAttempt: new Date().toISOString()
-      });
+    } catch (directError: any) {
+      console.error('Direct Square test failed:', directError);
+      
+      // Fallback to SDK test
+      try {
+        if (!squareService) {
+          return res.json({ 
+            success: false, 
+            error: 'Square service not available',
+            details: 'Service not initialized - check credentials',
+            directError: directError.message
+          });
+        }
+
+        const locations = await squareService.testConnection();
+        res.json({
+          success: true,
+          message: 'Square API connection successful (SDK fallback)',
+          locations: locations?.slice(0, 2),
+          lastSync: new Date().toISOString(),
+          environment: process.env.SQUARE_ACCESS_TOKEN?.startsWith('sandbox') ? 'sandbox' : 'production',
+          directError: directError.message
+        });
+      } catch (sdkError: any) {
+        console.error('Square test error:', sdkError);
+        res.json({
+          success: false,
+          error: sdkError.message,
+          details: sdkError.toString(),
+          directError: directError.message,
+          lastAttempt: new Date().toISOString()
+        });
+      }
     }
   });
 
@@ -86,14 +105,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         credentialsConfigured: !!(process.env.SQUARE_ACCESS_TOKEN && process.env.SQUARE_APPLICATION_ID && process.env.SQUARE_LOCATION_ID)
       };
 
-      if (squareService) {
-        try {
-          const testResult = await squareService.testConnection();
-          status.apiWorking = true;
-          status.locationCount = testResult?.length || 0;
-        } catch (error) {
+      // Test direct API call to get actual status
+      try {
+        const { testSquareAPIDirect } = await import('./squareTest');
+        const result = await testSquareAPIDirect();
+        status.apiWorking = true;
+        status.locationCount = result.locations?.length || 0;
+        status.method = 'Direct API';
+      } catch (error: any) {
+        // Fallback to SDK test
+        if (squareService) {
+          try {
+            const testResult = await squareService.testConnection();
+            status.apiWorking = true;
+            status.locationCount = testResult?.length || 0;
+            status.method = 'SDK';
+          } catch (sdkError: any) {
+            status.apiWorking = false;
+            status.lastError = sdkError.message;
+            status.method = 'Failed';
+          }
+        } else {
           status.apiWorking = false;
           status.lastError = error.message;
+          status.method = 'Direct API Failed';
         }
       }
 

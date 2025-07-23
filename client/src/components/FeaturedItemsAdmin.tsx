@@ -30,6 +30,9 @@ export default function FeaturedItemsAdmin({ onClose }: FeaturedItemsAdminProps)
               <p className="text-gray-600 mt-1">
                 Control which items appear on homepage ({featuredCount}/6 featured)
               </p>
+              <div className="text-xs text-green-600 mt-1 font-medium">
+                ✓ Admin Authenticated
+              </div>
             </div>
             <button
               onClick={onClose}

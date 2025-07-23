@@ -44,11 +44,14 @@ export class SquareService {
       : 'production';
     
     try {
+      // Use the correct property names for Square SDK v40+
       this.client = new SquareClient({
         accessToken: config.accessToken,
-        environment: environment
+        environment: environment,
+        customUrl: environment === 'sandbox' ? 'https://connect.squareupsandbox.com' : 'https://connect.squareup.com'
       });
       console.log('Square client initialized successfully for environment:', environment);
+      console.log('Client methods available:', Object.keys(this.client));
     } catch (error) {
       console.error('Failed to initialize Square client:', error);
       throw new Error('Square API initialization failed');
@@ -59,11 +62,26 @@ export class SquareService {
   async testConnection() {
     try {
       console.log('Testing Square API connection...');
-      const { result } = await this.client.locationsApi.listLocations();
-      console.log('Square locations response:', result);
-      return result.locations || [];
+      console.log('Client instance:', !!this.client);
+      console.log('LocationsApi:', !!this.client?.locationsApi);
+      
+      if (!this.client || !this.client.locationsApi) {
+        throw new Error('Square client or locationsApi not properly initialized');
+      }
+      
+      const response = await this.client.locationsApi.listLocations();
+      console.log('Square locations response:', response);
+      
+      // Handle both old and new SDK response formats
+      const locations = response.result?.locations || response.locations || [];
+      return locations;
     } catch (error: any) {
       console.error('Square connection test failed:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       throw new Error(`Square API connection failed: ${error.message}`);
     }
   }
