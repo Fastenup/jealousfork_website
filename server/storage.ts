@@ -44,7 +44,7 @@ class MemoryStorage implements IStorage {
       squareId: "LPQXTMGM7RNLH5SFCCPOF7XB",
       name: "Hot Maple Flatbread",
       description: "Cup and char pepperoni, double cream mozzarella, and red chili-black pepper maple",
-      category: "flatbread",
+      category: "flatbreads",
       price: 16,
       image: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80",
       featured: true,
@@ -136,9 +136,12 @@ class MemoryStorage implements IStorage {
   }
 
   async updateItemStock(localId: number, inStock: boolean): Promise<void> {
-    const item = this.featuredItems.find(i => i.localId === localId);
-    if (item) {
-      item.inStock = inStock;
+    const itemIndex = this.featuredItems.findIndex(i => i.localId === localId);
+    if (itemIndex >= 0) {
+      this.featuredItems[itemIndex].inStock = inStock;
+      console.log(`Updated item ${localId} stock to ${inStock}`);
+    } else {
+      throw new Error(`Featured item with localId ${localId} not found`);
     }
   }
 
@@ -216,12 +219,24 @@ class MemoryStorage implements IStorage {
   }
 
   async assignItemToCategory(squareId: string, categoryId: number): Promise<void> {
-    // Update featured item category assignment
+    // Find the category name from the categoryId
+    const categories = await this.getMenuCategories();
+    const category = categories.find(cat => cat.id === categoryId);
+    
+    if (!category) {
+      throw new Error(`Category with ID ${categoryId} not found`);
+    }
+    
+    // Update featured item category assignment if it exists in featured items
     const itemIndex = this.featuredItems.findIndex(item => item.squareId === squareId);
     if (itemIndex >= 0) {
-      // Update category mapping - would store in database in real implementation
-      console.log(`Assigned item ${squareId} to category ${categoryId}`);
+      this.featuredItems[itemIndex].category = category.name.toLowerCase();
+      console.log(`Updated featured item ${squareId} category to ${category.name.toLowerCase()}`);
     }
+    
+    // For comprehensive categorization, we would store this mapping in database
+    // For now, just log the assignment
+    console.log(`Assigned Square item ${squareId} to category ${category.name} (${categoryId})`);
   }
 
   async initializeDefaultMenuStructure(): Promise<void> {

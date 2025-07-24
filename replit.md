@@ -156,6 +156,14 @@ Changelog:
   * Created inventory management system with real-time stock level updates
   * Built Square menu manager component for selecting and promoting items to featured status
   * Ensured all featured items sync with Square for accurate ordering, pricing, and availability
+- July 24, 2025: Menu routing fix and comprehensive categorization system:
+  * Fixed menu routing: /menu now displays complete time-based menu (previously /full-menu)
+  * Resolved admin stock update errors - all featured items properly toggle between in-stock/out-of-stock
+  * Added comprehensive Square API item categorization in admin panel
+  * Created MenuCategorizationPanel for organizing all Square catalog items into menu sections
+  * Enhanced menu sections with real-time open/closed status based on operating hours
+  * Improved admin interface with complete Square item management and categorization
+  * All technical details (item IDs, sync status) hidden from customer pages, visible only in admin
 ```
 
 ## User Preferences

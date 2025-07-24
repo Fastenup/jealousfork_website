@@ -183,8 +183,9 @@ export default function MenuCategorizationPanel() {
 
       {/* Current Assignments Display */}
       <div className="mt-8 border-t pt-6">
-        <h3 className="text-lg font-medium mb-4">Current Menu Structure</h3>
-        <div className="space-y-4">
+        <h3 className="text-lg font-medium mb-4">Current Menu Structure & All Square Items</h3>
+        <div className="space-y-6">
+          {/* Menu Structure */}
           {sections.map((section) => {
             const sectionCategories = categoriesData?.categories?.filter(
               (cat: MenuCategory) => cat.sectionId === section.id
@@ -199,7 +200,8 @@ export default function MenuCategorizationPanel() {
                 <div className="space-y-2">
                   {sectionCategories.map((category) => {
                     const categoryItems = menuItems.filter(
-                      (item) => item.category === category.name.toLowerCase()
+                      (item) => item.category?.toLowerCase().includes(category.name.toLowerCase()) ||
+                                category.name.toLowerCase().includes(item.category?.toLowerCase() || '')
                     );
                     
                     return (
@@ -220,6 +222,30 @@ export default function MenuCategorizationPanel() {
               </div>
             );
           })}
+
+          {/* All Square Items for Categorization */}
+          <div className="border-t pt-6">
+            <h4 className="text-lg font-medium mb-4">All Square API Items Available for Categorization</h4>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-3">
+                Total items from Square: {menuItems.length}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto">
+                {menuItems.map((item) => (
+                  <div key={item.id} className="bg-white rounded border border-gray-200 p-3">
+                    <div className="font-medium text-sm">{item.name}</div>
+                    <div className="text-xs text-gray-600 truncate">{item.description}</div>
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="text-sm font-medium text-green-600">${item.price}</span>
+                      <span className="text-xs text-gray-500">
+                        {item.category || 'Uncategorized'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

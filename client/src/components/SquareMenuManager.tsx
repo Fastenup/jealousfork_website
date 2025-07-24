@@ -107,15 +107,22 @@ export default function SquareMenuManager() {
   // Update stock status
   const updateStockMutation = useMutation({
     mutationFn: async ({ localId, inStock }: { localId: number; inStock: boolean }) => {
-      return apiRequest(`/api/featured-items/${localId}/stock`, 'PATCH', { inStock });
+      return apiRequest(`/api/featured-items/${localId}/stock`, {
+        method: 'PATCH',
+        body: { inStock },
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/featured-items'] });
+      toast({
+        title: "Stock Updated",
+        description: "Item stock status updated successfully",
+      });
     },
     onError: (error: any) => {
       toast({
         title: "Failed to Update Stock",
-        description: error.message,
+        description: error.message || "Could not update stock status",
         variant: "destructive",
       });
     },

@@ -19,7 +19,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/menu/:slug?" component={MenuPage} />
+      <Route path="/menu/:slug?" component={FullMenuPage} />
       <Route path="/full-menu" component={FullMenuPage} />
       <Route path="/near/:area" component={LocalPage} />
       <Route path="/gallery" component={Home} />
