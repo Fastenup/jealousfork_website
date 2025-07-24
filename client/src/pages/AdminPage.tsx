@@ -4,6 +4,7 @@ import AdminLogin from '@/components/AdminLogin';
 import FeaturedItemsAdmin from '@/components/FeaturedItemsAdmin';
 import SquareStatusIndicator from '@/components/SquareStatusIndicator';
 import SquareMenuManager from '@/components/SquareMenuManager';
+import MenuCategorizationPanel from '@/components/MenuCategorizationPanel';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

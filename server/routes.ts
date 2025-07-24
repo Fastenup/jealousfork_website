@@ -259,6 +259,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // New admin routes for menu categorization
+  app.get('/api/admin/menu-sections', async (req, res) => {
+    try {
+      const sections = await storage.getMenuSections();
+      res.json({ sections });
+    } catch (error: any) {
+      console.error('Error fetching menu sections:', error);
+      res.status(500).json({ error: 'Failed to fetch menu sections' });
+    }
+  });
+
+  app.get('/api/admin/menu-categories/:sectionId?', async (req, res) => {
+    try {
+      const sectionId = req.params.sectionId ? parseInt(req.params.sectionId) : undefined;
+      const categories = await storage.getMenuCategories(sectionId);
+      res.json({ categories });
+    } catch (error: any) {
+      console.error('Error fetching menu categories:', error);
+      res.status(500).json({ error: 'Failed to fetch menu categories' });
+    }
+  });
+
+  app.post('/api/admin/assign-item-category', async (req, res) => {
+    try {
+      const { squareId, categoryId } = req.body;
+      if (!squareId || !categoryId) {
+        return res.status(400).json({ error: 'Missing squareId or categoryId' });
+      }
+      
+      await storage.assignItemToCategory(squareId, categoryId);
+      res.json({ success: true, message: 'Item assigned to category successfully' });
+    } catch (error: any) {
+      console.error('Error assigning item to category:', error);
+      res.status(500).json({ error: 'Failed to assign item to category' });
+    }
+  });
+
   // Get specific menu category
   app.get('/api/menu/:category', async (req, res) => {
     try {

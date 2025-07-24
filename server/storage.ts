@@ -27,6 +27,13 @@ export interface IStorage {
   getMenuItems(): Promise<LocalMenuItem[]>;
   updateMenuItems(items: LocalMenuItem[]): Promise<void>;
   syncWithSquare(): Promise<void>;
+  
+  // Menu sections and categories
+  getMenuSections(): Promise<any[]>;
+  getMenuCategories(sectionId?: number): Promise<any[]>;
+  getSquareMenuItems(categoryId?: number): Promise<any[]>;
+  assignItemToCategory(squareId: string, categoryId: number): Promise<void>;
+  initializeDefaultMenuStructure(): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -145,6 +152,80 @@ class MemoryStorage implements IStorage {
 
   async syncWithSquare(): Promise<void> {
     // Sync logic will be handled by the Square service
+  }
+
+  async getMenuSections(): Promise<any[]> {
+    return [
+      {
+        id: 1,
+        name: "Jealous Fork",
+        description: "Artisan pancakes and breakfast specialties",
+        operatingHours: "9:00 AM - 3:00 PM",
+        operatingDays: "Tuesday - Sunday",
+        displayOrder: 1,
+        isActive: true
+      },
+      {
+        id: 2,
+        name: "Jealous Burger",
+        description: "Gourmet burgers and dinner items",
+        operatingHours: "5:00 PM - 9:00 PM",
+        operatingDays: "Friday - Saturday",
+        displayOrder: 2,
+        isActive: true
+      },
+      {
+        id: 3,
+        name: "Beverages",
+        description: "Cocktails, coffee, beer and wine",
+        operatingHours: "Variable by section",
+        operatingDays: "Tuesday - Sunday",
+        displayOrder: 3,
+        isActive: true
+      }
+    ];
+  }
+
+  async getMenuCategories(sectionId?: number): Promise<any[]> {
+    const allCategories = [
+      { id: 1, sectionId: 1, name: "Pancakes", description: "Artisan pancake creations", displayOrder: 1 },
+      { id: 2, sectionId: 1, name: "Flatbreads", description: "Savory flatbread specialties", displayOrder: 2 },
+      { id: 3, sectionId: 2, name: "Burgers", description: "Gourmet burger selections", displayOrder: 1 },
+      { id: 4, sectionId: 3, name: "Cocktails", description: "Craft cocktails", displayOrder: 1 },
+      { id: 5, sectionId: 3, name: "Coffee", description: "Specialty coffee drinks", displayOrder: 2 },
+      { id: 6, sectionId: 3, name: "Beer", description: "Local and craft beers", displayOrder: 3 },
+      { id: 7, sectionId: 3, name: "Wine", description: "Curated wine selection", displayOrder: 4 }
+    ];
+    
+    return sectionId ? allCategories.filter(cat => cat.sectionId === sectionId) : allCategories;
+  }
+
+  async getSquareMenuItems(categoryId?: number): Promise<any[]> {
+    // Return featured items as Square menu items for now
+    return this.featuredItems.map(item => ({
+      id: item.localId,
+      squareId: item.squareId,
+      categoryId: categoryId || 1,
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      isAvailable: item.inStock,
+      isFeatured: item.featured,
+      displayOrder: item.displayOrder || 0
+    }));
+  }
+
+  async assignItemToCategory(squareId: string, categoryId: number): Promise<void> {
+    // Update featured item category assignment
+    const itemIndex = this.featuredItems.findIndex(item => item.squareId === squareId);
+    if (itemIndex >= 0) {
+      // Update category mapping - would store in database in real implementation
+      console.log(`Assigned item ${squareId} to category ${categoryId}`);
+    }
+  }
+
+  async initializeDefaultMenuStructure(): Promise<void> {
+    console.log('Default menu structure initialized');
   }
 }
 
