@@ -259,7 +259,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // New admin routes for menu categorization
+  // Admin routes for menu sections management
   app.get('/api/admin/menu-sections', async (req, res) => {
     try {
       const sections = await storage.getMenuSections();
@@ -270,6 +270,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/admin/menu-sections', async (req, res) => {
+    try {
+      const newSection = await storage.createMenuSection(req.body);
+      res.json({ section: newSection, success: true });
+    } catch (error: any) {
+      console.error('Error creating menu section:', error);
+      res.status(500).json({ error: 'Failed to create menu section', message: error.message });
+    }
+  });
+
+  app.patch('/api/admin/menu-sections/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updatedSection = await storage.updateMenuSection(id, req.body);
+      res.json({ section: updatedSection, success: true });
+    } catch (error: any) {
+      console.error('Error updating menu section:', error);
+      res.status(500).json({ error: 'Failed to update menu section', message: error.message });
+    }
+  });
+
+  app.delete('/api/admin/menu-sections/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteMenuSection(id);
+      res.json({ success: true, message: 'Menu section deleted successfully' });
+    } catch (error: any) {
+      console.error('Error deleting menu section:', error);
+      res.status(500).json({ error: 'Failed to delete menu section', message: error.message });
+    }
+  });
+
+  // Admin routes for menu categories management
   app.get('/api/admin/menu-categories/:sectionId?', async (req, res) => {
     try {
       const sectionId = req.params.sectionId ? parseInt(req.params.sectionId) : undefined;
@@ -278,6 +311,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error('Error fetching menu categories:', error);
       res.status(500).json({ error: 'Failed to fetch menu categories' });
+    }
+  });
+
+  app.post('/api/admin/menu-categories', async (req, res) => {
+    try {
+      const newCategory = await storage.createMenuCategory(req.body);
+      res.json({ category: newCategory, success: true });
+    } catch (error: any) {
+      console.error('Error creating menu category:', error);
+      res.status(500).json({ error: 'Failed to create menu category', message: error.message });
+    }
+  });
+
+  app.patch('/api/admin/menu-categories/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updatedCategory = await storage.updateMenuCategory(id, req.body);
+      res.json({ category: updatedCategory, success: true });
+    } catch (error: any) {
+      console.error('Error updating menu category:', error);
+      res.status(500).json({ error: 'Failed to update menu category', message: error.message });
+    }
+  });
+
+  app.delete('/api/admin/menu-categories/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteMenuCategory(id);
+      res.json({ success: true, message: 'Menu category deleted successfully' });
+    } catch (error: any) {
+      console.error('Error deleting menu category:', error);
+      res.status(500).json({ error: 'Failed to delete menu category', message: error.message });
     }
   });
 

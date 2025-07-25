@@ -157,50 +157,113 @@ class MemoryStorage implements IStorage {
     // Sync logic will be handled by the Square service
   }
 
+  private menuSections: any[] = [
+    {
+      id: 1,
+      name: "Jealous Fork",
+      description: "Artisan pancakes and breakfast specialties",
+      operatingHours: "9:00 AM - 3:00 PM",
+      operatingDays: "Tuesday - Sunday",
+      displayOrder: 1,
+      isActive: true
+    },
+    {
+      id: 2,
+      name: "Jealous Burger",
+      description: "Gourmet burgers and dinner items",
+      operatingHours: "5:00 PM - 9:00 PM",
+      operatingDays: "Friday - Saturday",
+      displayOrder: 2,
+      isActive: true
+    },
+    {
+      id: 3,
+      name: "Beverages",
+      description: "Cocktails, coffee, beer and wine",
+      operatingHours: "Variable by section",
+      operatingDays: "Tuesday - Sunday",
+      displayOrder: 3,
+      isActive: true
+    }
+  ];
+
   async getMenuSections(): Promise<any[]> {
-    return [
-      {
-        id: 1,
-        name: "Jealous Fork",
-        description: "Artisan pancakes and breakfast specialties",
-        operatingHours: "9:00 AM - 3:00 PM",
-        operatingDays: "Tuesday - Sunday",
-        displayOrder: 1,
-        isActive: true
-      },
-      {
-        id: 2,
-        name: "Jealous Burger",
-        description: "Gourmet burgers and dinner items",
-        operatingHours: "5:00 PM - 9:00 PM",
-        operatingDays: "Friday - Saturday",
-        displayOrder: 2,
-        isActive: true
-      },
-      {
-        id: 3,
-        name: "Beverages",
-        description: "Cocktails, coffee, beer and wine",
-        operatingHours: "Variable by section",
-        operatingDays: "Tuesday - Sunday",
-        displayOrder: 3,
-        isActive: true
-      }
-    ];
+    return [...this.menuSections];
   }
 
+  async createMenuSection(section: any): Promise<any> {
+    const maxId = Math.max(...this.menuSections.map(s => s.id), 0);
+    const newSection = {
+      ...section,
+      id: maxId + 1,
+      displayOrder: this.menuSections.length + 1,
+      isActive: true
+    };
+    this.menuSections.push(newSection);
+    return newSection;
+  }
+
+  async updateMenuSection(id: number, updates: any): Promise<any> {
+    const sectionIndex = this.menuSections.findIndex(s => s.id === id);
+    if (sectionIndex >= 0) {
+      this.menuSections[sectionIndex] = { ...this.menuSections[sectionIndex], ...updates };
+      return this.menuSections[sectionIndex];
+    }
+    throw new Error(`Menu section with id ${id} not found`);
+  }
+
+  async deleteMenuSection(id: number): Promise<void> {
+    const sectionIndex = this.menuSections.findIndex(s => s.id === id);
+    if (sectionIndex >= 0) {
+      this.menuSections.splice(sectionIndex, 1);
+      // Also remove associated categories
+      this.menuCategories = this.menuCategories.filter(cat => cat.sectionId !== id);
+    } else {
+      throw new Error(`Menu section with id ${id} not found`);
+    }
+  }
+
+  private menuCategories: any[] = [
+    { id: 1, sectionId: 1, name: "Pancakes", description: "Artisan pancake creations", displayOrder: 1 },
+    { id: 2, sectionId: 1, name: "Flatbreads", description: "Savory flatbread specialties", displayOrder: 2 },
+    { id: 3, sectionId: 2, name: "Burgers", description: "Gourmet burger selections", displayOrder: 1 },
+    { id: 4, sectionId: 3, name: "Cocktails", description: "Craft cocktails", displayOrder: 1 },
+    { id: 5, sectionId: 3, name: "Coffee", description: "Specialty coffee drinks", displayOrder: 2 },
+    { id: 6, sectionId: 3, name: "Beer", description: "Local and craft beers", displayOrder: 3 },
+    { id: 7, sectionId: 3, name: "Wine", description: "Curated wine selection", displayOrder: 4 }
+  ];
+
   async getMenuCategories(sectionId?: number): Promise<any[]> {
-    const allCategories = [
-      { id: 1, sectionId: 1, name: "Pancakes", description: "Artisan pancake creations", displayOrder: 1 },
-      { id: 2, sectionId: 1, name: "Flatbreads", description: "Savory flatbread specialties", displayOrder: 2 },
-      { id: 3, sectionId: 2, name: "Burgers", description: "Gourmet burger selections", displayOrder: 1 },
-      { id: 4, sectionId: 3, name: "Cocktails", description: "Craft cocktails", displayOrder: 1 },
-      { id: 5, sectionId: 3, name: "Coffee", description: "Specialty coffee drinks", displayOrder: 2 },
-      { id: 6, sectionId: 3, name: "Beer", description: "Local and craft beers", displayOrder: 3 },
-      { id: 7, sectionId: 3, name: "Wine", description: "Curated wine selection", displayOrder: 4 }
-    ];
-    
-    return sectionId ? allCategories.filter(cat => cat.sectionId === sectionId) : allCategories;
+    return sectionId ? this.menuCategories.filter(cat => cat.sectionId === sectionId) : [...this.menuCategories];
+  }
+
+  async createMenuCategory(category: any): Promise<any> {
+    const maxId = Math.max(...this.menuCategories.map(c => c.id), 0);
+    const newCategory = {
+      ...category,
+      id: maxId + 1,
+      displayOrder: this.menuCategories.filter(c => c.sectionId === category.sectionId).length + 1
+    };
+    this.menuCategories.push(newCategory);
+    return newCategory;
+  }
+
+  async updateMenuCategory(id: number, updates: any): Promise<any> {
+    const categoryIndex = this.menuCategories.findIndex(c => c.id === id);
+    if (categoryIndex >= 0) {
+      this.menuCategories[categoryIndex] = { ...this.menuCategories[categoryIndex], ...updates };
+      return this.menuCategories[categoryIndex];
+    }
+    throw new Error(`Menu category with id ${id} not found`);
+  }
+
+  async deleteMenuCategory(id: number): Promise<void> {
+    const categoryIndex = this.menuCategories.findIndex(c => c.id === id);
+    if (categoryIndex >= 0) {
+      this.menuCategories.splice(categoryIndex, 1);
+    } else {
+      throw new Error(`Menu category with id ${id} not found`);
+    }
   }
 
   async getSquareMenuItems(categoryId?: number): Promise<any[]> {

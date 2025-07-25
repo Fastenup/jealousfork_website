@@ -5,6 +5,7 @@ import FeaturedItemsAdmin from '@/components/FeaturedItemsAdmin';
 import SquareStatusIndicator from '@/components/SquareStatusIndicator';
 import SquareMenuManager from '@/components/SquareMenuManager';
 import MenuCategorizationPanel from '@/components/MenuCategorizationPanel';
+import MenuSectionManager from '@/components/MenuSectionManager';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -142,15 +143,20 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* Menu Categorization */}
+          {/* Menu Structure Management */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Menu Categorization</h2>
-            <MenuCategorizationPanel />
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Menu Structure Management</h2>
+            <MenuSectionManager />
           </div>
         </div>
 
         {/* Full width sections */}
         <div className="space-y-8">
+          {/* Menu Categorization */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Menu Categorization</h2>
+            <MenuCategorizationPanel />
+          </div>
           {/* Square Menu Items */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">All Square Menu Items</h2>
