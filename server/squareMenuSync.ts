@@ -11,6 +11,8 @@ export interface SquareMenuItem {
   categoryId?: string;
   inStock: boolean;
   imageUrl?: string;
+  imageIds?: string[];
+  hasSquareImage?: boolean;
 }
 
 export interface LocalMenuItem {
@@ -38,28 +40,62 @@ export class SquareMenuSyncService {
       : 'https://connect.squareup.com';
   }
 
-  // Fetch all menu items from Square catalog
+  // Fetch all menu items from Square catalog with images
   async fetchSquareMenuItems(): Promise<SquareMenuItem[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/v2/catalog/list?types=ITEM`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${this.accessToken}`,
-          'Square-Version': '2024-06-04',
-          'Content-Type': 'application/json'
-        }
-      });
+      // Fetch both items and images in parallel
+      const [itemsResponse, imagesResponse] = await Promise.all([
+        fetch(`${this.baseUrl}/v2/catalog/list?types=ITEM`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${this.accessToken}`,
+            'Square-Version': '2024-06-04',
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch(`${this.baseUrl}/v2/catalog/list?types=IMAGE`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${this.accessToken}`,
+            'Square-Version': '2024-06-04',
+            'Content-Type': 'application/json'
+          }
+        })
+      ]);
 
-      if (!response.ok) {
-        throw new Error(`Square API error: ${response.status}`);
+      if (!itemsResponse.ok) {
+        throw new Error(`Square API error: ${itemsResponse.status}`);
       }
 
-      const data = await response.json();
+      const itemsData = await itemsResponse.json();
       
-      return (data.objects || []).map((item: any) => {
+      // Build image map from Square images
+      const imageMap = new Map<string, string>();
+      if (imagesResponse.ok) {
+        const imagesData = await imagesResponse.json();
+        (imagesData.objects || []).forEach((image: any) => {
+          if (image.image_data?.url) {
+            imageMap.set(image.id, image.image_data.url);
+          }
+        });
+        console.log(`Found ${imageMap.size} Square images for menu items`);
+      }
+      
+      return (itemsData.objects || []).map((item: any) => {
         const itemData = item.item_data;
         const firstVariation = itemData?.variations?.[0];
         const price = firstVariation?.item_variation_data?.price_money?.amount || 0;
+        
+        // Find the first image URL from imageIds
+        let realImageUrl: string | undefined;
+        const imageIds = itemData?.image_ids || [];
+        for (const imageId of imageIds) {
+          const url = imageMap.get(imageId);
+          if (url) {
+            realImageUrl = url;
+            break;
+          }
+        }
         
         return {
           id: item.id,
@@ -70,7 +106,9 @@ export class SquareMenuSyncService {
           categoryId: itemData?.category_id,
           variations: itemData?.variations || [],
           inStock: true, // Default to in stock, check inventory separately
-          imageUrl: itemData?.image_url
+          imageUrl: realImageUrl || itemData?.image_url, // Use Square image first, fallback to any existing URL
+          imageIds: imageIds,
+          hasSquareImage: !!realImageUrl
         };
       });
     } catch (error) {
@@ -151,6 +189,7 @@ export class SquareMenuSyncService {
             ...localItem,
             squareId: squareItem.id,
             price: squareItem.price, // Use Square price
+            image: squareItem.imageUrl || localItem.image, // Use Square image if available
             inStock: inventoryCount > 0,
             lastSync: new Date().toISOString()
           });

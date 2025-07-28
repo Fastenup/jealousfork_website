@@ -45,6 +45,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.warn('Square service not configured:', error?.message || 'Unknown error');
   }
 
+  // Test Square API images
+  app.get('/api/test-square-images', async (req, res) => {
+    try {
+      const { testSquareImages } = await import('./squareImageTest');
+      const result = await testSquareImages();
+      res.json({
+        success: true,
+        ...result
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        details: error.toString()
+      });
+    }
+  });
+
   // Test Square API connection with direct API call
   app.post('/api/test-square', async (req, res) => {
     try {
@@ -725,6 +743,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error: any) {
       res.status(500).json({ error: 'Failed to update item stock', message: error.message });
+    }
+  });
+
+  // Get all Square images available for assignment
+  app.get('/api/square-images', async (req, res) => {
+    try {
+      const accessToken = process.env.SQUARE_ACCESS_TOKEN;
+      const baseUrl = accessToken?.startsWith('sandbox') 
+        ? 'https://connect.squareupsandbox.com' 
+        : 'https://connect.squareup.com';
+
+      const response = await fetch(`${baseUrl}/v2/catalog/list?types=IMAGE`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Square-Version': '2024-06-04',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Square API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const images = (data.objects || []).map((img: any) => ({
+        id: img.id,
+        name: img.image_data?.name || 'Unnamed Image',
+        url: img.image_data?.url,
+        createdAt: img.created_at
+      })).filter((img: any) => img.url);
+
+      res.json({
+        success: true,
+        images,
+        count: images.length
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
     }
   });
 
