@@ -62,7 +62,11 @@ export default function MenuCategorizationPanel() {
         title: "Success",
         description: "Item assigned to category successfully",
       });
+      // Reset selections after successful assignment
+      setSelectedItem(null);
+      // Invalidate queries to refresh data
       queryClient.invalidateQueries({ queryKey: ['/api/menu'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/item-assignments'] });
     },
     onError: (error: any) => {
       toast({

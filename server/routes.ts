@@ -354,10 +354,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       await storage.assignItemToCategory(squareId, categoryId);
-      res.json({ success: true, message: 'Item assigned to category successfully' });
+      
+      // Return success with updated assignments
+      const assignments = await storage.getItemCategoryAssignments();
+      res.json({ 
+        success: true, 
+        message: 'Item assigned to category successfully',
+        assignments 
+      });
     } catch (error: any) {
       console.error('Error assigning item to category:', error);
-      res.status(500).json({ error: 'Failed to assign item to category' });
+      res.status(500).json({ 
+        error: 'Failed to assign item to category',
+        message: error.message 
+      });
+    }
+  });
+
+  // Get item-category assignments
+  app.get('/api/admin/item-assignments', async (req, res) => {
+    try {
+      const assignments = await storage.getItemCategoryAssignments();
+      res.json({ success: true, assignments });
+    } catch (error: any) {
+      console.error('Error fetching item assignments:', error);
+      res.status(500).json({ error: 'Failed to fetch item assignments' });
     }
   });
 

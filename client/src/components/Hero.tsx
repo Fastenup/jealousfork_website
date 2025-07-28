@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 export default function Hero() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -5,6 +7,38 @@ export default function Hero() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  // Initialize Resy widget for hero button
+  useEffect(() => {
+    // Load Resy widget script if not already loaded
+    if (!document.querySelector('script[src="https://widgets.resy.com/embed.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://widgets.resy.com/embed.js';
+      script.async = true;
+      document.head.appendChild(script);
+      
+      script.onload = () => {
+        initializeHeroWidget();
+      };
+    } else {
+      // Script already loaded, initialize widget
+      setTimeout(initializeHeroWidget, 100);
+    }
+
+    function initializeHeroWidget() {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        const heroButton = document.getElementById('resyButtonHero');
+        if (heroButton && (window as any).resyWidget) {
+          (window as any).resyWidget.addButton(heroButton, {
+            venueId: 90707,
+            apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+            replace: true
+          });
+        }
+      }, 100);
+    }
+  }, []);
 
   return (
     <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -32,12 +66,12 @@ export default function Hero() {
           >
             View Menu
           </button>
-          <button 
-            onClick={() => scrollToSection('reservations')}
-            className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all"
+          <div 
+            id="resyButtonHero" 
+            className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all cursor-pointer text-center"
           >
             Make Reservation
-          </button>
+          </div>
         </div>
       </div>
       

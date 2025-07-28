@@ -281,6 +281,9 @@ class MemoryStorage implements IStorage {
     }));
   }
 
+  // Store item-to-category mappings
+  private itemCategoryMappings: { [squareId: string]: number } = {};
+
   async assignItemToCategory(squareId: string, categoryId: number): Promise<void> {
     // Find the category name from the categoryId
     const categories = await this.getMenuCategories();
@@ -290,16 +293,23 @@ class MemoryStorage implements IStorage {
       throw new Error(`Category with ID ${categoryId} not found`);
     }
     
+    // Store the item-to-category mapping
+    this.itemCategoryMappings[squareId] = categoryId;
+    
     // Update featured item category assignment if it exists in featured items
     const itemIndex = this.featuredItems.findIndex(item => item.squareId === squareId);
     if (itemIndex >= 0) {
       this.featuredItems[itemIndex].category = category.name.toLowerCase();
+      this.featuredItems[itemIndex].menuSection = category.sectionId;
+      this.featuredItems[itemIndex].menuCategory = categoryId;
       console.log(`Updated featured item ${squareId} category to ${category.name.toLowerCase()}`);
     }
     
-    // For comprehensive categorization, we would store this mapping in database
-    // For now, just log the assignment
-    console.log(`Assigned Square item ${squareId} to category ${category.name} (${categoryId})`);
+    console.log(`Successfully assigned Square item ${squareId} to category ${category.name} (${categoryId})`);
+  }
+
+  async getItemCategoryAssignments(): Promise<{ [squareId: string]: number }> {
+    return { ...this.itemCategoryMappings };
   }
 
   async initializeDefaultMenuStructure(): Promise<void> {

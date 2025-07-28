@@ -171,6 +171,9 @@ Changelog:
   * Made contact information section fully responsive with map positioned to the right of contact details
   * Enhanced contact layout with improved spacing, typography, and mobile responsiveness
   * All admin panel operations now working correctly (create, update, delete sections/categories)
+  * Replaced hero reservation button with functional Resy widget integration
+  * Fixed admin item-to-category assignment system with persistent storage mapping
+  * Added proper success feedback and data refresh for category assignments
 ```
 
 ## User Preferences
