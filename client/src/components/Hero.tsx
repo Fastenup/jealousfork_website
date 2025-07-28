@@ -67,8 +67,7 @@ export default function Hero() {
             View Menu
           </button>
           <div 
-            id="resyButtonHero" 
-            className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all cursor-pointer text-center"
+            id="resyButtonHero"
           >
             Make Reservation
           </div>

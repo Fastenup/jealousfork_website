@@ -2,6 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Resy Widget Styling */
+#resyButtonHero {
+  /* Ensure consistent button styling with View Menu button */
+  display: inline-block !important;
+  text-decoration: none !important;
+  border-radius: 9999px !important; /* rounded-full equivalent */
+  padding: 1rem 2rem !important; /* px-8 py-4 equivalent */
+  font-weight: 600 !important; /* font-semibold equivalent */
+  font-size: 1.125rem !important; /* text-lg equivalent */
+  border: 2px solid white !important;
+  color: white !important;
+  background-color: transparent !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  min-width: 200px !important;
+}
+
+#resyButtonHero:hover {
+  background-color: white !important;
+  color: #111827 !important; /* gray-900 equivalent */
+  transform: none !important; /* Remove any default transform */
+}
+
+/* Override any Resy widget default styles */
+#resyButtonHero * {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(0, 0%, 9%);
