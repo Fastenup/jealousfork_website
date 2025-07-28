@@ -37,7 +37,7 @@ export const openResyWidget = () => {
     if (window.resyWidget) {
       window.resyWidget.addButton(tempButton, {
         venueId: 90707,
-        apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+        apiKey: import.meta.env.VITE_RESY_API_KEY || "",
         replace: true
       });
       tempButton.click();
@@ -87,7 +87,7 @@ export default function ResyWidget({ className = "" }: ResyWidgetProps) {
         if (button && window.resyWidget) {
           window.resyWidget.addButton(button, {
             venueId: 90707,
-            apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+            apiKey: import.meta.env.VITE_RESY_API_KEY || "",
             replace: true
           });
         }
