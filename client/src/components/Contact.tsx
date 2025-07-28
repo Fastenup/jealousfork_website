@@ -33,9 +33,17 @@ export default function Contact() {
       setTimeout(() => {
         const button = document.getElementById('resyButton-P9CmnE96lqIg1Nk1WphHD');
         if (button && (window as any).resyWidget) {
+          const resyApiKey = import.meta.env.VITE_RESY_API_KEY;
+          const resyVenueId = import.meta.env.VITE_RESY_VENUE_ID || 90707;
+          
+          if (!resyApiKey) {
+            console.warn('VITE_RESY_API_KEY environment variable is not set');
+            return;
+          }
+          
           (window as any).resyWidget.addButton(button, {
-            venueId: 90707,
-            apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+            venueId: resyVenueId,
+            apiKey: resyApiKey,
             replace: true
           });
         }
