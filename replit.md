@@ -164,6 +164,13 @@ Changelog:
   * Enhanced menu sections with real-time open/closed status based on operating hours
   * Improved admin interface with complete Square item management and categorization
   * All technical details (item IDs, sync status) hidden from customer pages, visible only in admin
+- July 28, 2025: Admin panel fixes and responsive contact section:
+  * Fixed apiRequest function signature to resolve admin panel edit errors
+  * Added complete CRUD operations for menu sections and categories management
+  * Created MenuSectionManager component with create, rename, and delete functionality
+  * Made contact information section fully responsive with map positioned to the right of contact details
+  * Enhanced contact layout with improved spacing, typography, and mobile responsiveness
+  * All admin panel operations now working correctly (create, update, delete sections/categories)
 ```
 
 ## User Preferences
