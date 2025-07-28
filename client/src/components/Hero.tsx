@@ -30,9 +30,17 @@ export default function Hero() {
       setTimeout(() => {
         const heroButton = document.getElementById('resyButtonHero');
         if (heroButton && (window as any).resyWidget) {
+          const resyApiKey = import.meta.env.VITE_RESY_API_KEY;
+          const resyVenueId = import.meta.env.VITE_RESY_VENUE_ID || 90707;
+          
+          if (!resyApiKey) {
+            console.warn('VITE_RESY_API_KEY environment variable is not set');
+            return;
+          }
+          
           (window as any).resyWidget.addButton(heroButton, {
-            venueId: 90707,
-            apiKey: "Xyco1xMNKGCe2FaoSs5GAcr5dVh5gvSA",
+            venueId: resyVenueId,
+            apiKey: resyApiKey,
             replace: true
           });
         }
