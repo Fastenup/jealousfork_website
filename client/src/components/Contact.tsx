@@ -335,13 +335,12 @@ export default function Contact() {
             <h3 className="text-3xl font-bold text-gray-900 mb-4">Make a Reservation</h3>
             <p className="text-xl text-gray-600 mb-8">Book your table directly through Resy</p>
             <div className="flex justify-center">
-              <a 
-                href="https://resy.com/cities/miami-fl/venues/jealous-fork" 
+              <div 
                 id="resyButton-P9CmnE96lqIg1Nk1WphHD"
-                className="inline-block bg-gray-900 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors"
+                className="inline-block bg-gray-900 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors cursor-pointer"
               >
                 Book your Jealous Fork reservation on Resy
-              </a>
+              </div>
             </div>
           </div>
         </div>
