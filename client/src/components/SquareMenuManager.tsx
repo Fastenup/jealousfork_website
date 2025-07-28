@@ -43,7 +43,7 @@ export default function SquareMenuManager() {
   // Sync featured items with Square
   const syncMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest('/api/featured-items/sync', 'POST');
+      return apiRequest('/api/featured-items/sync', { method: 'POST' });
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['/api/featured-items'] });
@@ -64,7 +64,10 @@ export default function SquareMenuManager() {
   // Add Square item as featured
   const addFeaturedMutation = useMutation({
     mutationFn: async ({ squareId, localId }: { squareId: string; localId: number }) => {
-      return apiRequest('/api/featured-items/add-square-item', 'POST', { squareId, localId });
+      return apiRequest('/api/featured-items/add-square-item', { 
+        method: 'POST', 
+        body: { squareId, localId } 
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/featured-items'] });
@@ -86,7 +89,7 @@ export default function SquareMenuManager() {
   // Remove featured item
   const removeFeaturedMutation = useMutation({
     mutationFn: async (localId: number) => {
-      return apiRequest(`/api/featured-items/${localId}`, 'DELETE');
+      return apiRequest(`/api/featured-items/${localId}`, { method: 'DELETE' });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/featured-items'] });
@@ -131,7 +134,8 @@ export default function SquareMenuManager() {
   const handleAddSquareItem = () => {
     if (!selectedSquareItem) return;
     
-    const nextLocalId = Math.max(...(featuredData?.items || []).map((item: FeaturedItemConfig) => item.localId), 0) + 1;
+    const featuredItems = (featuredData as any)?.items || [];
+    const nextLocalId = Math.max(...featuredItems.map((item: FeaturedItemConfig) => item.localId), 0) + 1;
     addFeaturedMutation.mutate({
       squareId: selectedSquareItem.id,
       localId: nextLocalId
@@ -139,7 +143,7 @@ export default function SquareMenuManager() {
   };
 
   const squareItems = (squareMenu as any)?.items || [];
-  const featuredItems = featuredData?.items || [];
+  const featuredItems = (featuredData as any)?.items || [];
   const currentFeaturedCount = featuredItems.filter((item: FeaturedItemConfig) => item.featured).length;
 
   if (squareLoading || featuredLoading) {
