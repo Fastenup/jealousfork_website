@@ -1,6 +1,6 @@
 // Storage interface for featured items and menu synchronization
 import { LocalMenuItem } from './squareMenuSync';
-import { ContactSubmission, InsertContactSubmission, contactSubmissions } from '../shared/schema';
+import { ContactSubmission, InsertContactSubmission, contactSubmissions, squareMenuItems } from '../shared/schema';
 import { db } from './db';
 import { eq } from 'drizzle-orm';
 
@@ -290,6 +290,7 @@ class MemoryStorage implements IStorage {
 
   // Store item-to-category mappings
   private itemCategoryMappings: { [squareId: string]: number } = {};
+  private assignmentsLoaded = false;
 
   async assignItemToCategory(squareId: string, categoryId: number): Promise<void> {
     // Find the category name from the categoryId
@@ -300,8 +301,57 @@ class MemoryStorage implements IStorage {
       throw new Error(`Category with ID ${categoryId} not found`);
     }
     
-    // Store the item-to-category mapping
+    // Store the item-to-category mapping in memory for immediate use
     this.itemCategoryMappings[squareId] = categoryId;
+    
+    // Also persist to database for permanent storage
+    try {
+      // Check if the item already exists in the database
+      const existingItem = await db.query.squareMenuItems.findFirst({
+        where: (items, { eq }) => eq(items.squareId, squareId)
+      });
+
+      if (existingItem) {
+        // Update existing item with new category
+        await db.update(squareMenuItems).set({
+          categoryId: categoryId,
+          updatedAt: new Date()
+        }).where(eq(squareMenuItems.squareId, squareId));
+      } else {
+        // Create a placeholder entry in the database for this assignment
+        // We'll need basic item info, so let's get it from featured items first
+        const featuredItem = this.featuredItems.find(item => item.squareId === squareId);
+        if (featuredItem) {
+          await db.insert(squareMenuItems).values({
+            squareId: squareId,
+            categoryId: categoryId,
+            name: featuredItem.name,
+            description: featuredItem.description || '',
+            price: featuredItem.price.toString(),
+            isAvailable: featuredItem.inStock,
+            isFeatured: featuredItem.featured,
+            displayOrder: featuredItem.displayOrder || 0
+          });
+        } else {
+          // Create minimal entry for tracking category assignment
+          await db.insert(squareMenuItems).values({
+            squareId: squareId,
+            categoryId: categoryId,
+            name: `Square Item ${squareId}`,
+            description: 'Assigned via admin panel',
+            price: '0.00',
+            isAvailable: true,
+            isFeatured: false,
+            displayOrder: 0
+          });
+        }
+      }
+      
+      console.log(`Persisted Square item ${squareId} to category ${category.name} (${categoryId}) in database`);
+    } catch (error) {
+      console.error(`Failed to persist category assignment to database:`, error);
+      // Don't throw error - allow in-memory assignment to continue working
+    }
     
     // Update featured item category assignment if it exists in featured items
     const itemIndex = this.featuredItems.findIndex(item => item.squareId === squareId);
@@ -314,6 +364,32 @@ class MemoryStorage implements IStorage {
   }
 
   async getItemCategoryAssignments(): Promise<{ [squareId: string]: number }> {
+    // Load assignments from database only once to initialize in-memory cache
+    if (!this.assignmentsLoaded) {
+      try {
+        const dbAssignments = await db.query.squareMenuItems.findMany({
+          columns: {
+            squareId: true,
+            categoryId: true
+          },
+          where: (items, { isNotNull }) => isNotNull(items.categoryId)
+        });
+        
+        // Populate in-memory assignments from database
+        dbAssignments.forEach(item => {
+          if (item.categoryId !== null) {
+            this.itemCategoryMappings[item.squareId] = item.categoryId;
+          }
+        });
+        
+        this.assignmentsLoaded = true;
+        console.log(`Loaded ${dbAssignments.length} category assignments from database`);
+      } catch (error) {
+        console.error('Failed to load category assignments from database:', error);
+        // Continue with empty assignments
+      }
+    }
+    
     return { ...this.itemCategoryMappings };
   }
 

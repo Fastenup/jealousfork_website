@@ -8,8 +8,14 @@ import MenuCategorizationPanel from '@/components/MenuCategorizationPanel';
 import MenuSectionManager from '@/components/MenuSectionManager';
 
 export default function AdminPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showLogin, setShowLogin] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Check localStorage for authentication status on page load
+    return localStorage.getItem('admin_authenticated') === 'true';
+  });
+  const [showLogin, setShowLogin] = useState(() => {
+    // Only show login if not authenticated
+    return localStorage.getItem('admin_authenticated') !== 'true';
+  });
 
   // Admin password
   const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'jealous2025';
@@ -18,6 +24,8 @@ export default function AdminPage() {
     if (password === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       setShowLogin(false);
+      // Persist authentication status in localStorage
+      localStorage.setItem('admin_authenticated', 'true');
       return true;
     }
     return false;
@@ -26,6 +34,8 @@ export default function AdminPage() {
   const handleAdminLogout = () => {
     setIsAuthenticated(false);
     setShowLogin(true);
+    // Clear authentication status from localStorage
+    localStorage.removeItem('admin_authenticated');
   };
 
   // Fetch all Square menu items for verification
