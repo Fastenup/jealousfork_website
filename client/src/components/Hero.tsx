@@ -70,13 +70,15 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button 
             onClick={() => scrollToSection('menu')}
-            className="bg-gray-900 text-white px-8 py-3 rounded-sm font-semibold text-lg hover:bg-gray-800 transition-all transform hover:scale-105 w-48"
+            className="bg-gray-900 text-white py-3 rounded-sm font-semibold text-lg hover:bg-gray-800 transition-all transform hover:scale-105"
+            style={{ width: '196px', paddingLeft: '32px', paddingRight: '32px' }}
           >
             View Menu
           </button>
           <div 
             id="resyButtonHero" 
-            className="border-2 border-white text-white px-8 py-3 rounded-sm font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all cursor-pointer text-center w-48 flex items-center justify-center"
+            className="border-2 border-white text-white py-3 rounded-sm font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all cursor-pointer text-center flex items-center justify-center"
+            style={{ width: '196px', paddingLeft: '32px', paddingRight: '32px' }}
           >
             Make Reservation
           </div>
