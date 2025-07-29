@@ -18,11 +18,10 @@ export class BrevoEmailService {
     }
 
     // Initialize Brevo API client
-    const apiInstance = brevo.ApiClient.instance;
-    const apiKeyInstance = apiInstance.authentications['api-key'];
-    apiKeyInstance.apiKey = apiKey;
-    
     this.transactionalEmailsApi = new brevo.TransactionalEmailsApi();
+    
+    // Set API key authentication
+    this.transactionalEmailsApi.authentications.apiKey.apiKey = apiKey;
   }
 
   async sendContactEmail(contactData: ContactFormData): Promise<{ success: boolean; messageId?: string; error?: string }> {
@@ -141,12 +140,17 @@ Submitted on: ${new Date().toLocaleString('en-US', {
     try {
       // Test API connection by getting account info
       const accountApi = new brevo.AccountApi();
-      await accountApi.getAccount();
-      return { success: true };
+      accountApi.authentications.apiKey.apiKey = process.env.BREVO_API_KEY!;
+      
+      const account = await accountApi.getAccount();
+      return { 
+        success: true, 
+        message: `Connected to Brevo account: ${account.body?.email || 'Unknown'}` 
+      };
     } catch (error: any) {
       return {
         success: false,
-        error: error.message || 'Connection test failed'
+        error: error.response?.body?.message || error.message || 'Connection test failed'
       };
     }
   }

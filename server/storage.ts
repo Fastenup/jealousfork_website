@@ -1,6 +1,8 @@
 // Storage interface for featured items and menu synchronization
 import { LocalMenuItem } from './squareMenuSync';
-import { ContactSubmission, InsertContactSubmission } from '../shared/schema';
+import { ContactSubmission, InsertContactSubmission, contactSubmissions } from '../shared/schema';
+import { db } from './db';
+import { eq } from 'drizzle-orm';
 
 export interface FeaturedItemConfig {
   localId: number;
@@ -319,31 +321,28 @@ class MemoryStorage implements IStorage {
     console.log('Default menu structure initialized');
   }
 
-  // Contact form submissions (in-memory for now)
-  private contactSubmissions: ContactSubmission[] = [];
-  private nextContactSubmissionId = 1;
-
+  // Contact form submissions - now using actual database
   async createContactSubmission(data: InsertContactSubmission): Promise<ContactSubmission> {
-    const submission: ContactSubmission = {
-      id: this.nextContactSubmissionId++,
-      ...data,
-      status: 'pending',
-      sentAt: null,
-      createdAt: new Date()
-    };
+    const [submission] = await db.insert(contactSubmissions)
+      .values({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        message: data.message
+      })
+      .returning();
     
-    this.contactSubmissions.push(submission);
     return submission;
   }
 
   async updateContactSubmissionStatus(id: number, status: 'pending' | 'sent' | 'failed'): Promise<void> {
-    const submission = this.contactSubmissions.find(s => s.id === id);
-    if (submission) {
-      submission.status = status;
-      if (status === 'sent') {
-        submission.sentAt = new Date();
-      }
-    }
+    await db.update(contactSubmissions)
+      .set({
+        status: status,
+        sentAt: status === 'sent' ? new Date() : null
+      })
+      .where(eq(contactSubmissions.id, id));
   }
 }
 
