@@ -86,9 +86,31 @@ export const squareMenuItems = pgTable("square_menu_items", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Contact form submissions
+export const contactSubmissions = pgTable("contact_submissions", {
+  id: serial("id").primaryKey(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  message: text("message").notNull(),
+  status: text("status", { enum: ['pending', 'sent', 'failed'] }).default('pending'),
+  sentAt: timestamp("sent_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertContactSubmissionSchema = createInsertSchema(contactSubmissions).omit({
+  id: true,
+  status: true,
+  sentAt: true,
+  createdAt: true,
+});
+
 export type MenuSection = typeof menuSections.$inferSelect;
 export type InsertMenuSection = typeof menuSections.$inferInsert;
 export type MenuCategory = typeof menuCategories.$inferSelect;
 export type InsertMenuCategory = typeof menuCategories.$inferInsert;
 export type SquareMenuItem = typeof squareMenuItems.$inferSelect;
 export type InsertSquareMenuItem = typeof squareMenuItems.$inferInsert;
+export type ContactSubmission = typeof contactSubmissions.$inferSelect;
+export type InsertContactSubmission = z.infer<typeof insertContactSubmissionSchema>;

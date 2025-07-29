@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -51,6 +53,37 @@ export default function Contact() {
     }
   }, []);
 
+  // Contact form submission mutation
+  const contactMutation = useMutation({
+    mutationFn: (data: typeof formData) => apiRequest('/contact', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+    onSuccess: (response) => {
+      toast({
+        title: "Message sent successfully!",
+        description: response.message || "We'll get back to you soon.",
+      });
+      
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        message: ''
+      });
+    },
+    onError: (error: any) => {
+      console.error('Contact form error:', error);
+      toast({
+        title: "Message could not be sent",
+        description: error.message || "Please try again or call us directly.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -73,20 +106,8 @@ export default function Contact() {
       return;
     }
 
-    // Success message
-    toast({
-      title: "Message sent successfully!",
-      description: "We'll get back to you soon.",
-    });
-    
-    // Reset form
-    setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      message: ''
-    });
+    // Submit form data
+    contactMutation.mutate(formData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -264,9 +285,10 @@ export default function Contact() {
                 </div>
                 <button 
                   type="submit" 
-                  className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                  disabled={contactMutation.isPending}
+                  className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
-                  Send Message
+                  {contactMutation.isPending ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             </div>

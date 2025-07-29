@@ -1,5 +1,6 @@
 // Storage interface for featured items and menu synchronization
 import { LocalMenuItem } from './squareMenuSync';
+import { ContactSubmission, InsertContactSubmission } from '../shared/schema';
 
 export interface FeaturedItemConfig {
   localId: number;
@@ -34,6 +35,10 @@ export interface IStorage {
   getSquareMenuItems(categoryId?: number): Promise<any[]>;
   assignItemToCategory(squareId: string, categoryId: number): Promise<void>;
   initializeDefaultMenuStructure(): Promise<void>;
+  
+  // Contact form submissions
+  createContactSubmission(data: InsertContactSubmission): Promise<ContactSubmission>;
+  updateContactSubmissionStatus(id: number, status: 'pending' | 'sent' | 'failed'): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -300,8 +305,6 @@ class MemoryStorage implements IStorage {
     const itemIndex = this.featuredItems.findIndex(item => item.squareId === squareId);
     if (itemIndex >= 0) {
       this.featuredItems[itemIndex].category = category.name.toLowerCase();
-      this.featuredItems[itemIndex].menuSection = category.sectionId;
-      this.featuredItems[itemIndex].menuCategory = categoryId;
       console.log(`Updated featured item ${squareId} category to ${category.name.toLowerCase()}`);
     }
     
@@ -314,6 +317,33 @@ class MemoryStorage implements IStorage {
 
   async initializeDefaultMenuStructure(): Promise<void> {
     console.log('Default menu structure initialized');
+  }
+
+  // Contact form submissions (in-memory for now)
+  private contactSubmissions: ContactSubmission[] = [];
+  private nextContactSubmissionId = 1;
+
+  async createContactSubmission(data: InsertContactSubmission): Promise<ContactSubmission> {
+    const submission: ContactSubmission = {
+      id: this.nextContactSubmissionId++,
+      ...data,
+      status: 'pending',
+      sentAt: null,
+      createdAt: new Date()
+    };
+    
+    this.contactSubmissions.push(submission);
+    return submission;
+  }
+
+  async updateContactSubmissionStatus(id: number, status: 'pending' | 'sent' | 'failed'): Promise<void> {
+    const submission = this.contactSubmissions.find(s => s.id === id);
+    if (submission) {
+      submission.status = status;
+      if (status === 'sent') {
+        submission.sentAt = new Date();
+      }
+    }
   }
 }
 

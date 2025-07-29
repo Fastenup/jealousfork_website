@@ -4,6 +4,8 @@ import path from "path";
 import { storage } from "./storage";
 import { createSquareService } from "./squareService";
 import { z } from "zod";
+import { insertContactSubmissionSchema } from "../shared/schema";
+import { BrevoEmailService } from "./brevoService";
 
 // Order request validation schema
 const orderRequestSchema = z.object({
@@ -782,6 +784,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error: any) {
       res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+
+  // Contact form submission endpoint
+  app.post('/api/contact', async (req, res) => {
+    try {
+      // Validate request body
+      const contactData = insertContactSubmissionSchema.parse(req.body);
+      
+      // Save to database
+      const submission = await storage.createContactSubmission(contactData);
+      
+      // Initialize Brevo email service
+      let emailResult = { success: false, error: 'Email service not configured' };
+      
+      try {
+        const brevoService = new BrevoEmailService();
+        emailResult = await brevoService.sendContactEmail(contactData);
+      } catch (emailError: any) {
+        console.warn('Brevo email service not available:', emailError.message);
+        emailResult = { success: false, error: emailError.message };
+      }
+      
+      // Update submission status
+      await storage.updateContactSubmissionStatus(
+        submission.id, 
+        emailResult.success ? 'sent' : 'failed'
+      );
+      
+      if (emailResult.success) {
+        res.json({
+          success: true,
+          message: 'Message sent successfully! We\'ll get back to you soon.',
+          submissionId: submission.id
+        });
+      } else {
+        // Still return success to user but log the email failure
+        console.error('Email sending failed but form was saved:', emailResult.error);
+        res.json({
+          success: true,
+          message: 'Message received! We\'ll get back to you soon.',
+          submissionId: submission.id,
+          emailStatus: 'pending'
+        });
+      }
+    } catch (error: any) {
+      console.error('Contact form submission error:', error);
+      
+      if (error.name === 'ZodError') {
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid form data',
+          details: error.errors
+        });
+      }
+      
+      res.status(500).json({
+        success: false,
+        error: 'Failed to process contact form submission'
+      });
+    }
+  });
+
+  // Test Brevo connection endpoint
+  app.get('/api/test-brevo', async (req, res) => {
+    try {
+      const brevoService = new BrevoEmailService();
+      const result = await brevoService.testConnection();
+      res.json(result);
+    } catch (error: any) {
+      res.json({
         success: false,
         error: error.message
       });
