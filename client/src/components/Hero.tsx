@@ -67,16 +67,16 @@ export default function Hero() {
         <p className="text-xl md:text-2xl mb-8 font-light">
           From food truck to restaurant - Florida's best pancakes & gourmet burgers
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button 
             onClick={() => scrollToSection('menu')}
-            className="bg-gray-900 text-white px-8 py-0 rounded-sm font-semibold text-lg hover:bg-gray-800 transition-all transform hover:scale-105"
+            className="bg-gray-900 text-white px-8 py-3 rounded-sm font-semibold text-lg hover:bg-gray-800 transition-all transform hover:scale-105 w-full sm:w-auto"
           >
             View Menu
           </button>
           <div 
             id="resyButtonHero" 
-            className="border-2 border-white text-white px-8 py-0 rounded-sm font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all cursor-pointer text-center"
+            className="border-2 border-white text-white px-8 py-3 rounded-sm font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all cursor-pointer text-center w-full sm:w-auto flex items-center justify-center"
           >
             Make Reservation
           </div>
