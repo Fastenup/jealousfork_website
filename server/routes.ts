@@ -402,6 +402,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Bulk assign items to categories
+  app.post('/api/admin/bulk-assign-categories', async (req, res) => {
+    try {
+      const { assignments } = req.body;
+      if (!assignments || !Array.isArray(assignments)) {
+        return res.status(400).json({ error: 'Invalid assignments array' });
+      }
+
+      const results = [];
+      for (const { squareId, categoryId } of assignments) {
+        try {
+          await storage.assignItemToCategory(squareId, categoryId);
+          results.push({ squareId, categoryId, success: true });
+        } catch (error: any) {
+          results.push({ squareId, categoryId, success: false, error: error.message });
+        }
+      }
+
+      const successCount = results.filter(r => r.success).length;
+      const failCount = results.filter(r => !r.success).length;
+
+      res.json({
+        success: true,
+        message: `Processed ${assignments.length} assignments: ${successCount} successful, ${failCount} failed`,
+        results,
+        assignments: await storage.getItemCategoryAssignments()
+      });
+    } catch (error: any) {
+      console.error('Error in bulk assign:', error);
+      res.status(500).json({ error: 'Failed to process bulk assignments' });
+    }
+  });
+
+  // Remove item from category
+  app.delete('/api/admin/item-assignments/:squareId', async (req, res) => {
+    try {
+      const { squareId } = req.params;
+      await storage.removeItemFromCategory(squareId);
+      res.json({ 
+        success: true, 
+        message: 'Item removed from category',
+        assignments: await storage.getItemCategoryAssignments()
+      });
+    } catch (error: any) {
+      console.error('Error removing item assignment:', error);
+      res.status(500).json({ error: 'Failed to remove item assignment' });
+    }
+  });
+
   // Get specific menu category
   app.get('/api/menu/:category', async (req, res) => {
     try {

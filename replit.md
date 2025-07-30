@@ -174,6 +174,14 @@ Changelog:
   * Replaced hero reservation button with functional Resy widget integration
   * Fixed admin item-to-category assignment system with persistent storage mapping
   * Added proper success feedback and data refresh for category assignments
+- July 30, 2025: Complete admin authentication and bulk categorization system overhaul:
+  * Fixed admin authentication persistence - login now stays active after page refresh using localStorage
+  * Completely redesigned menu categorization with streamlined bulk assignment interface
+  * Added bulk category assignment API endpoints for processing multiple items simultaneously
+  * Created comprehensive BulkMenuCategorizationPanel with search, filtering, and bulk operations
+  * Enhanced category assignment persistence with proper database storage and in-memory caching
+  * Added ability to remove item assignments and view assignment statistics
+  * All category assignments now persist across server restarts and page refreshes
 ```
 
 ## User Preferences

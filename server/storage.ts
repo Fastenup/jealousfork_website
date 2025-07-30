@@ -36,6 +36,8 @@ export interface IStorage {
   getMenuCategories(sectionId?: number): Promise<any[]>;
   getSquareMenuItems(categoryId?: number): Promise<any[]>;
   assignItemToCategory(squareId: string, categoryId: number): Promise<void>;
+  removeItemFromCategory(squareId: string): Promise<void>;
+  getItemCategoryAssignments(): Promise<{ [squareId: string]: number }>;
   initializeDefaultMenuStructure(): Promise<void>;
   
   // Contact form submissions
@@ -391,6 +393,28 @@ class MemoryStorage implements IStorage {
     }
     
     return { ...this.itemCategoryMappings };
+  }
+
+  async removeItemFromCategory(squareId: string): Promise<void> {
+    // Remove from in-memory mappings
+    delete this.itemCategoryMappings[squareId];
+    
+    // Remove from database
+    try {
+      await db.delete(squareMenuItems).where(eq(squareMenuItems.squareId, squareId));
+      console.log(`Removed Square item ${squareId} from category assignment in database`);
+    } catch (error) {
+      console.error(`Failed to remove category assignment from database:`, error);
+    }
+    
+    // Update featured item if exists
+    const itemIndex = this.featuredItems.findIndex(item => item.squareId === squareId);
+    if (itemIndex >= 0) {
+      this.featuredItems[itemIndex].category = 'uncategorized';
+      console.log(`Reset featured item ${squareId} category to uncategorized`);
+    }
+    
+    console.log(`Successfully removed Square item ${squareId} from category assignment`);
   }
 
   async initializeDefaultMenuStructure(): Promise<void> {
