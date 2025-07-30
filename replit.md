@@ -182,6 +182,9 @@ Changelog:
   * Enhanced category assignment persistence with proper database storage and in-memory caching
   * Added ability to remove item assignments and view assignment statistics
   * All category assignments now persist across server restarts and page refreshes
+  * Fixed critical Square inventory logic: blank/null counts = in stock (unlimited), 0/negative = out of stock
+  * Resolved stock status inconsistency between featured items and Square menu items
+  * All inventory status now correctly reflects Square POS data across the entire application
 ```
 
 ## User Preferences

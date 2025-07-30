@@ -144,9 +144,15 @@ export class SquareService {
       if (result.quantities) {
         result.quantities.forEach((quantity: any) => {
           if (quantity.catalogObjectId) {
+            const rawQuantity = quantity.quantity;
+            const isTracked = rawQuantity !== null && rawQuantity !== undefined && rawQuantity !== '';
+            const numericQuantity = parseInt(rawQuantity || '0');
+            
             inventoryMap.set(quantity.catalogObjectId, {
-              available: parseInt(quantity.quantity || '0'),
-              inStock: parseInt(quantity.quantity || '0') > 0
+              available: numericQuantity,
+              // Logic: blank/null = in stock (unlimited), 0 or negative = out of stock
+              inStock: !isTracked || numericQuantity > 0,
+              isTracked: isTracked
             });
           }
         });

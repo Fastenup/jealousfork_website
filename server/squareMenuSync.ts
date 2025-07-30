@@ -118,7 +118,7 @@ export class SquareMenuSyncService {
   }
 
   // Get inventory counts for items
-  async getInventoryCounts(itemIds: string[]): Promise<Map<string, number>> {
+  async getInventoryCounts(itemIds: string[]): Promise<Map<string, { quantity: number, inStock: boolean, isTracked: boolean }>> {
     try {
       const response = await fetch(`${this.baseUrl}/v2/inventory/counts/batch-retrieve`, {
         method: 'POST',
@@ -139,10 +139,21 @@ export class SquareMenuSyncService {
       }
 
       const data = await response.json();
-      const inventoryMap = new Map<string, number>();
+      const inventoryMap = new Map<string, { quantity: number, inStock: boolean, isTracked: boolean }>();
       
       (data.counts || []).forEach((count: any) => {
-        inventoryMap.set(count.catalog_object_id, parseFloat(count.quantity || '0'));
+        const rawQuantity = count.quantity;
+        const isTracked = rawQuantity !== null && rawQuantity !== undefined && rawQuantity !== '';
+        const numericQuantity = parseFloat(rawQuantity || '0');
+        
+        // Inventory logic: blank/null = in stock (unlimited), 0/negative = out of stock (tracked/depleted)
+        
+        inventoryMap.set(count.catalog_object_id, {
+          quantity: numericQuantity,
+          // Logic: blank/null = in stock (unlimited), 0 or negative = out of stock
+          inStock: !isTracked || numericQuantity > 0,
+          isTracked: isTracked
+        });
       });
 
       return inventoryMap;
@@ -184,13 +195,13 @@ export class SquareMenuSyncService {
 
         if (squareItem) {
           // Sync with Square data
-          const inventoryCount = inventory.get(squareItem.id) || 0;
+          const inventoryInfo = inventory.get(squareItem.id) || { quantity: 0, inStock: true, isTracked: false };
           syncedItems.push({
             ...localItem,
             squareId: squareItem.id,
             price: squareItem.price, // Use Square price
             image: squareItem.imageUrl || localItem.image, // Use Square image if available
-            inStock: inventoryCount > 0,
+            inStock: inventoryInfo.inStock, // Use correct logic: null/blank = in stock, 0/negative = out of stock
             lastSync: new Date().toISOString()
           });
         } else {
@@ -201,10 +212,13 @@ export class SquareMenuSyncService {
       }
 
       // Update Square items with inventory status
-      const availableSquareItems = squareItems.map(item => ({
-        ...item,
-        inStock: (inventory.get(item.id) || 0) > 0
-      }));
+      const availableSquareItems = squareItems.map(item => {
+        const inventoryInfo = inventory.get(item.id) || { quantity: 0, inStock: true, isTracked: false };
+        return {
+          ...item,
+          inStock: inventoryInfo.inStock // Use correct logic: null/blank = in stock, 0/negative = out of stock
+        };
+      });
 
       return {
         syncedItems,

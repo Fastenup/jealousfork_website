@@ -167,6 +167,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { SquareMenuSyncService } = await import('./squareMenuSync');
       const { storage } = await import('./storage');
       
+      // Inventory logic: blank/null = in stock (unlimited), 0/negative = out of stock (tracked/depleted)
+      
       // Get current featured items for reference
       const featuredItems = await storage.getFeaturedItems();
       
