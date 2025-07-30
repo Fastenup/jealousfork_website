@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { featuredItemsConfig, setItemFeatured, setItemStock } from '@/data/featuredItems';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { apiRequest, queryClient } from '@/lib/queryClient';
+import { useToast } from '@/hooks/use-toast';
 
 interface FeaturedItemsAdminProps {
   onClose: () => void;
@@ -7,19 +9,64 @@ interface FeaturedItemsAdminProps {
 }
 
 export default function FeaturedItemsAdmin({ onClose, embedded = false }: FeaturedItemsAdminProps) {
-  const [items, setItems] = useState(featuredItemsConfig);
+  const { toast } = useToast();
 
-  const handleToggleFeatured = (itemId: number) => {
-    setItemFeatured(itemId, !items.find(item => item.id === itemId)?.featured);
-    setItems([...featuredItemsConfig]); // Trigger re-render
-  };
+  // Fetch real-time featured items from API
+  const { data: featuredData, isLoading } = useQuery({
+    queryKey: ['/api/featured-items'],
+  });
 
-  const handleToggleStock = (itemId: number) => {
-    setItemStock(itemId, !items.find(item => item.id === itemId)?.inStock);
-    setItems([...featuredItemsConfig]); // Trigger re-render
-  };
+  // Update stock status
+  const updateStockMutation = useMutation({
+    mutationFn: async ({ localId, inStock }: { localId: number; inStock: boolean }) => {
+      return apiRequest(`/api/featured-items/${localId}/stock`, {
+        method: 'PATCH',
+        body: { inStock },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/featured-items'] });
+      toast({
+        title: "Stock Updated",
+        description: "Item stock status updated successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to Update Stock",
+        description: error.message || "Could not update stock status",
+        variant: "destructive",
+      });
+    },
+  });
 
-  const featuredCount = items.filter(item => item.featured).length;
+  // Remove featured item
+  const removeFeaturedMutation = useMutation({
+    mutationFn: async (localId: number) => {
+      return apiRequest(`/api/featured-items/${localId}`, { method: 'DELETE' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/featured-items'] });
+      toast({
+        title: "Item Removed",
+        description: "Featured item removed successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to Remove Item",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const items = (featuredData as any)?.items || [];
+  const featuredCount = items.filter((item: any) => item.featured).length;
+
+  if (isLoading) {
+    return <div className="text-sm text-gray-500">Loading featured items...</div>;
+  }
 
   if (embedded) {
     return (
@@ -49,7 +96,11 @@ export default function FeaturedItemsAdmin({ onClose, embedded = false }: Featur
                       <input
                         type="checkbox"
                         checked={item.inStock}
-                        onChange={(e) => handleToggleStock(item.id, e.target.checked)}
+                        onChange={(e) => updateStockMutation.mutate({ 
+                          localId: item.localId, 
+                          inStock: e.target.checked 
+                        })}
+                        disabled={updateStockMutation.isPending}
                         className="rounded border-gray-300"
                       />
                       In Stock
@@ -57,19 +108,20 @@ export default function FeaturedItemsAdmin({ onClose, embedded = false }: Featur
                   </div>
                 </div>
                 
-                <button
-                  onClick={() => handleToggleFeatured(item.id)}
-                  disabled={!isFeatured && featuredCount >= 6}
-                  className={`w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isFeatured
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : featuredCount >= 6
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {isFeatured ? 'Remove from Featured' : 'Add to Featured'}
-                </button>
+                <div className="space-y-2">
+                  {item.squareId && (
+                    <div className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded text-center">
+                      Square ID: {item.squareId.slice(-8)}
+                    </div>
+                  )}
+                  <button
+                    onClick={() => removeFeaturedMutation.mutate(item.localId)}
+                    disabled={removeFeaturedMutation.isPending}
+                    className="w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-red-100 text-red-700 hover:bg-red-200"
+                  >
+                    Remove from Featured
+                  </button>
+                </div>
               </div>
             );
           })}
@@ -105,12 +157,10 @@ export default function FeaturedItemsAdmin({ onClose, embedded = false }: Featur
 
         <div className="p-6">
           <div className="grid gap-4">
-            {items.map((item) => (
+            {items.map((item: any) => (
               <div
-                key={item.id}
-                className={`border rounded-lg p-4 transition-all ${
-                  item.featured ? 'border-green-300 bg-green-50' : 'border-gray-200'
-                }`}
+                key={item.localId}
+                className="border border-green-300 bg-green-50 rounded-lg p-4 transition-all"
               >
                 <div className="flex items-start gap-4">
                   <img
@@ -127,36 +177,35 @@ export default function FeaturedItemsAdmin({ onClose, embedded = false }: Featur
                     
                     <p className="text-sm text-gray-600 mb-3">{item.description}</p>
                     
-                    <div className="flex items-center gap-4">
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={item.featured}
-                          onChange={() => handleToggleFeatured(item.id)}
-                          className="rounded text-green-600 focus:ring-green-500"
-                        />
-                        <span className="text-sm font-medium">Featured on Homepage</span>
-                      </label>
-                      
-                      <label className="flex items-center gap-2">
+                    <div className="flex items-center justify-between mt-3">
+                      <label className="flex items-center gap-2 text-sm">
                         <input
                           type="checkbox"
                           checked={item.inStock}
-                          onChange={() => handleToggleStock(item.id)}
-                          className="rounded text-blue-600 focus:ring-blue-500"
+                          onChange={(e) => updateStockMutation.mutate({ 
+                            localId: item.localId, 
+                            inStock: e.target.checked 
+                          })}
+                          disabled={updateStockMutation.isPending}
+                          className="rounded border-gray-300"
                         />
-                        <span className="text-sm font-medium">In Stock</span>
+                        In Stock
                       </label>
                       
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                        {item.category}
-                      </span>
-                      
-                      {item.lastUpdated && (
-                        <span className="text-xs text-gray-500">
-                          Updated: {item.lastUpdated}
-                        </span>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {item.squareId && (
+                          <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">
+                            Square ID: {item.squareId.slice(-8)}
+                          </span>
+                        )}
+                        <button
+                          onClick={() => removeFeaturedMutation.mutate(item.localId)}
+                          disabled={removeFeaturedMutation.isPending}
+                          className="px-3 py-1 rounded text-sm font-medium transition-colors bg-red-100 text-red-700 hover:bg-red-200"
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
