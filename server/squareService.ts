@@ -149,10 +149,11 @@ export class SquareService {
             const numericQuantity = parseInt(rawQuantity || '0');
             
             inventoryMap.set(quantity.catalogObjectId, {
-              available: numericQuantity,
+              available: isTracked ? numericQuantity : null, // null means unlimited/untracked
               // Logic: blank/null = in stock (unlimited), 0 or negative = out of stock
               inStock: !isTracked || numericQuantity > 0,
-              isTracked: isTracked
+              isTracked: isTracked,
+              rawQuantity: rawQuantity // Keep raw value for debugging
             });
           }
         });
@@ -173,11 +174,16 @@ export class SquareService {
       const catalogIds = catalogItems.map(item => item.squareId);
       const inventory = await this.getInventoryCounts(catalogIds);
 
-      return catalogItems.map((item: any) => ({
-        ...item,
-        inStock: inventory.get(item.squareId)?.inStock ?? true,
-        available: inventory.get(item.squareId)?.available ?? null
-      }));
+      return catalogItems.map((item: any) => {
+        const inventoryData = inventory.get(item.squareId);
+        return {
+          ...item,
+          inStock: inventoryData?.inStock ?? true,
+          available: inventoryData?.available ?? null,
+          isTracked: inventoryData?.isTracked ?? false,
+          rawQuantity: inventoryData?.rawQuantity ?? null
+        };
+      });
     } catch (error: any) {
       console.error('Error getting menu with inventory:', error);
       throw error;

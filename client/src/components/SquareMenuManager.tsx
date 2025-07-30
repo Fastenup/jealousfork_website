@@ -190,6 +190,23 @@ export default function SquareMenuManager() {
                           Square ID: {item.squareId.slice(-8)}
                         </span>
                       )}
+                      <div className="flex flex-col">
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          item.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {item.inStock ? 'In Stock' : 'Out of Stock'}
+                        </span>
+                        {item.available !== null && item.available !== undefined && (
+                          <span className="text-xs text-gray-500 mt-1 text-center">
+                            Qty: {item.available}
+                          </span>
+                        )}
+                        {(item.available === null || item.available === undefined) && (
+                          <span className="text-xs text-blue-500 mt-1 text-center">
+                            Unlimited
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <button
@@ -254,11 +271,23 @@ export default function SquareMenuManager() {
                       <p className="text-xs text-gray-600 mt-1 line-clamp-2">{item.description}</p>
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-sm font-medium text-green-600">${item.price}</span>
-                        <span className={`text-xs px-2 py-1 rounded ${
-                          item.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}>
-                          {item.inStock ? 'In Stock' : 'Out of Stock'}
-                        </span>
+                        <div className="flex flex-col items-end">
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            item.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {item.inStock ? 'In Stock' : 'Out of Stock'}
+                          </span>
+                          {item.available !== null && item.available !== undefined && (
+                            <span className="text-xs text-gray-500 mt-1">
+                              Qty: {item.available}
+                            </span>
+                          )}
+                          {(item.available === null || item.available === undefined) && (
+                            <span className="text-xs text-blue-500 mt-1">
+                              Unlimited
+                            </span>
+                          )}
+                        </div>
                       </div>
                       {isAlreadyFeatured && (
                         <div className="text-xs text-gray-500 mt-2">Already featured</div>

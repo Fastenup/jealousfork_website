@@ -6,6 +6,7 @@ import SquareStatusIndicator from '@/components/SquareStatusIndicator';
 import SquareMenuManager from '@/components/SquareMenuManager';
 import BulkMenuCategorizationPanel from '@/components/BulkMenuCategorizationPanel';
 import MenuSectionManager from '@/components/MenuSectionManager';
+import InventoryDebugPanel from '@/components/InventoryDebugPanel';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -191,8 +192,26 @@ export default function AdminPage() {
                             <span className="text-sm font-medium text-green-600">${item.price}</span>
                             <span className="text-xs text-gray-500">ID: {item.id}</span>
                           </div>
-                          <div className="text-xs text-gray-500 mt-1">
-                            Category: {item.category} | Stock: {item.inStock ? 'Available' : 'Out of Stock'}
+                          <div className="text-xs text-gray-500 mt-1 space-y-1">
+                            <div>Category: {item.category}</div>
+                            <div className="flex items-center gap-2">
+                              <span>Stock: {item.inStock ? 'Available' : 'Out of Stock'}</span>
+                              {item.available !== null && item.available !== undefined && (
+                                <span className="text-blue-600 font-medium">
+                                  Qty: {item.available}
+                                </span>
+                              )}
+                              {(item.available === null || item.available === undefined) && (
+                                <span className="text-green-600 font-medium">
+                                  Unlimited
+                                </span>
+                              )}
+                              {item.rawQuantity !== null && item.rawQuantity !== undefined && (
+                                <span className="text-gray-400 text-xs">
+                                  (Raw: {item.rawQuantity})
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -210,15 +229,25 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Square Menu Synchronization */}
-        <div className="mt-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          {/* Square Menu Synchronization */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Menu Synchronization</h2>
             <p className="text-gray-600 text-sm mb-6">
-              Sync featured items with Square catalog for real-time pricing, stock status, and ordering.
+              Select Square catalog items as featured items. Only Square items are allowed.
             </p>
             
             <SquareMenuManager />
+          </div>
+
+          {/* Inventory Debug Panel */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Inventory Debug</h2>
+            <p className="text-gray-600 text-sm mb-6">
+              View real-time inventory data from Square POS to verify stock counts.
+            </p>
+            
+            <InventoryDebugPanel />
           </div>
         </div>
       </div>
