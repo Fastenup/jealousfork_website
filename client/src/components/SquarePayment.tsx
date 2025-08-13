@@ -36,33 +36,30 @@ export default function SquarePayment({
     
     try {
       setIsLoading(true);
-      // For sandbox mode, we'll use mock payment functionality
-      if (applicationId.includes('sandbox')) {
-        // Simulate loading delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Create mock payment instance
-        const mockPayments = {
-          card: async () => ({
-            attach: async () => {},
-            tokenize: async () => ({
-              status: 'OK',
-              token: 'mock_token_' + Date.now()
-            }),
-            destroy: () => {}
-          })
-        };
-        
-        const mockCard = await mockPayments.card();
-        setPayments(mockPayments);
-        setCard(mockCard);
-        setInitialized(true);
-        setIsLoading(false);
-        return;
-      }
       
-      // Production Square loading would go here
-      throw new Error('Production Square not implemented yet');
+      // Always use sandbox/mock mode for demo purposes
+      console.log('Initializing sandbox payment mode...');
+      
+      // Simulate loading delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Create mock payment instance
+      const mockPayments = {
+        card: async () => ({
+          attach: async () => {},
+          tokenize: async () => ({
+            status: 'OK',
+            token: 'mock_token_' + Date.now()
+          }),
+          destroy: () => {}
+        })
+      };
+      
+      const mockCard = await mockPayments.card();
+      setPayments(mockPayments);
+      setCard(mockCard);
+      setInitialized(true);
+      setIsLoading(false);
       
     } catch (error) {
       console.error('Error initializing Square:', error);
@@ -85,8 +82,8 @@ export default function SquarePayment({
     setIsProcessing(true);
 
     try {
-      // For sandbox mode with mock payment
-      if (applicationId.includes('sandbox')) {
+      // Always use mock payment for demo
+      if (true) {
         console.log('Processing mock payment...');
         // Simulate payment processing delay
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -133,7 +130,7 @@ export default function SquarePayment({
           Total: ${amount.toFixed(2)}
         </div>
         
-        {applicationId.includes('sandbox') ? (
+        {true ? ( // Always show sandbox form for demo
           <div className="space-y-4">
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-700 font-medium mb-2">🧪 Sandbox Testing Mode</p>
