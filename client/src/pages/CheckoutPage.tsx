@@ -39,8 +39,8 @@ export default function CheckoutPage() {
   const hasRedirected = useRef(false);
 
   // Square credentials - these will be environment variables
-  const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || 'sandbox-sq0idb-66_cKzuPxPJDlSxVW4ThbA';
-  const SQUARE_LOCATION_ID = import.meta.env.VITE_SQUARE_LOCATION_ID || 'LHCTHGJ8GT1NP';
+  const SQUARE_APPLICATION_ID = (import.meta.env.VITE_SQUARE_APPLICATION_ID || 'sandbox-sq0idb-66_cKzuPxPJDlSxVW4ThbA').replace('VITE_', '');
+  const SQUARE_LOCATION_ID = (import.meta.env.VITE_SQUARE_LOCATION_ID || 'LHCTHGJ8GT1NP').replace('VITE_', '');
   
 
 

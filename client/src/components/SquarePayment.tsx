@@ -66,6 +66,11 @@ export default function SquarePayment({
         throw new Error('Square SDK not loaded');
       }
 
+      console.log('Initializing Square with:', {
+        applicationId: applicationId.substring(0, 20) + '...',
+        locationId: locationId.substring(0, 10) + '...'
+      });
+
       const paymentsInstance = window.Square.payments(applicationId, locationId);
       const cardInstance = await paymentsInstance.card();
       
@@ -81,7 +86,15 @@ export default function SquarePayment({
       console.log('Square Web Payments initialized successfully');
     } catch (error) {
       console.error('Error initializing Square payments:', error);
-      setIsLoading(false);
+      
+      // For development, show a fallback form
+      if (error && (error as any).name === 'InvalidApplicationIdError') {
+        console.log('Using fallback sandbox form due to credential mismatch');
+        // Create a fallback that shows fields but warns about credential issues
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -152,11 +165,54 @@ export default function SquarePayment({
             </p>
           </div>
           
-          <div 
-            ref={cardRef}
-            className="border rounded-lg p-4 min-h-[120px] bg-white"
-            style={{ minHeight: '120px' }}
-          />
+          {!initialized && !isLoading ? (
+            <div className="space-y-4">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <p className="text-sm text-yellow-700 font-medium mb-2">⚠️ Payment System Configuration</p>
+                <p className="text-xs text-yellow-600">
+                  Square payment form is initializing. If this persists, there may be a credential configuration issue.
+                </p>
+              </div>
+              
+              <div className="border rounded-lg p-4 space-y-3 bg-gray-50">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter your card number" 
+                    className="w-full p-2 border rounded text-sm"
+                    disabled
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiry</label>
+                    <input 
+                      type="text" 
+                      placeholder="MM/YY" 
+                      className="w-full p-2 border rounded text-sm"
+                      disabled
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">CVC</label>
+                    <input 
+                      type="text" 
+                      placeholder="123" 
+                      className="w-full p-2 border rounded text-sm"
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div 
+              ref={cardRef}
+              className="border rounded-lg p-4 min-h-[120px] bg-white"
+              style={{ minHeight: '120px' }}
+            />
+          )}
         </div>
         
         <Button 
