@@ -77,12 +77,23 @@ export default function SquarePayment({
       const cardInstance = await paymentsInstance.card();
       console.log('Card instance created:', !!cardInstance);
       
+      // Wait for DOM element to be ready with retry logic
+      let attempts = 0;
+      const maxAttempts = 10;
+      
+      while (!cardRef.current && attempts < maxAttempts) {
+        console.log(`Waiting for card container, attempt ${attempts + 1}/${maxAttempts}`);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+      }
+      
       if (cardRef.current) {
         console.log('Attaching card to container:', cardRef.current);
         await cardInstance.attach(cardRef.current);
         console.log('Card attached successfully');
       } else {
-        console.error('Card container ref not found');
+        console.error('Card container ref still not found after retries');
+        throw new Error('Card container not available');
       }
       
       setPayments(paymentsInstance);
@@ -107,7 +118,12 @@ export default function SquarePayment({
 
   useEffect(() => {
     if (applicationId && locationId && !initialized) {
-      initializeSquare();
+      // Small delay to ensure component is fully mounted
+      const timer = setTimeout(() => {
+        initializeSquare();
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
   }, [applicationId, locationId, initialized, initializeSquare]);
 
@@ -186,6 +202,7 @@ export default function SquarePayment({
               ref={cardRef}
               className="border rounded-lg p-4 min-h-[120px] bg-white"
               style={{ minHeight: '120px' }}
+              id="square-card-element"
             />
             
             {initialized && (
