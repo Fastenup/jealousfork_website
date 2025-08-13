@@ -51,7 +51,7 @@ export default function CheckoutPage() {
     } else {
       setDeliveryFee(0);
     }
-  }, [orderType, setDeliveryFee]);
+  }, [orderType]); // Remove setDeliveryFee from deps to prevent infinite loop
 
   useEffect(() => {
     // Allow time for cart to load, then check if empty
