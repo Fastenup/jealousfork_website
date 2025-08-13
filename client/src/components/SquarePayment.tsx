@@ -72,10 +72,17 @@ export default function SquarePayment({
       });
 
       const paymentsInstance = window.Square.payments(applicationId, locationId);
+      console.log('Payments instance created:', !!paymentsInstance);
+      
       const cardInstance = await paymentsInstance.card();
+      console.log('Card instance created:', !!cardInstance);
       
       if (cardRef.current) {
+        console.log('Attaching card to container:', cardRef.current);
         await cardInstance.attach(cardRef.current);
+        console.log('Card attached successfully');
+      } else {
+        console.error('Card container ref not found');
       }
       
       setPayments(paymentsInstance);
@@ -165,54 +172,28 @@ export default function SquarePayment({
             </p>
           </div>
           
-          {!initialized && !isLoading ? (
-            <div className="space-y-4">
+          <div className="space-y-4">
+            {!initialized && !isLoading && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <p className="text-sm text-yellow-700 font-medium mb-2">⚠️ Payment System Configuration</p>
+                <p className="text-sm text-yellow-700 font-medium mb-2">⚠️ Payment System Loading</p>
                 <p className="text-xs text-yellow-600">
-                  Square payment form is initializing. If this persists, there may be a credential configuration issue.
+                  Square payment form is initializing. Please wait...
                 </p>
               </div>
-              
-              <div className="border rounded-lg p-4 space-y-3 bg-gray-50">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
-                  <input 
-                    type="text" 
-                    placeholder="Enter your card number" 
-                    className="w-full p-2 border rounded text-sm"
-                    disabled
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiry</label>
-                    <input 
-                      type="text" 
-                      placeholder="MM/YY" 
-                      className="w-full p-2 border rounded text-sm"
-                      disabled
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">CVC</label>
-                    <input 
-                      type="text" 
-                      placeholder="123" 
-                      className="w-full p-2 border rounded text-sm"
-                      disabled
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
+            )}
+            
             <div 
               ref={cardRef}
               className="border rounded-lg p-4 min-h-[120px] bg-white"
               style={{ minHeight: '120px' }}
             />
-          )}
+            
+            {initialized && (
+              <div className="text-xs text-green-600 text-center">
+                Square payment form loaded successfully
+              </div>
+            )}
+          </div>
         </div>
         
         <Button 
