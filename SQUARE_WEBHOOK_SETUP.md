@@ -4,11 +4,11 @@
 
 Your Square application needs webhook endpoints configured to properly handle payment events. Here's how to set it up:
 
-### 1. Get Your Webhook URL
+### 1. Get Your Webhook URLs
 
-Your webhook endpoint is: `https://YOUR_REPLIT_DOMAIN/api/webhooks/square`
+**Payment Webhook:** `https://63530b14-e092-47a4-a74e-a5cc762be645-00-1oyaf6r3plc2.picard.replit.dev/api/webhooks/square`
 
-Replace `YOUR_REPLIT_DOMAIN` with your actual Replit domain (visible in the browser URL).
+**Subscription Webhook:** `https://63530b14-e092-47a4-a74e-a5cc762be645-00-1oyaf6r3plc2.picard.replit.dev/api/webhooks/square/subscriptions`
 
 ### 2. Square Developer Dashboard Setup
 
@@ -16,17 +16,29 @@ Replace `YOUR_REPLIT_DOMAIN` with your actual Replit domain (visible in the brow
    - Go to: https://developer.squareup.com/apps
    - Select your application
 
-2. **Configure Webhooks**
+2. **Configure Payment Webhooks**
    - Go to "Webhooks" section in your app
    - Click "Add Endpoint"
-   - Enter your webhook URL: `https://YOUR_REPLIT_DOMAIN/api/webhooks/square`
+   - **Endpoint Name:** "Jealous Fork Payment Webhook"
+   - **Notification URL:** `https://63530b14-e092-47a4-a74e-a5cc762be645-00-1oyaf6r3plc2.picard.replit.dev/api/webhooks/square`
 
-3. **Subscribe to Events**
+3. **Subscribe to Payment Events**
    Select these payment-related events:
    - `payment.created`
    - `payment.updated` 
    - `payment.completed`
    - `payment.failed`
+
+4. **Configure Subscription Webhooks (if needed)**
+   - Click "Add Endpoint" again
+   - **Endpoint Name:** "Jealous Fork Subscription Webhook"
+   - **Notification URL:** `https://63530b14-e092-47a4-a74e-a5cc762be645-00-1oyaf6r3plc2.picard.replit.dev/api/webhooks/square/subscriptions`
+   - Select subscription events:
+     - `subscription.created`
+     - `subscription.updated`
+     - `subscription.paused`
+     - `subscription.resumed`
+     - `subscription.canceled`
 
 4. **Webhook Signature**
    - Copy the "Signature Key" from Square

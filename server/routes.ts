@@ -937,6 +937,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Square subscription webhook endpoint
+  app.post('/api/webhooks/square/subscriptions', express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+      const signature = req.headers['x-square-signature'] as string;
+      const body = req.body;
+      
+      // Log subscription webhook for debugging
+      console.log('Square subscription webhook received:', {
+        signature: signature ? 'present' : 'missing',
+        bodyLength: body?.length || 0,
+        headers: req.headers
+      });
+
+      // Acknowledge receipt for subscription events
+      res.status(200).json({ message: 'Subscription webhook received' });
+    } catch (error) {
+      console.error('Subscription webhook processing error:', error);
+      res.status(500).json({ error: 'Subscription webhook processing failed' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
