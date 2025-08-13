@@ -29,6 +29,7 @@ export default function SquarePayment({
   const [payments, setPayments] = useState<any>(null);
   const [card, setCard] = useState<any>(null);
   const [initialized, setInitialized] = useState(false);
+  const [containerReady, setContainerReady] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const initializeSquare = useCallback(async () => {
@@ -77,22 +78,26 @@ export default function SquarePayment({
       const cardInstance = await paymentsInstance.card();
       console.log('Card instance created:', !!cardInstance);
       
-      // Wait for DOM element to be ready with retry logic
+      // Wait for DOM element to be ready with direct DOM query
       let attempts = 0;
-      const maxAttempts = 10;
+      const maxAttempts = 20;
+      let cardContainer = null;
       
-      while (!cardRef.current && attempts < maxAttempts) {
-        console.log(`Waiting for card container, attempt ${attempts + 1}/${maxAttempts}`);
-        await new Promise(resolve => setTimeout(resolve, 100));
-        attempts++;
+      while (!cardContainer && attempts < maxAttempts) {
+        cardContainer = document.getElementById('square-card-element');
+        if (!cardContainer) {
+          console.log(`Waiting for card container, attempt ${attempts + 1}/${maxAttempts}`);
+          await new Promise(resolve => setTimeout(resolve, 100));
+          attempts++;
+        }
       }
       
-      if (cardRef.current) {
-        console.log('Attaching card to container:', cardRef.current);
-        await cardInstance.attach(cardRef.current);
+      if (cardContainer) {
+        console.log('Attaching card to container:', cardContainer);
+        await cardInstance.attach(cardContainer);
         console.log('Card attached successfully');
       } else {
-        console.error('Card container ref still not found after retries');
+        console.error('Card container element still not found after retries');
         throw new Error('Card container not available');
       }
       
@@ -116,16 +121,31 @@ export default function SquarePayment({
     }
   };
 
+  // Monitor when the container element is ready
   useEffect(() => {
-    if (applicationId && locationId && !initialized) {
-      // Small delay to ensure component is fully mounted
-      const timer = setTimeout(() => {
-        initializeSquare();
-      }, 100);
-      
-      return () => clearTimeout(timer);
+    const checkContainer = () => {
+      const element = document.getElementById('square-card-element');
+      if (element && !containerReady) {
+        console.log('Card container element found in DOM');
+        setContainerReady(true);
+      }
+    };
+
+    const observer = new MutationObserver(checkContainer);
+    observer.observe(document.body, { childList: true, subtree: true });
+    
+    // Also check immediately
+    checkContainer();
+
+    return () => observer.disconnect();
+  }, [containerReady]);
+
+  useEffect(() => {
+    if (applicationId && locationId && !initialized && containerReady) {
+      console.log('Starting Square initialization with ready container');
+      initializeSquare();
     }
-  }, [applicationId, locationId, initialized, initializeSquare]);
+  }, [applicationId, locationId, initialized, containerReady, initializeSquare]);
 
   const handlePayment = async () => {
     if (!card || !payments) {
@@ -189,6 +209,12 @@ export default function SquarePayment({
           </div>
           
           <div className="space-y-4">
+            <div className="text-xs text-gray-600 text-center">
+              Debug: Container Ready: {containerReady ? 'Yes' : 'No'} | 
+              Initialized: {initialized ? 'Yes' : 'No'} | 
+              Loading: {isLoading ? 'Yes' : 'No'}
+            </div>
+            
             {!initialized && !isLoading && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <p className="text-sm text-yellow-700 font-medium mb-2">⚠️ Payment System Loading</p>
@@ -200,10 +226,14 @@ export default function SquarePayment({
             
             <div 
               ref={cardRef}
-              className="border rounded-lg p-4 min-h-[120px] bg-white"
+              className="border-2 border-red-500 rounded-lg p-4 min-h-[120px] bg-white"
               style={{ minHeight: '120px' }}
               id="square-card-element"
-            />
+            >
+              <div className="text-sm text-gray-500 text-center">
+                Square Card Element Container (ID: square-card-element)
+              </div>
+            </div>
             
             {initialized && (
               <div className="text-xs text-green-600 text-center">
