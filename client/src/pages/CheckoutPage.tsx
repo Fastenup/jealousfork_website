@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import SquarePayment from '@/components/SquarePayment';
+import SquarePaymentNew from '@/components/SquarePaymentNew';
 import { squareService, OrderRequest } from '@/services/squareService';
 import { ArrowLeft, MapPin, Clock, Phone } from 'lucide-react';
 import Navigation from '@/components/Navigation';
@@ -38,9 +38,14 @@ export default function CheckoutPage() {
   const [isLoading, setIsLoading] = useState(true);
   const hasRedirected = useRef(false);
 
-  // Square credentials - these will be environment variables
-  const SQUARE_APPLICATION_ID = (import.meta.env.VITE_SQUARE_APPLICATION_ID || 'sandbox-sq0idb-66_cKzuPxPJDlSxVW4ThbA').replace('VITE_', '');
-  const SQUARE_LOCATION_ID = (import.meta.env.VITE_SQUARE_LOCATION_ID || 'LHCTHGJ8GT1NP').replace('VITE_', '');
+  // Square credentials - production values
+  const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || 'sq0idp-Tv7vHFlv14KExKQf_KAgJA';
+  const SQUARE_LOCATION_ID = import.meta.env.VITE_SQUARE_LOCATION_ID || 'LWMD4B2R5DZ6J';
+  
+  console.log('Square Config:', { 
+    appId: SQUARE_APPLICATION_ID?.substring(0, 20) + '...', 
+    locationId: SQUARE_LOCATION_ID 
+  });
   
 
 
@@ -321,7 +326,7 @@ export default function CheckoutPage() {
                 </Button>
               </>
             ) : (
-              <SquarePayment
+              <SquarePaymentNew
                 amount={cartState.total}
                 onPaymentSuccess={handlePaymentSuccess}
                 onPaymentError={handlePaymentError}
