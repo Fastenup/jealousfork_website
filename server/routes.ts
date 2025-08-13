@@ -915,6 +915,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Square webhook endpoint for payment notifications
+  app.post('/api/webhooks/square', express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+      const signature = req.headers['x-square-signature'] as string;
+      const body = req.body;
+      
+      // Log webhook for debugging
+      console.log('Square webhook received:', {
+        signature: signature ? 'present' : 'missing',
+        bodyLength: body?.length || 0,
+        headers: req.headers
+      });
+
+      // For now, acknowledge receipt
+      // In production, you'd verify the signature and process events
+      res.status(200).json({ message: 'Webhook received' });
+    } catch (error) {
+      console.error('Webhook processing error:', error);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
