@@ -38,14 +38,9 @@ export default function CheckoutPage() {
   const [isLoading, setIsLoading] = useState(true);
   const hasRedirected = useRef(false);
 
-  // Square credentials - production values
-  const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || 'sq0idp-Tv7vHFlv14KExKQf_KAgJA';
-  const SQUARE_LOCATION_ID = import.meta.env.VITE_SQUARE_LOCATION_ID || 'LWMD4B2R5DZ6J';
-  
-  console.log('Square Config:', { 
-    appId: SQUARE_APPLICATION_ID?.substring(0, 20) + '...', 
-    locationId: SQUARE_LOCATION_ID 
-  });
+  // Square credentials - get from environment or use production defaults
+  const SQUARE_APPLICATION_ID = 'sq0idp-Tv7vHFlv14KExKQf_KAgJA';
+  const SQUARE_LOCATION_ID = 'LWMD4B2R5DZ6J';
   
 
 

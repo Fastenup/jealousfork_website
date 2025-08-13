@@ -32,42 +32,83 @@ export default function SquarePaymentNew({
   useEffect(() => {
     const initializeSquare = async () => {
       try {
-        // Load Square Web Payments SDK
+        console.log('Starting Square initialization with:', {
+          appId: applicationId?.substring(0, 15) + '...',
+          locationId
+        });
+
+        // Load Square Web Payments SDK if not already loaded
         if (!window.Square) {
+          console.log('Loading Square SDK...');
           const script = document.createElement('script');
           script.src = 'https://web.squarecdn.com/v1/square.js';
-          script.async = true;
+          script.async = false; // Load synchronously for better initialization
           
           await new Promise<void>((resolve, reject) => {
-            script.onload = () => resolve();
+            script.onload = () => {
+              console.log('Square SDK loaded successfully');
+              resolve();
+            };
             script.onerror = () => reject(new Error('Failed to load Square SDK'));
             document.head.appendChild(script);
           });
         }
 
-        // Initialize payments
+        // Wait for DOM to be ready
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Initialize Square payments with proper error handling
+        console.log('Initializing Square payments...');
         const paymentsInstance = window.Square.payments(applicationId, locationId);
+        console.log('Payments instance created');
+        
         setPayments(paymentsInstance);
 
-        // Initialize card
-        const cardInstance = await paymentsInstance.card();
+        // Initialize card payment method
+        console.log('Creating card instance...');
+        const cardInstance = await paymentsInstance.card({
+          style: {
+            input: {
+              fontSize: '14px',
+              fontFamily: 'system-ui, -apple-system, sans-serif'
+            }
+          }
+        });
+        console.log('Card instance created');
+        
         setCard(cardInstance);
 
-        // Attach card to DOM
+        // Wait for DOM container to be available
+        let retries = 0;
+        while (!cardContainerRef.current && retries < 10) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          retries++;
+        }
+
         if (cardContainerRef.current) {
+          console.log('Attaching card to DOM...');
           await cardInstance.attach(cardContainerRef.current);
+          console.log('Card attached successfully');
+        } else {
+          throw new Error('Card container not found after retries');
         }
 
         setIsLoading(false);
+        console.log('Square initialization complete');
+
       } catch (error) {
         console.error('Square initialization error:', error);
-        onPaymentError('Failed to initialize payment system');
+        onPaymentError(`Payment system initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         setIsLoading(false);
       }
     };
 
     if (applicationId && locationId) {
       initializeSquare();
+    } else {
+      console.error('Missing Square credentials:', { applicationId: !!applicationId, locationId: !!locationId });
+      onPaymentError('Square credentials not configured');
+      setIsLoading(false);
     }
   }, [applicationId, locationId, onPaymentError]);
 
