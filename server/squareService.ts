@@ -200,16 +200,61 @@ export class SquareService {
     referenceId?: string;
   }) {
     try {
-      // TODO: Implement actual Square payment processing once API keys are provided
-      // For now, simulate successful payment for testing
-      console.log('Processing payment:', paymentData);
+      console.log('Processing Square payment with production API...');
       
+      const accessToken = process.env.SQUARE_ACCESS_TOKEN;
+      const locationId = process.env.SQUARE_LOCATION_ID;
+      
+      if (!accessToken || !locationId) {
+        throw new Error('Square credentials not configured');
+      }
+
+      const environment = accessToken.startsWith('sandbox') ? 'sandbox' : 'production';
+      const baseUrl = environment === 'sandbox' 
+        ? 'https://connect.squareupsandbox.com' 
+        : 'https://connect.squareup.com';
+
+      const requestBody = {
+        source_id: paymentData.sourceId,
+        amount_money: paymentData.amountMoney,
+        idempotency_key: paymentData.idempotencyKey,
+        location_id: locationId,
+        ...(paymentData.referenceId && { reference_id: paymentData.referenceId })
+      };
+
+      console.log('Sending payment request to Square API:', { 
+        ...requestBody, 
+        source_id: '[REDACTED]' 
+      });
+
+      const response = await fetch(`${baseUrl}/v2/payments`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Square-Version': '2024-06-04',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        console.error('Square payment API error:', responseData);
+        throw new Error(responseData.errors?.[0]?.detail || 'Payment processing failed');
+      }
+
+      const payment = responseData.payment;
+      console.log('Payment processed successfully:', payment.id);
+
       return {
-        id: `sqpmt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        status: 'COMPLETED',
-        amountMoney: paymentData.amountMoney,
-        sourceType: 'CARD',
-        referenceId: paymentData.referenceId,
+        id: payment.id,
+        status: payment.status,
+        amountMoney: payment.amount_money,
+        sourceType: payment.source_type,
+        referenceId: payment.reference_id,
+        receiptNumber: payment.receipt_number,
+        receiptUrl: payment.receipt_url
       };
     } catch (error: any) {
       console.error('Square payment error:', error);
@@ -219,10 +264,40 @@ export class SquareService {
 
   async getPayment(paymentId: string) {
     try {
-      // TODO: Implement actual Square payment retrieval once API keys are provided
+      const accessToken = process.env.SQUARE_ACCESS_TOKEN;
+      
+      if (!accessToken) {
+        throw new Error('Square access token not configured');
+      }
+
+      const environment = accessToken.startsWith('sandbox') ? 'sandbox' : 'production';
+      const baseUrl = environment === 'sandbox' 
+        ? 'https://connect.squareupsandbox.com' 
+        : 'https://connect.squareup.com';
+
+      const response = await fetch(`${baseUrl}/v2/payments/${paymentId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Square-Version': '2024-06-04',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.errors?.[0]?.detail || 'Failed to retrieve payment');
+      }
+
+      const payment = responseData.payment;
       return {
-        id: paymentId,
-        status: 'COMPLETED',
+        id: payment.id,
+        status: payment.status,
+        amountMoney: payment.amount_money,
+        sourceType: payment.source_type,
+        receiptNumber: payment.receipt_number,
+        receiptUrl: payment.receipt_url
       };
     } catch (error: any) {
       console.error('Get payment error:', error);

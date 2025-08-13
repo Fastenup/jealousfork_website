@@ -36,36 +36,54 @@ export default function SquarePayment({
     
     try {
       setIsLoading(true);
+      console.log('Initializing Square Web Payments SDK...');
       
-      // Always use sandbox/mock mode for demo purposes
-      console.log('Initializing sandbox payment mode...');
-      
-      // Simulate loading delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Create mock payment instance
-      const mockPayments = {
-        card: async () => ({
-          attach: async () => {},
-          tokenize: async () => ({
-            status: 'OK',
-            token: 'mock_token_' + Date.now()
-          }),
-          destroy: () => {}
-        })
-      };
-      
-      const mockCard = await mockPayments.card();
-      setPayments(mockPayments);
-      setCard(mockCard);
-      setInitialized(true);
-      setIsLoading(false);
+      // Load Square Web Payments SDK
+      if (!window.Square) {
+        const script = document.createElement('script');
+        script.src = 'https://web.squarecdn.com/v1/square.js';
+        script.onload = async () => {
+          await initializeSquarePayments();
+        };
+        script.onerror = () => {
+          console.error('Failed to load Square SDK');
+          setIsLoading(false);
+        };
+        document.head.appendChild(script);
+      } else {
+        await initializeSquarePayments();
+      }
       
     } catch (error) {
       console.error('Error initializing Square:', error);
       setIsLoading(false);
     }
   }, [applicationId, locationId, initialized]);
+
+  const initializeSquarePayments = async () => {
+    try {
+      if (!window.Square) {
+        throw new Error('Square SDK not loaded');
+      }
+
+      const paymentsInstance = window.Square.payments(applicationId, locationId);
+      const cardInstance = await paymentsInstance.card();
+      
+      if (cardRef.current) {
+        await cardInstance.attach(cardRef.current);
+      }
+      
+      setPayments(paymentsInstance);
+      setCard(cardInstance);
+      setInitialized(true);
+      setIsLoading(false);
+      
+      console.log('Square Web Payments initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Square payments:', error);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (applicationId && locationId && !initialized) {
@@ -82,26 +100,22 @@ export default function SquarePayment({
     setIsProcessing(true);
 
     try {
-      // Always use mock payment for demo
-      if (true) {
-        console.log('Processing mock payment...');
-        // Simulate payment processing delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        onPaymentSuccess('mock_payment_token_' + Date.now());
-        return;
-      }
-
-      // Real Square payment processing
+      console.log('Processing Square payment...');
+      
+      // Tokenize the payment method
       const result = await card.tokenize();
 
       if (result.status === 'OK') {
+        console.log('Payment tokenization successful');
         onPaymentSuccess(result.token);
       } else {
-        onPaymentError(result.errors?.[0]?.message || 'Payment failed');
+        console.error('Payment tokenization failed:', result.errors);
+        const errorMessage = result.errors?.[0]?.message || 'Payment failed';
+        onPaymentError(errorMessage);
       }
     } catch (error) {
       console.error('Payment error:', error);
-      onPaymentError('Payment processing failed');
+      onPaymentError('Payment processing failed: ' + (error as Error).message);
     } finally {
       setIsProcessing(false);
     }
@@ -130,57 +144,20 @@ export default function SquarePayment({
           Total: ${amount.toFixed(2)}
         </div>
         
-        {true ? ( // Always show sandbox form for demo
-          <div className="space-y-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-sm text-blue-700 font-medium mb-2">🧪 Sandbox Testing Mode</p>
-              <p className="text-xs text-blue-600">
-                This is a demo payment form. In sandbox mode, any payment will be processed as a test transaction.
-              </p>
-            </div>
-            
-            <div className="border rounded-lg p-4 space-y-3 bg-gray-50">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
-                <input 
-                  type="text" 
-                  placeholder="4111 1111 1111 1111" 
-                  className="w-full p-2 border rounded text-sm"
-                  defaultValue="4111 1111 1111 1111"
-                  disabled
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Expiry</label>
-                  <input 
-                    type="text" 
-                    placeholder="12/25" 
-                    className="w-full p-2 border rounded text-sm"
-                    defaultValue="12/25"
-                    disabled
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">CVC</label>
-                  <input 
-                    type="text" 
-                    placeholder="123" 
-                    className="w-full p-2 border rounded text-sm"
-                    defaultValue="123"
-                    disabled
-                  />
-                </div>
-              </div>
-            </div>
+        <div className="space-y-4">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <p className="text-sm text-green-700 font-medium mb-2">🔒 Secure Payment Processing</p>
+            <p className="text-xs text-green-600">
+              Enter your payment information below. All transactions are processed securely through Square.
+            </p>
           </div>
-        ) : (
+          
           <div 
             ref={cardRef}
-            className="border rounded-lg p-4 min-h-[120px]"
+            className="border rounded-lg p-4 min-h-[120px] bg-white"
             style={{ minHeight: '120px' }}
           />
-        )}
+        </div>
         
         <Button 
           onClick={handlePayment}
