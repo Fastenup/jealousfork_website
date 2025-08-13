@@ -916,7 +916,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Square webhook endpoint for payment notifications
-  app.post('/api/webhooks/square', express.raw({ type: 'application/json' }), async (req, res) => {
+  app.post('/api/webhooks/square', (req, res, next) => {
+    // Parse raw body for webhook signature verification
+    let data = '';
+    req.on('data', chunk => data += chunk);
+    req.on('end', async () => {
+      req.body = data;
+      next();
+    });
+  }, async (req, res) => {
     try {
       const signature = req.headers['x-square-signature'] as string;
       const body = req.body;
@@ -938,7 +946,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Square subscription webhook endpoint
-  app.post('/api/webhooks/square/subscriptions', express.raw({ type: 'application/json' }), async (req, res) => {
+  app.post('/api/webhooks/square/subscriptions', (req, res, next) => {
+    // Parse raw body for webhook signature verification
+    let data = '';
+    req.on('data', chunk => data += chunk);
+    req.on('end', async () => {
+      req.body = data;
+      next();
+    });
+  }, async (req, res) => {
     try {
       const signature = req.headers['x-square-signature'] as string;
       const body = req.body;
