@@ -85,8 +85,6 @@ export default function SquarePaymentBasic({
         }
         
         // Initialize payments
-        console.log('Using Application ID:', applicationId);
-        console.log('Using Location ID:', locationId);
         const payments = window.Square.payments(applicationId, locationId);
         
         // Create card payment method
