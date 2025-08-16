@@ -10,11 +10,11 @@ import { BrevoEmailService } from "./brevoService";
 // Order request validation schema
 const orderRequestSchema = z.object({
   items: z.array(z.object({
-    id: z.number(),
+    id: z.union([z.string(), z.number()]), // Allow both string and number IDs
     name: z.string(),
     price: z.number(),
     quantity: z.number(),
-    category: z.string(),
+    category: z.string().optional(), // Make category optional since cart items might not have it
     description: z.string().optional(),
   })),
   subtotal: z.number(),

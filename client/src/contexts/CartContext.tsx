@@ -12,8 +12,8 @@ interface CartState {
 
 type CartAction =
   | { type: 'ADD_ITEM'; payload: Omit<CartItem, 'quantity'> }
-  | { type: 'REMOVE_ITEM'; payload: number }
-  | { type: 'UPDATE_QUANTITY'; payload: { id: number; quantity: number } }
+  | { type: 'REMOVE_ITEM'; payload: string | number }
+  | { type: 'UPDATE_QUANTITY'; payload: { id: string | number; quantity: number } }
   | { type: 'CLEAR_CART' }
   | { type: 'TOGGLE_CART' }
   | { type: 'SET_CART_OPEN'; payload: boolean }

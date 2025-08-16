@@ -1,11 +1,11 @@
 import { apiRequest } from '@/lib/queryClient';
 
 export interface CartItem {
-  id: number;
+  id: string | number; // Allow both string and number IDs
   name: string;
   price: number;
   quantity: number;
-  category: string;
+  category?: string; // Make category optional
   description?: string;
 }
 
