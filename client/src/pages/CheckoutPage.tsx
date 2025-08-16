@@ -42,6 +42,9 @@ export default function CheckoutPage() {
   const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID;
   const SQUARE_LOCATION_ID = import.meta.env.VITE_SQUARE_LOCATION_ID;
   
+  console.log('Frontend Square Application ID:', SQUARE_APPLICATION_ID);
+  console.log('Frontend Square Location ID:', SQUARE_LOCATION_ID);
+  
 
 
   useEffect(() => {
