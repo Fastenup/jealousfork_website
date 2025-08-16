@@ -43,6 +43,11 @@ export interface IStorage {
   // Contact form submissions
   createContactSubmission(data: InsertContactSubmission): Promise<ContactSubmission>;
   updateContactSubmissionStatus(id: number, status: 'pending' | 'sent' | 'failed'): Promise<void>;
+  
+  // Order management
+  createOrder(orderData: any): Promise<any>;
+  getOrder(orderId: string): Promise<any>;
+  updateOrderStatus(orderId: string, status: string): Promise<any>;
 }
 
 // In-memory storage implementation
@@ -443,6 +448,40 @@ class MemoryStorage implements IStorage {
         sentAt: status === 'sent' ? new Date() : null
       })
       .where(eq(contactSubmissions.id, id));
+  }
+
+  // Order management - in-memory storage for now
+  private orders: any[] = [];
+
+  async createOrder(orderData: any): Promise<any> {
+    const order = {
+      ...orderData,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.orders.push(order);
+    console.log(`Created order ${order.orderId} with payment ${order.paymentId}`);
+    return order;
+  }
+
+  async getOrder(orderId: string): Promise<any> {
+    const order = this.orders.find(o => o.orderId === orderId);
+    if (!order) {
+      throw new Error(`Order ${orderId} not found`);
+    }
+    return order;
+  }
+
+  async updateOrderStatus(orderId: string, status: string): Promise<any> {
+    const orderIndex = this.orders.findIndex(o => o.orderId === orderId);
+    if (orderIndex >= 0) {
+      this.orders[orderIndex].status = status;
+      this.orders[orderIndex].updatedAt = new Date();
+      console.log(`Updated order ${orderId} status to ${status}`);
+      return this.orders[orderIndex];
+    } else {
+      throw new Error(`Order ${orderId} not found`);
+    }
   }
 }
 

@@ -66,14 +66,23 @@ export default function SquarePaymentBasic({
   }, [onPaymentError]);
 
   useEffect(() => {
-    if (!squareLoaded) return;
+    if (!squareLoaded || (window as any).squareCardInitialized) return;
 
     const initializeSquarePayments = async () => {
       try {
         console.log('Initializing Square payments');
         
+        // Prevent multiple initializations
+        (window as any).squareCardInitialized = true;
+        
         // Wait for DOM to be ready
         await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Check if container exists
+        const container = document.getElementById('square-card-form');
+        if (!container) {
+          throw new Error('Square container not found');
+        }
         
         // Initialize payments
         const payments = window.Square.payments(applicationId, locationId);
@@ -91,6 +100,7 @@ export default function SquarePaymentBasic({
         
       } catch (error) {
         console.error('Square initialization error:', error);
+        (window as any).squareCardInitialized = false; // Reset on error
         onPaymentError('Payment form initialization failed');
       }
     };
