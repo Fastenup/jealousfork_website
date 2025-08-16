@@ -536,7 +536,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
               amount: Math.round(item.price * 100),
               currency: 'USD'
             },
-            note: item.description || ''
+            note: item.description || '',
+            // Add modifiers for kitchen routing - helps categorize items
+            modifiers: item.category ? [{
+              name: `Kitchen: ${item.category}`,
+              base_price_money: {
+                amount: 0,
+                currency: 'USD'
+              }
+            }] : []
           })),
           service_charges: orderData.deliveryFee > 0 ? [{
             name: 'Delivery Fee',
@@ -551,7 +559,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }],
           fulfillments: [{
             type: orderData.orderType === 'pickup' ? 'PICKUP' : 'SHIPMENT',
-            state: 'PROPOSED',
+            state: 'RESERVED', // Use RESERVED instead of PROPOSED for active kitchen orders
             pickup_details: orderData.orderType === 'pickup' ? {
               recipient: {
                 display_name: orderData.customerInfo.name,

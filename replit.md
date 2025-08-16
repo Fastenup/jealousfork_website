@@ -174,6 +174,14 @@ Changelog:
   * Replaced hero reservation button with functional Resy widget integration
   * Fixed admin item-to-category assignment system with persistent storage mapping
   * Added proper success feedback and data refresh for category assignments
+- August 16, 2025: Square Orders API integration and KDS routing fixes:
+  * Fixed Square Orders API field naming issues - converted all camelCase to snake_case (location_id, pickup_details, etc.)
+  * Implemented proper two-step order process: create detailed order first, then process payment with order reference
+  * Enhanced fulfillment state management - using RESERVED state for active kitchen preparation
+  * Added kitchen routing support with online order compatibility and category-based item routing
+  * Integrated Brevo email service for order confirmation emails with proper API key configuration
+  * Resolved payment form loading issues by fixing Square Web Payments SDK initialization
+  * Orders now appear correctly in Square POS with complete customer and item details
 - July 30, 2025: Complete admin authentication and bulk categorization system overhaul:
   * Fixed admin authentication persistence - login now stays active after page refresh using localStorage
   * Completely redesigned menu categorization with streamlined bulk assignment interface
