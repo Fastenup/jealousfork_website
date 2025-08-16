@@ -520,6 +520,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const orderId = `JF-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       
       // Process payment with Square
+      console.log('Processing payment for order:', orderId, 'with token:', orderData.paymentToken.substring(0, 20) + '...');
       const payment = await squareService.createPayment({
         sourceId: orderData.paymentToken,
         amountMoney: {

@@ -112,6 +112,7 @@ export default function CheckoutPage() {
         paymentToken,
       };
 
+      console.log('Submitting order with payment token:', paymentToken);
       const response = await squareService.createOrder(orderData);
       
       toast({
@@ -123,9 +124,10 @@ export default function CheckoutPage() {
       setLocation(`/order-confirmation/${response.orderId}`);
     } catch (error) {
       console.error('Order submission failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: 'Order Failed',
-        description: 'There was an issue processing your order. Please try again.',
+        description: `There was an issue processing your order: ${errorMessage}`,
         variant: 'destructive',
       });
     } finally {

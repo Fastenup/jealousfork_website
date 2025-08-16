@@ -118,16 +118,35 @@ export default function SquarePaymentBasic({
 
     try {
       const card = (window as any).squareCard;
-      const result = await card.tokenize();
+      
+      // Required verification details for production tokenization
+      const verificationDetails = {
+        intent: 'CHARGE',
+        amount: Math.round(amount * 100).toString(), // Amount in smallest currency unit (cents)
+        billingContact: {
+          givenName: 'Customer', // Required for production
+          familyName: 'Customer',
+          email: 'customer@jealousfork.com',
+          phone: '3051234567',
+          addressLines: ['123 Main St'],
+          city: 'Miami',
+          state: 'FL',
+          countryCode: 'US',
+          postalCode: '33101',
+        },
+      };
+      
+      const result = await card.tokenize(verificationDetails);
       
       if (result.status === 'OK') {
-        console.log('Payment tokenized successfully');
+        console.log('Payment tokenized successfully with token:', result.token.substring(0, 20) + '...');
         onPaymentSuccess(result.token);
       } else {
         let errorMessage = 'Payment failed';
         if (result.errors) {
-          errorMessage = result.errors.map((error: any) => error.message).join(', ');
+          errorMessage = result.errors.map((error: any) => error.message || error.detail).join(', ');
         }
+        console.error('Tokenization failed:', result.errors);
         onPaymentError(errorMessage);
       }
     } catch (error) {
