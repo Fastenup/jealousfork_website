@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import path from "path";
 import { storage } from "./storage";
-import { createSquareService } from "./squareService";
+import { createSquareServiceFixed } from "./squareServiceFixed";
 import { z } from "zod";
 import { insertContactSubmissionSchema } from "../shared/schema";
 import { BrevoEmailService } from "./brevoService";
@@ -42,7 +42,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   let squareService: any;
   
   try {
-    squareService = createSquareService();
+    squareService = createSquareServiceFixed();
   } catch (error: any) {
     console.warn('Square service not configured:', error?.message || 'Unknown error');
   }

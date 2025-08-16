@@ -46,8 +46,8 @@ export class SquareService {
     try {
       // Use the correct property names for Square SDK v40+
       this.client = new SquareClient({
-        accessToken: config.accessToken,
         environment: environment,
+        accessToken: config.accessToken,
         customUrl: environment === 'sandbox' ? 'https://connect.squareupsandbox.com' : 'https://connect.squareup.com'
       });
       console.log('Square client initialized successfully for environment:', environment);
@@ -368,27 +368,7 @@ export class SquareService {
     }
   }
 
-  async createOrder(orderData: {
-    lineItems: Array<{
-      name: string;
-      quantity: string;
-      basePriceMoney: {
-        amount: number;
-        currency: string;
-      };
-    }>;
-  }) {
-    try {
-      // TODO: Implement actual Square order creation once API keys are provided
-      return {
-        id: `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        lineItems: orderData.lineItems,
-      };
-    } catch (error: any) {
-      console.error('Square order error:', error);
-      throw new Error(`Order creation failed: ${error?.message || 'Unknown error'}`);
-    }
-  }
+
 
   private generateIdempotencyKey(): string {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
