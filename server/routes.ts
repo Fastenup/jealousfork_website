@@ -519,7 +519,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate unique order ID
       const orderId = `JF-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       
-      // Process payment with Square
+      // Process payment with Square including order details
       console.log('Processing payment for order:', orderId, 'with token:', orderData.paymentToken.substring(0, 20) + '...');
       const payment = await squareService.createPayment({
         sourceId: orderData.paymentToken,
@@ -529,6 +529,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         idempotencyKey: `${orderId}-payment`,
         referenceId: orderId,
+        note: `${orderData.orderType.toUpperCase()} Order - ${orderData.customerInfo.name} - ${orderData.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}`,
+        orderRequest: {
+          order: {
+            locationId: process.env.SQUARE_LOCATION_ID,
+            referenceId: orderId,
+            source: {
+              name: 'Jealous Fork Online Ordering'
+            },
+            lineItems: orderData.items.map(item => ({
+              name: item.name,
+              quantity: item.quantity.toString(),
+              basePriceMoney: {
+                amount: Math.round(item.price * 100),
+                currency: 'USD'
+              },
+              note: item.description || ''
+            })),
+            serviceCharges: orderData.deliveryFee > 0 ? [{
+              name: 'Delivery Fee',
+              amountMoney: {
+                amount: Math.round(orderData.deliveryFee * 100),
+                currency: 'USD'
+              }
+            }] : [],
+            taxes: [{
+              name: 'Sales Tax',
+              percentage: '7.5'
+            }],
+            fulfillments: [{
+              type: orderData.orderType === 'pickup' ? 'PICKUP' : 'SHIPMENT',
+              state: 'PROPOSED',
+              pickupDetails: orderData.orderType === 'pickup' ? {
+                recipient: {
+                  displayName: orderData.customerInfo.name,
+                  emailAddress: orderData.customerInfo.email,
+                  phoneNumber: orderData.customerInfo.phone
+                },
+                scheduleType: 'ASAP',
+                note: 'Order ready for pickup'
+              } : undefined,
+              shipmentDetails: orderData.orderType === 'delivery' ? {
+                recipient: {
+                  displayName: orderData.customerInfo.name,
+                  emailAddress: orderData.customerInfo.email,
+                  phoneNumber: orderData.deliveryInfo?.phone || orderData.customerInfo.phone,
+                  address: {
+                    addressLine1: orderData.deliveryInfo?.address || '',
+                    locality: orderData.deliveryInfo?.city || '',
+                    administrativeDistrictLevel1: orderData.deliveryInfo?.state || '',
+                    postalCode: orderData.deliveryInfo?.zipCode || ''
+                  }
+                },
+                note: orderData.deliveryInfo?.deliveryNotes || 'Delivery order'
+              } : undefined
+            }]
+          }
+        }
       });
 
       if (!payment || payment.status !== 'COMPLETED') {
@@ -568,12 +625,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         estimatedReadyTime,
       });
 
+      // Send confirmation email to customer
+      try {
+        await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: orderData.customerInfo.name.split(' ')[0],
+            lastName: orderData.customerInfo.name.split(' ').slice(1).join(' ') || '',
+            email: orderData.customerInfo.email,
+            phone: orderData.customerInfo.phone,
+            message: `Order Confirmation - ${orderId}\n\nThank you for your order!\n\nOrder Details:\n${orderData.items.map(item => `• ${item.quantity}x ${item.name} - $${item.price.toFixed(2)}`).join('\n')}\n\nSubtotal: $${orderData.subtotal.toFixed(2)}\nTax: $${orderData.tax.toFixed(2)}\n${orderData.deliveryFee > 0 ? `Delivery Fee: $${orderData.deliveryFee.toFixed(2)}\n` : ''}Total: $${orderData.total.toFixed(2)}\n\nOrder Type: ${orderData.orderType.toUpperCase()}\nEstimated Ready Time: ${estimatedReadyTime.toLocaleString()}\n\n${orderData.orderType === 'pickup' ? 'Pickup Location:\n14417 SW 42nd St\nMiami, FL 33175\n(305) 699-1430' : `Delivery Address:\n${orderData.deliveryInfo?.address}\n${orderData.deliveryInfo?.city}, ${orderData.deliveryInfo?.state} ${orderData.deliveryInfo?.zipCode}`}\n\nWe'll notify you when your order is ready!`
+          })
+        });
+        console.log('Confirmation email sent to:', orderData.customerInfo.email);
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError);
+      }
+
       res.json({
         orderId: order.orderId,
         paymentId: order.paymentId,
         status: order.status,
         estimatedReadyTime: order.estimatedReadyTime?.toISOString(),
         total: parseFloat(order.total),
+        items: order.items,
+        orderType: order.orderType,
+        customerInfo: {
+          name: order.customerName,
+          email: order.customerEmail,
+          phone: order.customerPhone
+        }
       });
     } catch (error: any) {
       console.error('Order creation error:', error);
@@ -608,6 +690,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: order.status,
         estimatedReadyTime: order.estimatedReadyTime?.toISOString(),
         total: parseFloat(order.total),
+        items: order.items,
+        orderType: order.orderType,
+        customerInfo: {
+          name: order.customerName,
+          email: order.customerEmail,
+          phone: order.customerPhone
+        },
+        deliveryInfo: order.orderType === 'delivery' ? {
+          address: order.deliveryAddress,
+          city: order.deliveryCity,
+          state: order.deliveryState,
+          zipCode: order.deliveryZipCode,
+          phone: order.deliveryPhone,
+          notes: order.deliveryNotes
+        } : null,
+        subtotal: parseFloat(order.subtotal),
+        tax: parseFloat(order.tax),
+        deliveryFee: parseFloat(order.deliveryFee)
       });
     } catch (error: any) {
       console.error('Get order error:', error);

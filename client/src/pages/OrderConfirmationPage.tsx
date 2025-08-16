@@ -144,6 +144,113 @@ export default function OrderConfirmationPage() {
             </CardContent>
           </Card>
 
+          {/* Order Details */}
+          {order.items && order.items.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Order Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {order.items.map((item, index) => (
+                  <div key={index} className="flex justify-between items-start border-b pb-2 last:border-b-0">
+                    <div className="flex-1">
+                      <h4 className="font-medium">{item.name}</h4>
+                      {item.description && (
+                        <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                      )}
+                      <p className="text-sm text-gray-600">
+                        ${item.price.toFixed(2)} × {item.quantity}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="border-t pt-4 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Subtotal:</span>
+                    <span>${order.subtotal?.toFixed(2) || '0.00'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Tax:</span>
+                    <span>${order.tax?.toFixed(2) || '0.00'}</span>
+                  </div>
+                  {order.deliveryFee && order.deliveryFee > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span>Delivery Fee:</span>
+                      <span>${order.deliveryFee.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-bold text-lg border-t pt-2">
+                    <span>Total:</span>
+                    <span>${order.total.toFixed(2)}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Order Type & Location */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                {order.orderType === 'pickup' ? 'Pickup' : 'Delivery'} Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {order.orderType === 'pickup' ? (
+                <div>
+                  <p className="font-medium mb-2">Pickup Location:</p>
+                  <div className="text-sm text-gray-600">
+                    <p className="font-medium">Jealous Fork</p>
+                    <p>14417 SW 42nd St</p>
+                    <p>Miami, FL 33175</p>
+                    <a href="tel:(305)699-1430" className="text-blue-600 hover:text-blue-800">
+                      (305) 699-1430
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                order.deliveryInfo && (
+                  <div>
+                    <p className="font-medium mb-2">Delivery Address:</p>
+                    <div className="text-sm text-gray-600">
+                      <p>{order.deliveryInfo.address}</p>
+                      <p>{order.deliveryInfo.city}, {order.deliveryInfo.state} {order.deliveryInfo.zipCode}</p>
+                      {order.deliveryInfo.phone && (
+                        <p>Phone: {order.deliveryInfo.phone}</p>
+                      )}
+                      {order.deliveryInfo.notes && (
+                        <p className="mt-2"><strong>Notes:</strong> {order.deliveryInfo.notes}</p>
+                      )}
+                    </div>
+                  </div>
+                )
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Customer Information */}
+          {order.customerInfo && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Customer Information</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-sm space-y-1">
+                  <p><strong>Name:</strong> {order.customerInfo.name}</p>
+                  <p><strong>Email:</strong> {order.customerInfo.email}</p>
+                  <p><strong>Phone:</strong> {order.customerInfo.phone}</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Contact Information */}
           <Card>
             <CardHeader>
@@ -164,39 +271,13 @@ export default function OrderConfirmationPage() {
                   (305) 699-1430
                 </a>
               </div>
-              
-              <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-1 text-gray-500" />
-                <div className="text-sm">
-                  <p className="font-medium">Jealous Fork</p>
-                  <p className="text-gray-600">
-                    14417 SW 42nd St<br />
-                    Miami, FL 33175
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Order Total */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Order Total</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                ${order.total.toFixed(2)}
-              </div>
-              <p className="text-sm text-gray-600 mt-1">
-                Payment confirmed
-              </p>
             </CardContent>
           </Card>
 
           {/* Actions */}
           <div className="flex gap-4">
             <Button 
-              onClick={() => setLocation('/full-menu')} 
+              onClick={() => setLocation('/menu')} 
               variant="outline" 
               className="flex-1"
             >

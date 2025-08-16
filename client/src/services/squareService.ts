@@ -16,6 +16,7 @@ export interface DeliveryInfo {
   zipCode: string;
   phone: string;
   deliveryNotes?: string;
+  notes?: string;
 }
 
 export interface OrderRequest {
@@ -40,6 +41,17 @@ export interface OrderResponse {
   status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed' | 'cancelled';
   estimatedReadyTime?: string;
   total: number;
+  items?: CartItem[];
+  orderType?: 'pickup' | 'delivery';
+  customerInfo?: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  deliveryInfo?: DeliveryInfo | null;
+  subtotal?: number;
+  tax?: number;
+  deliveryFee?: number;
 }
 
 export const squareService = {
