@@ -66,42 +66,79 @@ export default function SquarePaymentBasic({
   }, [onPaymentError]);
 
   useEffect(() => {
-    if (!squareLoaded || (window as any).squareCardInitialized) return;
+    if (!squareLoaded) return;
 
     const initializeSquarePayments = async () => {
       try {
-        console.log('Initializing Square payments');
-        
-        // Prevent multiple initializations
-        (window as any).squareCardInitialized = true;
+        console.log('Initializing Square payments with ID:', applicationId, 'Location:', locationId);
         
         // Wait for DOM to be ready
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        // Clear any existing Square card instance
+        if ((window as any).squareCard) {
+          try {
+            await (window as any).squareCard.destroy();
+          } catch (e) {
+            console.log('No existing card to destroy');
+          }
+        }
         
         // Check if container exists
         const container = document.getElementById('square-card-form');
         if (!container) {
+          console.error('Square container not found in DOM');
           throw new Error('Square container not found');
         }
         
+        console.log('Container found, initializing Square payments...');
+        
         // Initialize payments
         const payments = window.Square.payments(applicationId, locationId);
+        console.log('Square payments object created');
         
         // Create card payment method
-        const card = await payments.card();
+        const card = await payments.card({
+          style: {
+            '.input-container': {
+              borderColor: '#d1d5db',
+              borderRadius: '6px',
+            },
+            '.input-container.is-focus': {
+              borderColor: '#3b82f6',
+            },
+            '.input-container.is-error': {
+              borderColor: '#ef4444',
+            },
+            '.message-text': {
+              color: '#ef4444',
+            },
+            '.message-icon': {
+              color: '#ef4444',
+            },
+            '.message-text.is-success': {
+              color: '#10b981',
+            },
+            '.message-icon.is-success': {
+              color: '#10b981',
+            },
+          }
+        });
+        console.log('Square card object created');
+        
+        // Clear container first
+        container.innerHTML = '';
         
         // Attach to the card container
         await card.attach('#square-card-form');
-        
-        console.log('Square payment form initialized successfully');
+        console.log('Square payment form attached successfully');
         
         // Store card instance for payment processing
         (window as any).squareCard = card;
         
       } catch (error) {
         console.error('Square initialization error:', error);
-        (window as any).squareCardInitialized = false; // Reset on error
-        onPaymentError('Payment form initialization failed');
+        onPaymentError(`Payment form initialization failed: ${error.message}`);
       }
     };
 
@@ -187,8 +224,16 @@ export default function SquarePaymentBasic({
       <CardContent className="space-y-6">
         <div 
           id="square-card-form"
-          className="min-h-[120px] p-4 border border-gray-300 rounded-md bg-white"
-        />
+          className="min-h-[150px] p-4 border border-gray-300 rounded-md bg-white"
+          style={{ position: 'relative', zIndex: 1 }}
+        >
+          {!squareLoaded && (
+            <div className="flex items-center justify-center h-32">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+              <span className="ml-2 text-gray-600">Loading payment form...</span>
+            </div>
+          )}
+        </div>
         
         <Button 
           onClick={handlePayment}
