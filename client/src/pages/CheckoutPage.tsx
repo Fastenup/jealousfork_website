@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import SquarePaymentNew from '@/components/SquarePaymentNew';
+import SquarePaymentBasic from '@/components/SquarePaymentBasic';
 import { squareService, OrderRequest } from '@/services/squareService';
 import { ArrowLeft, MapPin, Clock, Phone } from 'lucide-react';
 import Navigation from '@/components/Navigation';
@@ -321,7 +321,7 @@ export default function CheckoutPage() {
                 </Button>
               </>
             ) : (
-              <SquarePaymentNew
+              <SquarePaymentBasic
                 amount={cartState.total}
                 onPaymentSuccess={handlePaymentSuccess}
                 onPaymentError={handlePaymentError}

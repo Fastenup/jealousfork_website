@@ -32,17 +32,14 @@ export default function SquarePaymentNew({
   useEffect(() => {
     const initializeSquare = async () => {
       try {
-        console.log('Starting Square initialization with:', {
-          appId: applicationId?.substring(0, 15) + '...',
-          locationId
-        });
+        console.log('Starting Square initialization...');
 
         // Load Square Web Payments SDK if not already loaded
         if (!window.Square) {
           console.log('Loading Square SDK...');
           const script = document.createElement('script');
           script.src = 'https://web.squarecdn.com/v1/square.js';
-          script.async = false; // Load synchronously for better initialization
+          script.async = true;
           
           await new Promise<void>((resolve, reject) => {
             script.onload = () => {
@@ -54,47 +51,30 @@ export default function SquarePaymentNew({
           });
         }
 
-        // Wait for DOM to be ready
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Wait for component to be fully mounted
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Initialize Square payments with proper error handling
+        // Initialize Square payments
         console.log('Initializing Square payments...');
         const paymentsInstance = window.Square.payments(applicationId, locationId);
-        console.log('Payments instance created');
-        
         setPayments(paymentsInstance);
 
-        // Initialize card payment method
+        // Initialize card payment method without custom styling
         console.log('Creating card instance...');
-        const cardInstance = await paymentsInstance.card({
-          style: {
-            input: {
-              fontSize: '14px',
-              fontFamily: 'system-ui, -apple-system, sans-serif'
-            }
-          }
-        });
-        console.log('Card instance created');
-        
+        const cardInstance = await paymentsInstance.card();
         setCard(cardInstance);
 
-        // Wait for DOM container to be available
-        let retries = 0;
-        while (!cardContainerRef.current && retries < 10) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          retries++;
+        // Ensure DOM container exists
+        const container = document.getElementById('square-card-container');
+        if (!container) {
+          throw new Error('Square card container not found in DOM');
         }
 
-        if (cardContainerRef.current) {
-          console.log('Attaching card to DOM...');
-          await cardInstance.attach(cardContainerRef.current);
-          console.log('Card attached successfully');
-        } else {
-          throw new Error('Card container not found after retries');
-        }
+        console.log('Attaching card to container...');
+        await cardInstance.attach('#square-card-container');
+        console.log('Card attached successfully');
 
         setIsLoading(false);
-        console.log('Square initialization complete');
 
       } catch (error) {
         console.error('Square initialization error:', error);
@@ -103,12 +83,11 @@ export default function SquarePaymentNew({
       }
     };
 
+    // Only initialize if we have both credentials and the component is mounted
     if (applicationId && locationId) {
-      initializeSquare();
-    } else {
-      console.error('Missing Square credentials:', { applicationId: !!applicationId, locationId: !!locationId });
-      onPaymentError('Square credentials not configured');
-      setIsLoading(false);
+      // Delay initialization to ensure DOM is ready
+      const timer = setTimeout(initializeSquare, 100);
+      return () => clearTimeout(timer);
     }
   }, [applicationId, locationId, onPaymentError]);
 
@@ -167,7 +146,7 @@ export default function SquarePaymentNew({
       <CardContent className="space-y-6">
         <div 
           ref={cardContainerRef}
-          id="card-container"
+          id="square-card-container"
           className="p-3 border border-gray-300 rounded-md min-h-[56px] bg-white"
         />
         
