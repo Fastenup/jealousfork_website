@@ -525,22 +525,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         idempotencyKey: `${orderId}-order`,
         order: {
           locationId: process.env.SQUARE_LOCATION_ID,
-          referenceId: orderId,
+          reference_id: orderId,
           source: {
             name: 'Jealous Fork Online Ordering'
           },
-          lineItems: orderData.items.map(item => ({
+          line_items: orderData.items.map(item => ({
             name: item.name,
             quantity: item.quantity.toString(),
-            basePriceMoney: {
+            base_price_money: {
               amount: Math.round(item.price * 100),
               currency: 'USD'
             },
             note: item.description || ''
           })),
-          serviceCharges: orderData.deliveryFee > 0 ? [{
+          service_charges: orderData.deliveryFee > 0 ? [{
             name: 'Delivery Fee',
-            amountMoney: {
+            amount_money: {
               amount: Math.round(orderData.deliveryFee * 100),
               currency: 'USD'
             }
@@ -552,25 +552,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
           fulfillments: [{
             type: orderData.orderType === 'pickup' ? 'PICKUP' : 'SHIPMENT',
             state: 'PROPOSED',
-            pickupDetails: orderData.orderType === 'pickup' ? {
+            pickup_details: orderData.orderType === 'pickup' ? {
               recipient: {
-                displayName: orderData.customerInfo.name,
-                emailAddress: orderData.customerInfo.email,
-                phoneNumber: orderData.customerInfo.phone
+                display_name: orderData.customerInfo.name,
+                email_address: orderData.customerInfo.email,
+                phone_number: orderData.customerInfo.phone
               },
-              scheduleType: 'ASAP',
+              schedule_type: 'ASAP',
               note: 'Order ready for pickup'
             } : undefined,
-            shipmentDetails: orderData.orderType === 'delivery' ? {
+            shipment_details: orderData.orderType === 'delivery' ? {
               recipient: {
-                displayName: orderData.customerInfo.name,
-                emailAddress: orderData.customerInfo.email,
-                phoneNumber: orderData.deliveryInfo?.phone || orderData.customerInfo.phone,
+                display_name: orderData.customerInfo.name,
+                email_address: orderData.customerInfo.email,
+                phone_number: orderData.deliveryInfo?.phone || orderData.customerInfo.phone,
                 address: {
-                  addressLine1: orderData.deliveryInfo?.address || '',
+                  address_line_1: orderData.deliveryInfo?.address || '',
                   locality: orderData.deliveryInfo?.city || '',
-                  administrativeDistrictLevel1: orderData.deliveryInfo?.state || '',
-                  postalCode: orderData.deliveryInfo?.zipCode || ''
+                  administrative_district_level_1: orderData.deliveryInfo?.state || '',
+                  postal_code: orderData.deliveryInfo?.zipCode || ''
                 }
               },
               note: orderData.deliveryInfo?.deliveryNotes || 'Delivery order'
