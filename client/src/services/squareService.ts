@@ -44,25 +44,50 @@ export interface OrderResponse {
 
 export const squareService = {
   async createOrder(orderData: OrderRequest): Promise<OrderResponse> {
-    const response = await apiRequest('POST', '/api/orders', orderData);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Order creation failed:', response.status, errorText);
+    try {
+      console.log('Sending order data:', orderData);
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Order creation failed:', response.status, errorText);
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          throw new Error(errorData.error || `HTTP ${response.status}: ${errorText}`);
+        } catch (parseError) {
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+      }
+      
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
+      
+      if (!responseText.trim()) {
+        throw new Error('Empty response from server');
+      }
       
       try {
-        const errorData = JSON.parse(errorText);
-        throw new Error(errorData.error || `HTTP ${response.status}: ${errorText}`);
+        return JSON.parse(responseText);
       } catch (parseError) {
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        console.error('JSON parse error:', parseError, 'Response:', responseText);
+        throw new Error('Invalid JSON response from server');
       }
+    } catch (error) {
+      console.error('Order creation error:', error);
+      throw error;
     }
-    
-    return await response.json();
   },
 
   async getOrder(orderId: string): Promise<OrderResponse> {
-    const response = await apiRequest('GET', `/api/orders/${orderId}`);
+    const response = await fetch(`/api/orders/${orderId}`, {
+      credentials: 'include'
+    });
     return await response.json();
   },
 
