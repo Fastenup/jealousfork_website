@@ -123,6 +123,7 @@ export default function SquarePaymentBasic({
       const verificationDetails = {
         intent: 'CHARGE',
         amount: Math.round(amount * 100).toString(), // Amount in smallest currency unit (cents)
+        currencyCode: 'USD', // Required currency code
         customerInitiated: true, // Required boolean field
         sellerKeyedIn: false, // Required boolean field
         billingContact: {
