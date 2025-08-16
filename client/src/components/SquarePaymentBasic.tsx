@@ -97,33 +97,8 @@ export default function SquarePaymentBasic({
         const payments = window.Square.payments(applicationId, locationId);
         console.log('Square payments object created');
         
-        // Create card payment method
-        const card = await payments.card({
-          style: {
-            '.input-container': {
-              borderColor: '#d1d5db',
-              borderRadius: '6px',
-            },
-            '.input-container.is-focus': {
-              borderColor: '#3b82f6',
-            },
-            '.input-container.is-error': {
-              borderColor: '#ef4444',
-            },
-            '.message-text': {
-              color: '#ef4444',
-            },
-            '.message-icon': {
-              color: '#ef4444',
-            },
-            '.message-text.is-success': {
-              color: '#10b981',
-            },
-            '.message-icon.is-success': {
-              color: '#10b981',
-            },
-          }
-        });
+        // Create card payment method - minimal styling to avoid selector errors
+        const card = await payments.card();
         console.log('Square card object created');
         
         // Clear container first
@@ -136,9 +111,9 @@ export default function SquarePaymentBasic({
         // Store card instance for payment processing
         (window as any).squareCard = card;
         
-      } catch (error) {
+      } catch (error: any) {
         console.error('Square initialization error:', error);
-        onPaymentError(`Payment form initialization failed: ${error.message}`);
+        onPaymentError(`Payment form initialization failed: ${error?.message || 'Unknown error'}`);
       }
     };
 
