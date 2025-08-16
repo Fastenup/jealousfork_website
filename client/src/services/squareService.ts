@@ -45,6 +45,19 @@ export interface OrderResponse {
 export const squareService = {
   async createOrder(orderData: OrderRequest): Promise<OrderResponse> {
     const response = await apiRequest('POST', '/api/orders', orderData);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Order creation failed:', response.status, errorText);
+      
+      try {
+        const errorData = JSON.parse(errorText);
+        throw new Error(errorData.error || `HTTP ${response.status}: ${errorText}`);
+      } catch (parseError) {
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+    }
+    
     return await response.json();
   },
 
