@@ -60,8 +60,14 @@ export class SquareServiceFixed {
 
       const requestBody = {
         idempotency_key: orderData.idempotencyKey,
-        order: orderData.order
+        order: {
+          ...orderData.order,
+          location_id: orderData.order.locationId, // Square expects location_id, not locationId
+        }
       };
+      
+      // Remove the camelCase version to avoid confusion
+      delete requestBody.order.locationId;
 
       console.log('Sending order request to Square API:', JSON.stringify(requestBody, null, 2));
 
