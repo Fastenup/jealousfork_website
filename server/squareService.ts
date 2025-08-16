@@ -190,6 +190,65 @@ export class SquareService {
     }
   }
 
+  async createOrder(orderData: {
+    idempotencyKey: string;
+    order: {
+      locationId: string;
+      referenceId: string;
+      source: {
+        name: string;
+      };
+      lineItems: any[];
+      serviceCharges?: any[];
+      taxes?: any[];
+      fulfillments: any[];
+    };
+  }) {
+    try {
+      console.log('Creating Square order with details...');
+      
+      const accessToken = process.env.SQUARE_ACCESS_TOKEN;
+      if (!accessToken) {
+        throw new Error('Square access token not configured');
+      }
+
+      const environment = accessToken.startsWith('sandbox') ? 'sandbox' : 'production';
+      const baseUrl = environment === 'sandbox' 
+        ? 'https://connect.squareupsandbox.com' 
+        : 'https://connect.squareup.com';
+
+      const requestBody = {
+        idempotency_key: orderData.idempotencyKey,
+        order: orderData.order
+      };
+
+      console.log('Sending order request to Square API:', JSON.stringify(requestBody, null, 2));
+
+      const response = await fetch(`${baseUrl}/v2/orders`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Square-Version': '2024-06-04',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        console.error('Square orders API error:', responseData);
+        throw new Error(responseData.errors?.[0]?.detail || 'Order creation failed');
+      }
+
+      console.log('Square order created successfully:', responseData.order?.id);
+      return responseData;
+    } catch (error: any) {
+      console.error('Square order creation error:', error);
+      throw new Error(`Order creation failed: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
   async createPayment(paymentData: {
     sourceId: string;
     amountMoney: {
@@ -198,6 +257,8 @@ export class SquareService {
     };
     idempotencyKey: string;
     referenceId?: string;
+    orderId?: string;
+    note?: string;
   }) {
     try {
       console.log('Processing Square payment with production API...');
@@ -219,7 +280,9 @@ export class SquareService {
         amount_money: paymentData.amountMoney,
         idempotency_key: paymentData.idempotencyKey,
         location_id: locationId,
-        ...(paymentData.referenceId && { reference_id: paymentData.referenceId })
+        ...(paymentData.referenceId && { reference_id: paymentData.referenceId }),
+        ...(paymentData.orderId && { order_id: paymentData.orderId }),
+        ...(paymentData.note && { note: paymentData.note })
       };
 
       console.log('Sending payment request to Square API:', { 

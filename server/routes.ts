@@ -519,8 +519,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate unique order ID
       const orderId = `JF-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       
-      // Process payment with Square including order details
-      console.log('Processing payment for order:', orderId, 'with token:', orderData.paymentToken.substring(0, 20) + '...');
+      // Step 1: Create order in Square with detailed line items and fulfillment
+      console.log('Creating Square order with line items for:', orderId);
+      const squareOrder = await squareService.createOrder({
+        idempotencyKey: `${orderId}-order`,
+        order: {
+          locationId: process.env.SQUARE_LOCATION_ID,
+          referenceId: orderId,
+          source: {
+            name: 'Jealous Fork Online Ordering'
+          },
+          lineItems: orderData.items.map(item => ({
+            name: item.name,
+            quantity: item.quantity.toString(),
+            basePriceMoney: {
+              amount: Math.round(item.price * 100),
+              currency: 'USD'
+            },
+            note: item.description || ''
+          })),
+          serviceCharges: orderData.deliveryFee > 0 ? [{
+            name: 'Delivery Fee',
+            amountMoney: {
+              amount: Math.round(orderData.deliveryFee * 100),
+              currency: 'USD'
+            }
+          }] : [],
+          taxes: [{
+            name: 'Sales Tax',
+            percentage: '7.5'
+          }],
+          fulfillments: [{
+            type: orderData.orderType === 'pickup' ? 'PICKUP' : 'SHIPMENT',
+            state: 'PROPOSED',
+            pickupDetails: orderData.orderType === 'pickup' ? {
+              recipient: {
+                displayName: orderData.customerInfo.name,
+                emailAddress: orderData.customerInfo.email,
+                phoneNumber: orderData.customerInfo.phone
+              },
+              scheduleType: 'ASAP',
+              note: 'Order ready for pickup'
+            } : undefined,
+            shipmentDetails: orderData.orderType === 'delivery' ? {
+              recipient: {
+                displayName: orderData.customerInfo.name,
+                emailAddress: orderData.customerInfo.email,
+                phoneNumber: orderData.deliveryInfo?.phone || orderData.customerInfo.phone,
+                address: {
+                  addressLine1: orderData.deliveryInfo?.address || '',
+                  locality: orderData.deliveryInfo?.city || '',
+                  administrativeDistrictLevel1: orderData.deliveryInfo?.state || '',
+                  postalCode: orderData.deliveryInfo?.zipCode || ''
+                }
+              },
+              note: orderData.deliveryInfo?.deliveryNotes || 'Delivery order'
+            } : undefined
+          }]
+        }
+      });
+
+      if (!squareOrder || !squareOrder.order || !squareOrder.order.id) {
+        return res.status(400).json({ 
+          error: 'Failed to create order in Square. Please try again.' 
+        });
+      }
+
+      console.log('Square order created successfully:', squareOrder.order.id);
+
+      // Step 2: Process payment with reference to the created order
+      console.log('Processing payment for Square order:', squareOrder.order.id, 'with token:', orderData.paymentToken.substring(0, 20) + '...');
       const payment = await squareService.createPayment({
         sourceId: orderData.paymentToken,
         amountMoney: {
@@ -529,63 +597,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         idempotencyKey: `${orderId}-payment`,
         referenceId: orderId,
-        note: `${orderData.orderType.toUpperCase()} Order - ${orderData.customerInfo.name} - ${orderData.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}`,
-        orderRequest: {
-          order: {
-            locationId: process.env.SQUARE_LOCATION_ID,
-            referenceId: orderId,
-            source: {
-              name: 'Jealous Fork Online Ordering'
-            },
-            lineItems: orderData.items.map(item => ({
-              name: item.name,
-              quantity: item.quantity.toString(),
-              basePriceMoney: {
-                amount: Math.round(item.price * 100),
-                currency: 'USD'
-              },
-              note: item.description || ''
-            })),
-            serviceCharges: orderData.deliveryFee > 0 ? [{
-              name: 'Delivery Fee',
-              amountMoney: {
-                amount: Math.round(orderData.deliveryFee * 100),
-                currency: 'USD'
-              }
-            }] : [],
-            taxes: [{
-              name: 'Sales Tax',
-              percentage: '7.5'
-            }],
-            fulfillments: [{
-              type: orderData.orderType === 'pickup' ? 'PICKUP' : 'SHIPMENT',
-              state: 'PROPOSED',
-              pickupDetails: orderData.orderType === 'pickup' ? {
-                recipient: {
-                  displayName: orderData.customerInfo.name,
-                  emailAddress: orderData.customerInfo.email,
-                  phoneNumber: orderData.customerInfo.phone
-                },
-                scheduleType: 'ASAP',
-                note: 'Order ready for pickup'
-              } : undefined,
-              shipmentDetails: orderData.orderType === 'delivery' ? {
-                recipient: {
-                  displayName: orderData.customerInfo.name,
-                  emailAddress: orderData.customerInfo.email,
-                  phoneNumber: orderData.deliveryInfo?.phone || orderData.customerInfo.phone,
-                  address: {
-                    addressLine1: orderData.deliveryInfo?.address || '',
-                    locality: orderData.deliveryInfo?.city || '',
-                    administrativeDistrictLevel1: orderData.deliveryInfo?.state || '',
-                    postalCode: orderData.deliveryInfo?.zipCode || ''
-                  }
-                },
-                note: orderData.deliveryInfo?.deliveryNotes || 'Delivery order'
-              } : undefined
-            }]
-          }
-        }
+        orderId: squareOrder.order.id,
+        note: `${orderData.orderType.toUpperCase()} Order - ${orderData.customerInfo.name} - ${orderData.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}`
       });
 
       if (!payment || payment.status !== 'COMPLETED') {
@@ -627,7 +640,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Send confirmation email to customer
       try {
-        await fetch('/api/contact', {
+        await fetch(`http://localhost:${process.env.PORT || 5000}/api/contact`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -655,7 +668,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           name: order.customerName,
           email: order.customerEmail,
           phone: order.customerPhone
-        }
+        },
+        squareOrderId: squareOrder.order.id
       });
     } catch (error: any) {
       console.error('Order creation error:', error);
