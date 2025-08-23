@@ -213,10 +213,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         await storage.setFeaturedItems(updatedFeatured);
         
+        // Add featured status to Square items
+        const itemsWithFeaturedStatus = allSquareItems.map((item: any) => ({
+          ...item,
+          isFeatured: featuredItems.some(featured => 
+            featured.squareId === item.id || featured.squareId === item.squareId
+          ),
+          localId: featuredItems.find(featured => 
+            featured.squareId === item.id || featured.squareId === item.squareId
+          )?.localId || item.id
+        }));
+
         return res.json({
-          items: allSquareItems,
+          success: true,
+          items: itemsWithFeaturedStatus,
           source: 'square-sync',
-          count: allSquareItems.length,
+          count: itemsWithFeaturedStatus.length,
           featuredSynced: syncResult.syncedItems.length
         });
       } catch (syncError) {
@@ -257,7 +269,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
             };
           }) || [];
           
-          return res.json({ items, source: 'square-direct', count: items.length });
+          // Add featured status to items
+          const itemsWithFeaturedStatus = items.map((item: any) => ({
+            ...item,
+            isFeatured: featuredItems.some(featured => 
+              featured.squareId === item.id || featured.squareId === item.squareId
+            ),
+            localId: featuredItems.find(featured => 
+              featured.squareId === item.id || featured.squareId === item.squareId
+            )?.localId || item.id,
+            isAvailable: true, // Default to available
+            stockLevel: null
+          }));
+          
+          return res.json({ 
+            success: true, 
+            items: itemsWithFeaturedStatus, 
+            source: 'square-direct', 
+            count: itemsWithFeaturedStatus.length 
+          });
         }
       } catch (directError) {
         console.log('Direct Square API also failed');
@@ -788,7 +818,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/featured-items', async (req, res) => {
     try {
       const { storage } = await import('./storage');
-      const items = await storage.getFeaturedItems();
+      let items = await storage.getFeaturedItems();
+      
+      // Sync with Square API to get real stock levels
+      if (squareService && items.length > 0) {
+        try {
+          const allSquareItems = await squareService.getMenuWithInventory();
+          items = items.map(item => {
+            const squareItem = allSquareItems.find((sq: any) => sq.id === item.squareId || sq.squareId === item.squareId);
+            if (squareItem) {
+              return {
+                ...item,
+                isAvailable: squareItem.inStock,
+                stockLevel: squareItem.stockLevel,
+                price: squareItem.price || item.price
+              };
+            }
+            return item;
+          });
+        } catch (syncError) {
+          console.error('Failed to sync with Square:', syncError);
+        }
+      }
+      
       res.json({ items });
     } catch (error: any) {
       res.status(500).json({ error: 'Failed to fetch featured items', message: error.message });
@@ -898,6 +950,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Add POST endpoint for toggling featured status
+  app.post('/api/featured-items/:localId', async (req, res) => {
+    try {
+      const { localId } = req.params;
+      const { squareId, name, description, price, category, imageUrl } = req.body;
+      const { storage } = await import('./storage');
+      
+      // Create new featured item
+      const newFeaturedItem = {
+        localId: parseInt(localId),
+        squareId: squareId || null,
+        name: name || 'Unknown Item',
+        description: description || '',
+        price: parseFloat(price) || 0,
+        category: category || 'uncategorized',
+        image: imageUrl || 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=800&q=80',
+        featured: true,
+        inStock: true,
+        displayOrder: (await storage.getFeaturedItems()).length + 1
+      };
+      
+      await storage.addFeaturedItem(newFeaturedItem);
+      
+      res.json({ success: true, item: newFeaturedItem });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to add featured item', message: error.message });
+    }
+  });
+
   app.delete('/api/featured-items/:localId', async (req, res) => {
     try {
       const { localId } = req.params;
@@ -917,7 +998,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { inStock } = req.body;
       const { storage } = await import('./storage');
       
+      // Update local stock status
       await storage.updateItemStock(parseInt(localId), inStock);
+      
+      // Also try to sync with Square if available
+      if (squareService) {
+        try {
+          const featuredItems = await storage.getFeaturedItems();
+          const item = featuredItems.find(item => item.localId === parseInt(localId));
+          if (item?.squareId) {
+            // Note: Square inventory management requires different permissions
+            // For now we just update local status
+            console.log(`Stock updated for Square item ${item.squareId}: ${inStock}`);
+          }
+        } catch (squareError) {
+          console.error('Square inventory sync failed:', squareError);
+        }
+      }
       
       res.json({ success: true });
     } catch (error: any) {

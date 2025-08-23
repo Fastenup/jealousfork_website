@@ -51,9 +51,28 @@ export function FeaturedItemsManager() {
   // Toggle featured status
   const toggleFeaturedMutation = useMutation({
     mutationFn: async ({ itemId, featured }: { itemId: number; featured: boolean }) => {
-      return apiRequest(`/api/featured-items/${itemId}`, {
-        method: featured ? 'POST' : 'DELETE',
-      });
+      if (featured) {
+        // Add item as featured - need to find the square item and add it
+        const menuItem = allMenuItems.find(item => item.localId === itemId || item.id === itemId);
+        if (menuItem) {
+          return apiRequest(`/api/featured-items/${itemId}`, {
+            method: 'POST',
+            body: { 
+              squareId: menuItem.squareId || menuItem.id,
+              name: menuItem.name,
+              description: menuItem.description,
+              price: menuItem.price,
+              category: menuItem.category,
+              imageUrl: menuItem.imageUrl || menuItem.image
+            },
+          });
+        }
+      } else {
+        // Remove from featured
+        return apiRequest(`/api/featured-items/${itemId}`, {
+          method: 'DELETE',
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/featured-items'] });
