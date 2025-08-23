@@ -23,7 +23,7 @@ import {
   AlertCircle,
   Star,
   Layout,
-  Gallery
+  Grid
 } from 'lucide-react';
 
 export default function ProfessionalAdminPage() {
@@ -257,7 +257,7 @@ export default function ProfessionalAdminPage() {
               Banners
             </TabsTrigger>
             <TabsTrigger value="gallery" className="flex items-center gap-2">
-              <Gallery className="w-4 h-4" />
+              <Grid className="w-4 h-4" />
               Gallery
             </TabsTrigger>
             <TabsTrigger value="locations" className="flex items-center gap-2">
