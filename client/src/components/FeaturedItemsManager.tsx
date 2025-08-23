@@ -34,6 +34,7 @@ export function FeaturedItemsManager() {
   });
 
   const featuredItems: MenuItem[] = (featuredData as any)?.items || [];
+  console.log('Featured items data:', featuredData);
 
   // Fetch all menu items for selection
   const { data: allMenuData } = useQuery({
@@ -41,12 +42,17 @@ export function FeaturedItemsManager() {
   });
 
   const allMenuItems: MenuItem[] = (allMenuData as any)?.items || [];
+  console.log('All menu items data:', allMenuData);
 
   // Filter items for search
   const filteredItems = allMenuItems.filter(item => 
     item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Current featured items for display
+  const currentFeaturedItems = featuredItems.length > 0 ? featuredItems : 
+    allMenuItems.filter(item => item.isFeatured === true);
 
   // Toggle featured status
   const toggleFeaturedMutation = useMutation({
@@ -195,12 +201,12 @@ export function FeaturedItemsManager() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {featuredItems.filter(item => item.isFeatured).map((item) => (
-              <Card key={item.id} className="overflow-hidden">
+            {currentFeaturedItems.map((item) => (
+              <Card key={item.localId || item.id} className="overflow-hidden">
                 <div className="aspect-video bg-gray-100 flex items-center justify-center">
-                  {item.imageUrl ? (
+                  {(item.imageUrl || item.image) ? (
                     <img
-                      src={item.imageUrl}
+                      src={item.imageUrl || item.image}
                       alt={item.name}
                       className="w-full h-full object-cover"
                     />
@@ -218,12 +224,12 @@ export function FeaturedItemsManager() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Switch
-                        checked={item.isAvailable}
+                        checked={item.inStock !== false && item.isAvailable !== false}
                         onCheckedChange={() => handleToggleStock(item)}
                         disabled={toggleStockMutation.isPending}
                       />
                       <span className="text-sm text-gray-600">
-                        {item.isAvailable ? 'In Stock' : 'Out of Stock'}
+                        {(item.inStock !== false && item.isAvailable !== false) ? 'In Stock' : 'Out of Stock'}
                       </span>
                     </div>
                     <Button
@@ -277,9 +283,9 @@ export function FeaturedItemsManager() {
             {filteredItems.filter(item => !item.isFeatured).map((item) => (
               <Card key={item.id} className="overflow-hidden hover:shadow-md transition-shadow">
                 <div className="aspect-video bg-gray-100 flex items-center justify-center">
-                  {item.imageUrl ? (
+                  {(item.imageUrl || item.image) ? (
                     <img
-                      src={item.imageUrl}
+                      src={item.imageUrl || item.image}
                       alt={item.name}
                       className="w-full h-full object-cover"
                     />

@@ -51,7 +51,7 @@ export function CurrentImagesGallery() {
         name: item.name,
         type: 'menu-item' as const,
         usage: `Menu Item${item.isFeatured ? ' (Featured)' : ''}`,
-        isActive: item.isAvailable,
+        isActive: item.inStock !== false && item.isAvailable !== false,
         source: item.squareId ? 'Square API' : 'Manual'
       })),
 
