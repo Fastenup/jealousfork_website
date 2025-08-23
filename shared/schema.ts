@@ -78,6 +78,7 @@ export const squareMenuItems = pgTable("square_menu_items", {
   name: text("name").notNull(),
   description: text("description"),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  imageUrl: text("image_url"),
   isAvailable: boolean("is_available").default(true),
   isFeatured: boolean("is_featured").default(false),
   displayOrder: integer("display_order").default(0),
@@ -114,3 +115,29 @@ export type SquareMenuItem = typeof squareMenuItems.$inferSelect;
 export type InsertSquareMenuItem = typeof squareMenuItems.$inferInsert;
 export type ContactSubmission = typeof contactSubmissions.$inferSelect;
 export type InsertContactSubmission = z.infer<typeof insertContactSubmissionSchema>;
+
+// Restaurant locations and areas for SEO and management
+export const restaurantLocations = pgTable("restaurant_locations", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
+  address: text("address"),
+  city: text("city"),
+  state: text("state"),
+  zipCode: text("zip_code"),
+  phone: text("phone"),
+  latitude: decimal("latitude", { precision: 10, scale: 8 }),
+  longitude: decimal("longitude", { precision: 11, scale: 8 }),
+  imageUrl: text("image_url"),
+  heroImageUrl: text("hero_image_url"),
+  isActive: boolean("is_active").default(true),
+  isMainLocation: boolean("is_main_location").default(false),
+  operatingHours: jsonb("operating_hours"),
+  displayOrder: integer("display_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type RestaurantLocation = typeof restaurantLocations.$inferSelect;
+export type InsertRestaurantLocation = typeof restaurantLocations.$inferInsert;

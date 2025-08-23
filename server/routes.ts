@@ -4,8 +4,11 @@ import path from "path";
 import { storage } from "./storage";
 import { createSquareServiceFixed } from "./squareServiceFixed";
 import { z } from "zod";
-import { insertContactSubmissionSchema } from "../shared/schema";
+import { insertContactSubmissionSchema, restaurantLocations, squareMenuItems } from "../shared/schema";
 import { BrevoEmailService } from "./brevoService";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 // Order request validation schema
 const orderRequestSchema = z.object({
@@ -1094,6 +1097,155 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Subscription webhook processing error:', error);
       res.status(500).json({ error: 'Subscription webhook processing failed' });
+    }
+  });
+
+  // Object Storage Routes
+  const objectStorageService = new ObjectStorageService();
+
+  // Get upload URL for object entities
+  app.post('/api/objects/upload', async (req, res) => {
+    try {
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error: any) {
+      console.error('Error getting upload URL:', error);
+      res.status(500).json({ error: 'Failed to get upload URL' });
+    }
+  });
+
+  // Serve private objects
+  app.get('/objects/:objectPath(*)', async (req, res) => {
+    try {
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error: any) {
+      console.error('Error serving object:', error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
+
+  // Admin Routes for Image Management
+
+  // Get all locations
+  app.get('/api/admin/locations', async (req, res) => {
+    try {
+      const locations = await db.select().from(restaurantLocations);
+      res.json({ locations });
+    } catch (error: any) {
+      console.error('Error fetching locations:', error);
+      res.status(500).json({ error: 'Failed to fetch locations' });
+    }
+  });
+
+  // Create location
+  app.post('/api/admin/locations', async (req, res) => {
+    try {
+      const [location] = await db.insert(restaurantLocations).values(req.body).returning();
+      res.json(location);
+    } catch (error: any) {
+      console.error('Error creating location:', error);
+      res.status(500).json({ error: 'Failed to create location' });
+    }
+  });
+
+  // Update location
+  app.patch('/api/admin/locations/:id', async (req, res) => {
+    try {
+      const locationId = parseInt(req.params.id);
+      const [location] = await db.update(restaurantLocations)
+        .set(req.body)
+        .where(eq(restaurantLocations.id, locationId))
+        .returning();
+      res.json(location);
+    } catch (error: any) {
+      console.error('Error updating location:', error);
+      res.status(500).json({ error: 'Failed to update location' });
+    }
+  });
+
+  // Update location image
+  app.patch('/api/admin/locations/:id/image', async (req, res) => {
+    try {
+      const locationId = parseInt(req.params.id);
+      const { imageUrl } = req.body;
+      
+      // Normalize the object path and set ACL policy
+      const normalizedPath = objectStorageService.normalizeObjectEntityPath(imageUrl);
+      if (normalizedPath.startsWith('/objects/')) {
+        await objectStorageService.trySetObjectEntityAclPolicy(imageUrl, {
+          owner: 'admin',
+          visibility: 'public',
+        });
+      }
+
+      const [location] = await db.update(restaurantLocations)
+        .set({ imageUrl: normalizedPath })
+        .where(eq(restaurantLocations.id, locationId))
+        .returning();
+      
+      res.json({ imageUrl: normalizedPath });
+    } catch (error: any) {
+      console.error('Error updating location image:', error);
+      res.status(500).json({ error: 'Failed to update location image' });
+    }
+  });
+
+  // Remove location image
+  app.delete('/api/admin/locations/:id/image', async (req, res) => {
+    try {
+      const locationId = parseInt(req.params.id);
+      await db.update(restaurantLocations)
+        .set({ imageUrl: null })
+        .where(eq(restaurantLocations.id, locationId));
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error('Error removing location image:', error);
+      res.status(500).json({ error: 'Failed to remove location image' });
+    }
+  });
+
+  // Update menu item image
+  app.patch('/api/admin/menu-items/:id/image', async (req, res) => {
+    try {
+      const itemId = parseInt(req.params.id);
+      const { imageUrl } = req.body;
+      
+      // Normalize the object path and set ACL policy
+      const normalizedPath = objectStorageService.normalizeObjectEntityPath(imageUrl);
+      if (normalizedPath.startsWith('/objects/')) {
+        await objectStorageService.trySetObjectEntityAclPolicy(imageUrl, {
+          owner: 'admin',
+          visibility: 'public',
+        });
+      }
+
+      const [menuItem] = await db.update(squareMenuItems)
+        .set({ imageUrl: normalizedPath })
+        .where(eq(squareMenuItems.id, itemId))
+        .returning();
+      
+      res.json({ imageUrl: normalizedPath });
+    } catch (error: any) {
+      console.error('Error updating menu item image:', error);
+      res.status(500).json({ error: 'Failed to update menu item image' });
+    }
+  });
+
+  // Remove menu item image
+  app.delete('/api/admin/menu-items/:id/image', async (req, res) => {
+    try {
+      const itemId = parseInt(req.params.id);
+      await db.update(squareMenuItems)
+        .set({ imageUrl: null })
+        .where(eq(squareMenuItems.id, itemId));
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error('Error removing menu item image:', error);
+      res.status(500).json({ error: 'Failed to remove menu item image' });
     }
   });
 
