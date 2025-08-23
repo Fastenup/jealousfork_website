@@ -3,6 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import AdminLogin from '@/components/AdminLogin';
 import { MenuItemImageManager } from '@/components/MenuItemImageManager';
 import { LocationManager } from '@/components/LocationManager';
+import { FeaturedItemsManager } from '@/components/FeaturedItemsManager';
+import { BannerManager } from '@/components/BannerManager';
+import { CurrentImagesGallery } from '@/components/CurrentImagesGallery';
 import SquareStatusIndicator from '@/components/SquareStatusIndicator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +20,10 @@ import {
   Users, 
   Database,
   Activity,
-  AlertCircle
+  AlertCircle,
+  Star,
+  Layout,
+  Gallery
 } from 'lucide-react';
 
 export default function ProfessionalAdminPage() {
@@ -236,11 +242,23 @@ export default function ProfessionalAdminPage() {
         </Card>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="menu-images" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="featured-items" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="featured-items" className="flex items-center gap-2">
+              <Star className="w-4 h-4" />
+              Featured
+            </TabsTrigger>
             <TabsTrigger value="menu-images" className="flex items-center gap-2">
               <Images className="w-4 h-4" />
               Menu Images
+            </TabsTrigger>
+            <TabsTrigger value="banners" className="flex items-center gap-2">
+              <Layout className="w-4 h-4" />
+              Banners
+            </TabsTrigger>
+            <TabsTrigger value="gallery" className="flex items-center gap-2">
+              <Gallery className="w-4 h-4" />
+              Gallery
             </TabsTrigger>
             <TabsTrigger value="locations" className="flex items-center gap-2">
               <MapPin className="w-4 h-4" />
@@ -252,6 +270,20 @@ export default function ProfessionalAdminPage() {
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="featured-items" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Featured Items Management</CardTitle>
+                <p className="text-sm text-gray-600">
+                  Manage featured items on the homepage with real-time Square API stock synchronization.
+                </p>
+              </CardHeader>
+              <CardContent>
+                <FeaturedItemsManager />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="menu-images" className="space-y-6">
             <Card>
               <CardHeader>
@@ -262,6 +294,34 @@ export default function ProfessionalAdminPage() {
               </CardHeader>
               <CardContent>
                 <MenuItemImageManager />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="banners" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Banner & Photo Management</CardTitle>
+                <p className="text-sm text-gray-600">
+                  Upload and manage banner images, hero photos, and promotional content for the website.
+                </p>
+              </CardHeader>
+              <CardContent>
+                <BannerManager />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="gallery" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Current Images Gallery</CardTitle>
+                <p className="text-sm text-gray-600">
+                  View all images currently in use across the website, including stock photos and uploaded content.
+                </p>
+              </CardHeader>
+              <CardContent>
+                <CurrentImagesGallery />
               </CardContent>
             </Card>
           </TabsContent>

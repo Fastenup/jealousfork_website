@@ -1249,6 +1249,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Banner management routes (placeholder for now - using locations table as example)
+  app.get('/api/admin/banners', async (req, res) => {
+    try {
+      // For now, return empty array - in real implementation would have dedicated banners table
+      const banners = [
+        {
+          id: 1,
+          name: 'Hero Banner',
+          description: 'Main homepage hero image',
+          imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?auto=format&fit=crop&w=1000',
+          altText: 'Delicious pancakes with berries',
+          isActive: true,
+          displayOrder: 1,
+          usage: 'hero'
+        },
+        {
+          id: 2,
+          name: 'About Section Background',
+          description: 'Background image for about section',
+          imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800',
+          altText: 'Restaurant interior',
+          isActive: true,
+          displayOrder: 2,
+          usage: 'section'
+        }
+      ];
+      res.json({ banners });
+    } catch (error: any) {
+      console.error('Error fetching banners:', error);
+      res.status(500).json({ error: 'Failed to fetch banners' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
