@@ -496,7 +496,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const { category } = req.params;
-      const allItems = await squareService.getMenuWithInventory();
+      const allItems = await squareService.getCatalogItems();
       const categoryItems = allItems.filter((item: any) => 
         item.category.toLowerCase() === category.toLowerCase()
       );
@@ -820,26 +820,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { storage } = await import('./storage');
       let items = await storage.getFeaturedItems();
       
-      // Sync with Square API to get real stock levels
-      if (squareService && items.length > 0) {
-        try {
-          const allSquareItems = await squareService.getMenuWithInventory();
-          items = items.map(item => {
-            const squareItem = allSquareItems.find((sq: any) => sq.id === item.squareId || sq.squareId === item.squareId);
-            if (squareItem) {
-              return {
-                ...item,
-                isAvailable: squareItem.inStock,
-                stockLevel: squareItem.stockLevel,
-                price: squareItem.price || item.price
-              };
-            }
-            return item;
-          });
-        } catch (syncError) {
-          console.error('Failed to sync with Square:', syncError);
-        }
-      }
+      // For now, just return items as-is with default stock status
+      // Square sync will be handled through the separate sync endpoint
+      items = items.map(item => ({
+        ...item,
+        inStock: item.inStock ?? true, // Keep existing stock status or default to true
+        isAvailable: item.inStock ?? true
+      }));
       
       res.json({ items });
     } catch (error: any) {

@@ -53,17 +53,21 @@ export function FeaturedItemsManager() {
     mutationFn: async ({ itemId, featured }: { itemId: number; featured: boolean }) => {
       if (featured) {
         // Add item as featured - need to find the square item and add it
-        const menuItem = allMenuItems.find(item => item.localId === itemId || item.id === itemId);
+        const menuItem = allMenuItems.find(item => 
+          item.localId === itemId || 
+          item.id === itemId || 
+          (typeof item.id === 'string' && item.id === itemId.toString())
+        );
         if (menuItem) {
           return apiRequest(`/api/featured-items/${itemId}`, {
             method: 'POST',
             body: { 
               squareId: menuItem.squareId || menuItem.id,
               name: menuItem.name,
-              description: menuItem.description,
-              price: menuItem.price,
-              category: menuItem.category,
-              imageUrl: menuItem.imageUrl || menuItem.image
+              description: menuItem.description || '',
+              price: menuItem.price || 0,
+              category: menuItem.category || 'uncategorized',
+              imageUrl: menuItem.imageUrl || 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=800&q=80'
             },
           });
         }
