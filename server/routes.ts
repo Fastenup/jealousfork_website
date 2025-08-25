@@ -4,6 +4,7 @@ import path from "path";
 import { storage } from "./storage";
 import { createSquareServiceFixed } from "./squareServiceFixed";
 import { z } from "zod";
+import { serverCache, CACHE_KEYS } from "./cache";
 import { insertContactSubmissionSchema, restaurantLocations, squareMenuItems } from "../shared/schema";
 import { BrevoEmailService } from "./brevoService";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
@@ -64,6 +65,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: false,
         error: error.message,
         details: error.toString()
+      });
+    }
+  });
+
+  // Main menu endpoint (CACHED - most important for cost reduction!)
+  app.get('/api/menu', async (req, res) => {
+    try {
+      // Check cache first - this will eliminate most Square API calls
+      const cachedMenu = serverCache.get(CACHE_KEYS.SQUARE_CATALOG);
+      if (cachedMenu) {
+        console.log('Serving cached menu - no Square API call needed');
+        return res.json(cachedMenu);
+      }
+
+      if (!squareService) {
+        return res.status(503).json({ 
+          success: false,
+          error: 'Square API not configured.' 
+        });
+      }
+
+      console.log('Cache miss - fetching full menu from Square API');
+      const allItems = await squareService.getCatalogItems();
+      
+      const responseData = { 
+        success: true, 
+        items: allItems,
+        source: 'square_api',
+        timestamp: new Date().toISOString()
+      };
+      
+      // Cache for 4 hours - this will dramatically reduce API calls
+      serverCache.set(CACHE_KEYS.SQUARE_CATALOG, responseData, 240);
+      
+      res.json(responseData);
+    } catch (error: any) {
+      console.error('Menu API error:', error);
+      res.status(500).json({ 
+        success: false,
+        error: 'Failed to fetch menu',
+        message: error?.message || 'Unknown error'
       });
     }
   });
@@ -504,22 +546,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get specific menu category
+  // Get specific menu category (CACHED - no more constant Square API calls!)
   app.get('/api/menu/:category', async (req, res) => {
     try {
+      const { category } = req.params;
+      const cacheKey = `${CACHE_KEYS.MENU_CATEGORY}${category}`;
+      
+      // Check cache first - avoid Square API call
+      const cachedData = serverCache.get(cacheKey);
+      if (cachedData) {
+        console.log(`Serving cached menu for category: ${category}`);
+        return res.json(cachedData);
+      }
+
       if (!squareService) {
         return res.status(503).json({ 
           error: 'Square API not configured.' 
         });
       }
 
-      const { category } = req.params;
+      console.log(`Cache miss - fetching category ${category} from Square API`);
       const allItems = await squareService.getCatalogItems();
       const categoryItems = allItems.filter((item: any) => 
         item.category.toLowerCase() === category.toLowerCase()
       );
       
-      res.json({ success: true, items: categoryItems, category });
+      const responseData = { success: true, items: categoryItems, category };
+      
+      // Cache for 4 hours - dramatically reduces API calls
+      serverCache.set(cacheKey, responseData, 240);
+      
+      res.json(responseData);
     } catch (error: any) {
       console.error('Category menu API error:', error);
       res.status(500).json({ 
@@ -529,24 +586,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get inventory status for specific items
+  // Get inventory status for specific items (CACHED - major cost savings!)
   app.post('/api/inventory/check', async (req, res) => {
     try {
+      const { itemIds } = req.body;
+      if (!itemIds || !Array.isArray(itemIds)) {
+        return res.status(400).json({ error: 'itemIds array required' });
+      }
+
+      const cacheKey = `${CACHE_KEYS.SQUARE_INVENTORY}${itemIds.sort().join(',')}`;
+      
+      // Check cache first - avoid Square API call
+      const cachedInventory = serverCache.get(cacheKey);
+      if (cachedInventory) {
+        console.log(`Serving cached inventory for ${itemIds.length} items`);
+        return res.json(cachedInventory);
+      }
+
       if (!squareService) {
         return res.status(503).json({ 
           error: 'Square API not configured.' 
         });
       }
 
-      const { itemIds } = req.body;
-      if (!itemIds || !Array.isArray(itemIds)) {
-        return res.status(400).json({ error: 'itemIds array required' });
-      }
-
+      console.log(`Cache miss - fetching inventory for ${itemIds.length} items from Square API`);
       const inventory = await squareService.getInventoryCounts(itemIds);
       const inventoryStatus = Object.fromEntries(inventory);
       
-      res.json({ success: true, inventory: inventoryStatus });
+      const responseData = { success: true, inventory: inventoryStatus };
+      
+      // Cache inventory for 30 minutes - inventory changes less frequently
+      serverCache.set(cacheKey, responseData, 30);
+      
+      res.json(responseData);
     } catch (error: any) {
       console.error('Inventory check API error:', error);
       res.status(500).json({ 
@@ -832,9 +904,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.join(process.cwd(), 'public', 'robots.txt'));
   });
 
-  // Featured items management endpoints
+  // Featured items management endpoints (CACHED - no Square API calls)
   app.get('/api/featured-items', async (req, res) => {
     try {
+      // Check cache first
+      const cachedFeatured = serverCache.get(CACHE_KEYS.FEATURED_ITEMS);
+      if (cachedFeatured) {
+        console.log('Serving cached featured items');
+        return res.json(cachedFeatured);
+      }
+
       const { storage } = await import('./storage');
       let items = await storage.getFeaturedItems();
       
@@ -846,7 +925,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isAvailable: item.inStock ?? true
       }));
       
-      res.json({ items });
+      const responseData = { items };
+      
+      // Cache featured items for 2 hours
+      serverCache.set(CACHE_KEYS.FEATURED_ITEMS, responseData, 120);
+      
+      res.json(responseData);
     } catch (error: any) {
       res.status(500).json({ error: 'Failed to fetch featured items', message: error.message });
     }
@@ -946,6 +1030,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       await storage.addFeaturedItem(newFeaturedItem);
       
+      // Invalidate featured items cache when adding new items
+      serverCache.invalidate(CACHE_KEYS.FEATURED_ITEMS);
+      
       res.json({
         success: true,
         item: newFeaturedItem
@@ -990,6 +1077,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { storage } = await import('./storage');
       
       await storage.removeFeaturedItem(parseInt(localId));
+      
+      // Invalidate featured items cache when removing items
+      serverCache.invalidate(CACHE_KEYS.FEATURED_ITEMS);
       
       res.json({ success: true });
     } catch (error: any) {

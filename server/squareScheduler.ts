@@ -29,9 +29,14 @@ export function initializeScheduledSync() {
   console.log('Square API scheduler initialized - syncs at 9am and 12pm only');
 }
 
-async function performScheduledSync(timeSlot: 'morning' | 'midday') {
+async function performScheduledSync(timeSlot: 'morning' | 'midday' | 'manual') {
   try {
     console.log(`[${timeSlot}] Starting scheduled Square sync...`);
+    
+    // Clear cache before sync to ensure fresh data
+    const { serverCache } = await import('./cache');
+    serverCache.clear();
+    console.log(`[${timeSlot}] Cleared cache for fresh sync`);
     
     // Import sync functions dynamically to avoid circular deps
     const { syncMenuWithSquare } = await import('./squareMenuSync');
@@ -48,5 +53,11 @@ async function performScheduledSync(timeSlot: 'morning' | 'midday') {
 
 export async function triggerManualSync() {
   console.log('Manual Square API sync triggered');
+  
+  // Clear all cached data before sync
+  const { serverCache } = await import('./cache');
+  serverCache.clear();
+  console.log('Cleared all cached data for fresh sync');
+  
   return await performScheduledSync('manual');
 }
