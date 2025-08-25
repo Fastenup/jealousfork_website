@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { initializeScheduledSync } from "./squareScheduler";
 import path from "path";
 import dotenv from "dotenv";
 
@@ -75,5 +76,7 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+    // Initialize Square API scheduled sync (9am and 12pm only)
+    initializeScheduledSync();
   });
 })();

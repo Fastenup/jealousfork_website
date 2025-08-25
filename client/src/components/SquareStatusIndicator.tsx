@@ -29,9 +29,7 @@ export default function SquareStatusIndicator() {
     };
 
     checkStatus();
-    // Check status every 30 seconds
-    const interval = setInterval(checkStatus, 30000);
-    return () => clearInterval(interval);
+    // Removed automatic polling - only check once on mount
   }, []);
 
   if (loading) {

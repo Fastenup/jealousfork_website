@@ -63,7 +63,7 @@ export default function AdminPage() {
       return response.json();
     },
     enabled: isAuthenticated,
-    refetchInterval: 30000 // Refresh every 30 seconds
+    refetchInterval: false // Disable automatic polling
   });
 
   if (!isAuthenticated) {

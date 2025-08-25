@@ -23,8 +23,10 @@ import {
   AlertCircle,
   Star,
   Layout,
-  Grid
+  Grid,
+  RefreshCw
 } from 'lucide-react';
+import { ManualSyncButton } from '@/components/ManualSyncButton';
 
 export default function ProfessionalAdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -60,7 +62,7 @@ export default function ProfessionalAdminPage() {
       return response.json();
     },
     enabled: isAuthenticated,
-    refetchInterval: 60000 // Refresh every minute
+    refetchInterval: false // Disable automatic polling
   });
 
   // Fetch featured items count
@@ -122,6 +124,7 @@ export default function ProfessionalAdminPage() {
                 <Activity className="w-3 h-3 mr-1" />
                 Online
               </Badge>
+              <ManualSyncButton />
               <Button
                 variant="outline"
                 size="sm"

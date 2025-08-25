@@ -54,7 +54,7 @@ export default function FullMenuPage() {
   // Fetch all menu items with real-time Square sync
   const { data: menuData, isLoading, error } = useQuery({
     queryKey: ['/api/menu'],
-    refetchInterval: 60000, // Refresh every minute for menu updates
+    refetchInterval: false, // Disable automatic polling
   });
 
   const menuItems: MenuItem[] = menuData?.items || [];

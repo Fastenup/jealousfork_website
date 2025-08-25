@@ -68,6 +68,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Manual Square sync trigger (on-demand)
+  app.post('/api/square/sync', async (req, res) => {
+    try {
+      const { triggerManualSync } = await import('./squareScheduler');
+      const result = await triggerManualSync();
+      res.json({
+        success: true,
+        message: 'Manual sync completed',
+        ...result
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+
   // Test Square API connection with direct API call
   app.post('/api/test-square', async (req, res) => {
     try {

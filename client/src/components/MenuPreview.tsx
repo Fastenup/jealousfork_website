@@ -15,7 +15,7 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
   // Fetch real-time featured items from API
   const { data: featuredData, isLoading } = useQuery({
     queryKey: ['/api/featured-items'],
-    refetchInterval: 30000, // Refresh every 30 seconds
+    refetchInterval: false, // Disable automatic polling
   });
 
   // Use real-time data when available, fallback to static config
