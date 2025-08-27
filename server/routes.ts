@@ -972,6 +972,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.join(process.cwd(), 'public', 'robots.txt'));
   });
 
+  // Menu items endpoint (comprehensive menu data for admin)
+  app.get('/api/menu-items', async (req, res) => {
+    try {
+      // Get both local featured items and full Square menu
+      const [featuredItems, allMenuData] = await Promise.all([
+        storage.getFeaturedItems(),
+        (async () => {
+          try {
+            const { SquareMenuSyncService } = await import('./squareMenuSync');
+            const syncService = new SquareMenuSyncService();
+            return await syncService.fetchSquareMenuItems();
+          } catch (error) {
+            console.log('Square menu fetch failed, using empty array');
+            return [];
+          }
+        })()
+      ]);
+
+      // Combine and format menu items with featured status
+      const allItems = allMenuData.map(item => ({
+        id: item.id,
+        localId: item.localId || parseInt(item.id),
+        squareId: item.id,
+        name: item.name,
+        description: item.description || '',
+        price: item.price || 0,
+        category: item.category || 'uncategorized',
+        imageUrl: item.imageUrl || null,
+        isAvailable: item.inStock !== false,
+        isFeatured: featuredItems.some(f => f.squareId === item.id),
+        stockLevel: item.stockLevel
+      }));
+
+      res.json({ items: allItems });
+    } catch (error: any) {
+      console.error('Error fetching menu items:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch menu items',
+        items: []
+      });
+    }
+  });
+
   // Featured items management endpoints (CACHED - no Square API calls)
   app.get('/api/featured-items', async (req, res) => {
     try {
