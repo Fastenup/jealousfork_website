@@ -1352,26 +1352,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  // Square webhook endpoint for payment notifications
+  // Webhook deduplication cache - stores event IDs to prevent duplicate processing
+  const processedWebhooks = new Set();
+  const WEBHOOK_CACHE_MAX_SIZE = 10000;
+  const WEBHOOK_RATE_LIMIT = {
+    windowMs: 60000, // 1 minute
+    maxRequests: 100, // Max 100 webhooks per minute
+    requests: new Map() // IP -> {count, resetTime}
+  };
+
+  // Square webhook endpoint for payment notifications with rate limiting and deduplication
   app.post('/api/webhooks/square', async (req, res) => {
     try {
+      // Rate limiting by IP
+      const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
+      const now = Date.now();
+      const clientLimit = WEBHOOK_RATE_LIMIT.requests.get(clientIp) || { count: 0, resetTime: now + WEBHOOK_RATE_LIMIT.windowMs };
+      
+      if (now > clientLimit.resetTime) {
+        clientLimit.count = 0;
+        clientLimit.resetTime = now + WEBHOOK_RATE_LIMIT.windowMs;
+      }
+      
+      if (clientLimit.count >= WEBHOOK_RATE_LIMIT.maxRequests) {
+        console.log(`Webhook rate limit exceeded for IP: ${clientIp}`);
+        return res.status(200).json({ message: 'Rate limited but acknowledged' });
+      }
+      
+      clientLimit.count++;
+      WEBHOOK_RATE_LIMIT.requests.set(clientIp, clientLimit);
+
+      // Deduplication - check if we've already processed this event
+      const eventId = req.body?.event_id;
+      if (eventId && processedWebhooks.has(eventId)) {
+        console.log(`Duplicate webhook ignored: ${eventId}`);
+        return res.status(200).json({ message: 'Duplicate webhook ignored' });
+      }
+
       // Immediately acknowledge receipt to Square to prevent retries
       res.status(200).json({ message: 'Webhook received successfully' });
       
-      // Log webhook for monitoring
-      console.log('Square webhook received and acknowledged:', {
-        timestamp: new Date().toISOString(),
-        signature: req.headers['x-square-signature'] ? 'present' : 'missing',
-        body: req.body
-      });
+      // Add to processed webhooks cache
+      if (eventId) {
+        processedWebhooks.add(eventId);
+        
+        // Clean up cache if it gets too large
+        if (processedWebhooks.size > WEBHOOK_CACHE_MAX_SIZE) {
+          const firstItems = Array.from(processedWebhooks).slice(0, 1000);
+          firstItems.forEach(id => processedWebhooks.delete(id));
+        }
+      }
 
-      // Process webhook events asynchronously after responding to Square
-      // This prevents timeout issues that cause Square to retry
+      // Minimal logging for monitoring (reduced verbosity)
+      console.log(`Webhook: ${req.body?.type || 'unknown'} ${eventId ? `(${eventId.slice(-8)})` : ''} - ${req.body?.data?.type || 'no-data'}`);
+
+      // Skip processing historical/old events to reduce load
+      const eventTime = req.body?.created_at;
+      if (eventTime) {
+        const eventDate = new Date(eventTime);
+        const hoursSinceEvent = (now - eventDate.getTime()) / (1000 * 60 * 60);
+        
+        if (hoursSinceEvent > 24) {
+          console.log(`Skipping old webhook event (${hoursSinceEvent.toFixed(1)}h old)`);
+          return;
+        }
+      }
+
+      // Process only recent webhook events asynchronously
       setImmediate(() => {
         try {
-          if (req.body?.data) {
-            console.log('Processing Square webhook event:', req.body.data);
-            // Add actual event processing here if needed
+          if (req.body?.data && req.body?.type) {
+            // Only process critical events to reduce load
+            const criticalEvents = ['payment.created', 'payment.updated', 'payment.completed'];
+            if (criticalEvents.includes(req.body.type)) {
+              console.log(`Processing critical event: ${req.body.type} ${req.body.data.id}`);
+              // Add actual critical event processing here if needed
+            }
           }
         } catch (processingError) {
           console.error('Async webhook processing error:', processingError);
@@ -1384,30 +1440,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Square subscription webhook endpoint
+  // Square subscription webhook endpoint with rate limiting
   app.post('/api/webhooks/square/subscriptions', async (req, res) => {
     try {
+      // Apply same rate limiting as main webhook
+      const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
+      const now = Date.now();
+      const clientLimit = WEBHOOK_RATE_LIMIT.requests.get(clientIp) || { count: 0, resetTime: now + WEBHOOK_RATE_LIMIT.windowMs };
+      
+      if (now > clientLimit.resetTime) {
+        clientLimit.count = 0;
+        clientLimit.resetTime = now + WEBHOOK_RATE_LIMIT.windowMs;
+      }
+      
+      if (clientLimit.count >= WEBHOOK_RATE_LIMIT.maxRequests) {
+        console.log(`Subscription webhook rate limit exceeded for IP: ${clientIp}`);
+        return res.status(200).json({ message: 'Rate limited but acknowledged' });
+      }
+      
+      clientLimit.count++;
+      WEBHOOK_RATE_LIMIT.requests.set(clientIp, clientLimit);
+
       // Immediately acknowledge receipt to Square to prevent retries
       res.status(200).json({ message: 'Subscription webhook received successfully' });
       
-      // Log subscription webhook for monitoring
-      console.log('Square subscription webhook received and acknowledged:', {
-        timestamp: new Date().toISOString(),
-        signature: req.headers['x-square-signature'] ? 'present' : 'missing',
-        body: req.body
-      });
-
-      // Process subscription events asynchronously after responding to Square
-      setImmediate(() => {
-        try {
-          if (req.body?.data) {
-            console.log('Processing Square subscription webhook event:', req.body.data);
-            // Add actual subscription event processing here if needed
-          }
-        } catch (processingError) {
-          console.error('Async subscription webhook processing error:', processingError);
-        }
-      });
+      // Minimal logging
+      console.log(`Subscription webhook: ${req.body?.type || 'unknown'}`);
 
     } catch (error) {
       console.error('Subscription webhook processing error:', error);
