@@ -1468,39 +1468,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Only process critical events to reduce load
             const criticalEvents = ['payment.created', 'payment.completed'];
             
-            // HEAVILY LIMIT order.updated events (major cost saver)
-            if (req.body.type === 'order.updated') {
-              // Only process 1 order.updated event per order ID per 15 minutes
-              const orderId = req.body.data?.id;
-              const orderUpdateKey = `order_update_${orderId}`;
-              const lastProcessed = serverCache.get(orderUpdateKey);
+            // HEAVILY LIMIT both order.updated and payment.updated events (major cost saver)
+            if (req.body.type === 'order.updated' || req.body.type === 'payment.updated') {
+              const entityId = req.body.data?.id;
+              const eventType = req.body.type;
+              const cacheKey = `${eventType}_${entityId}`;
+              const lastProcessed = serverCache.get(cacheKey);
               const now = Date.now();
               
+              // Apply same aggressive 15-minute rate limiting to both event types
               if (lastProcessed && (now - lastProcessed) < 15 * 60 * 1000) {
-                console.log(`Skipping order.updated for ${orderId} - processed ${Math.round((now - lastProcessed) / 1000 / 60)}min ago`);
+                console.log(`Skipping ${eventType} for ${entityId} - processed ${Math.round((now - lastProcessed) / 1000 / 60)}min ago`);
                 return; // Skip processing
               }
               
               // Cache this processing time for 15 minutes
-              serverCache.set(orderUpdateKey, now, 15 * 60);
-              console.log(`Processing rate-limited order.updated: ${orderId}`);
-              // Add minimal order.updated processing here if needed
-            } else if (req.body.type === 'payment.updated') {
-              // Also limit payment.updated events but less aggressively
-              const paymentId = req.body.data?.id;
-              const paymentUpdateKey = `payment_update_${paymentId}`;
-              const lastProcessed = serverCache.get(paymentUpdateKey);
-              const now = Date.now();
-              
-              if (lastProcessed && (now - lastProcessed) < 10 * 60 * 1000) {
-                console.log(`Skipping payment.updated for ${paymentId} - processed ${Math.round((now - lastProcessed) / 1000 / 60)}min ago`);
-                return; // Skip processing
-              }
-              
-              // Cache this processing time for 10 minutes
-              serverCache.set(paymentUpdateKey, now, 10 * 60);
-              console.log(`Processing rate-limited payment.updated: ${paymentId}`);
-              // Add minimal payment.updated processing here if needed
+              serverCache.set(cacheKey, now, 15 * 60);
+              console.log(`Processing rate-limited ${eventType}: ${entityId}`);
+              // Add minimal processing here if needed
             } else if (criticalEvents.includes(req.body.type)) {
               console.log(`Processing critical event: ${req.body.type} ${req.body.data.id}`);
               // Add actual critical event processing here if needed
