@@ -43,6 +43,8 @@ export function SimplePhotoManager({ type, title, description }: PhotoManagerPro
                type === 'banners' ? (data as any)?.banners || [] :
                (data as any)?.images || [];
 
+  console.log(`${type} data:`, data);
+
   // Filter items
   const filteredItems = items.filter((item: any) =>
     item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -62,10 +64,10 @@ export function SimplePhotoManager({ type, title, description }: PhotoManagerPro
 
     setIsUploading(true);
     try {
-      // Get upload URL
+      // Get upload URL from the backend
       const { uploadURL } = await apiRequest('/api/objects/upload', { method: 'POST' });
 
-      // Upload directly to storage
+      // Upload file directly to object storage
       const uploadResponse = await fetch(uploadURL, {
         method: 'PUT',
         body: file,
@@ -78,7 +80,7 @@ export function SimplePhotoManager({ type, title, description }: PhotoManagerPro
         throw new Error('Upload failed');
       }
 
-      // Update item image
+      // Update item image with the uploaded URL
       if (targetItem) {
         await updateItemImage(targetItem, uploadResponse.url);
       }

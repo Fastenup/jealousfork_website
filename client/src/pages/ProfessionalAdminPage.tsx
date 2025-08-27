@@ -4,7 +4,6 @@ import AdminLogin from '@/components/AdminLogin';
 import { LocationManager } from '@/components/LocationManager';
 import { FeaturedItemsManager } from '@/components/FeaturedItemsManager';
 import { SimplePhotoManager } from '@/components/SimplePhotoManager';
-import { CurrentImagesGallery } from '@/components/CurrentImagesGallery';
 import SquareStatusIndicator from '@/components/SquareStatusIndicator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -303,17 +302,11 @@ export default function ProfessionalAdminPage() {
           </TabsContent>
 
           <TabsContent value="gallery" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Current Images Gallery</CardTitle>
-                <p className="text-sm text-gray-600">
-                  View all images currently in use across the website, including stock photos and uploaded content.
-                </p>
-              </CardHeader>
-              <CardContent>
-                <CurrentImagesGallery />
-              </CardContent>
-            </Card>
+            <SimplePhotoManager 
+              type="gallery"
+              title="Photo Gallery"
+              description="Manage all website photos and uploaded content"
+            />
           </TabsContent>
 
           <TabsContent value="locations" className="space-y-6">
