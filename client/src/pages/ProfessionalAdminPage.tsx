@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import AdminLogin from '@/components/AdminLogin';
-import { MenuItemImageManager } from '@/components/MenuItemImageManager';
 import { LocationManager } from '@/components/LocationManager';
 import { FeaturedItemsManager } from '@/components/FeaturedItemsManager';
-import { BannerManager } from '@/components/BannerManager';
+import { SimplePhotoManager } from '@/components/SimplePhotoManager';
 import { CurrentImagesGallery } from '@/components/CurrentImagesGallery';
 import SquareStatusIndicator from '@/components/SquareStatusIndicator';
 import { Button } from '@/components/ui/button';
@@ -288,31 +287,19 @@ export default function ProfessionalAdminPage() {
           </TabsContent>
 
           <TabsContent value="menu-images" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Menu Item Image Management</CardTitle>
-                <p className="text-sm text-gray-600">
-                  Upload and manage images for all menu items. Images are automatically optimized and served via CDN.
-                </p>
-              </CardHeader>
-              <CardContent>
-                <MenuItemImageManager />
-              </CardContent>
-            </Card>
+            <SimplePhotoManager 
+              type="menu-items"
+              title="Menu Item Photos"
+              description="Easily upload or add photos to featured menu items"
+            />
           </TabsContent>
 
           <TabsContent value="banners" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Banner & Photo Management</CardTitle>
-                <p className="text-sm text-gray-600">
-                  Upload and manage banner images, hero photos, and promotional content for the website.
-                </p>
-              </CardHeader>
-              <CardContent>
-                <BannerManager />
-              </CardContent>
-            </Card>
+            <SimplePhotoManager 
+              type="banners"
+              title="Banner Images"
+              description="Manage hero banners and promotional images"
+            />
           </TabsContent>
 
           <TabsContent value="gallery" className="space-y-6">

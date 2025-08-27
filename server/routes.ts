@@ -1163,6 +1163,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update featured item image
+  app.patch('/api/featured-items/:localId/image', async (req, res) => {
+    try {
+      const { localId } = req.params;
+      const { imageUrl } = req.body;
+      const { storage } = await import('./storage');
+      
+      await storage.updateFeaturedItemImage(parseInt(localId), imageUrl);
+      
+      // Invalidate featured items cache when updating image
+      serverCache.invalidate(CACHE_KEYS.FEATURED_ITEMS);
+      
+      res.json({ success: true, message: 'Image updated successfully' });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to update image', message: error.message });
+    }
+  });
+
   app.delete('/api/featured-items/:localId', async (req, res) => {
     try {
       const { localId } = req.params;
@@ -1587,6 +1605,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
         error: 'Failed to get IP tracking stats',
         message: error.message
       });
+    }
+  });
+
+  // Simple photo management endpoints
+  app.get('/api/admin/banners', async (req, res) => {
+    try {
+      const { storage } = await import('./storage');
+      const banners = await storage.getBanners();
+      res.json({ banners });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to fetch banners', message: error.message });
+    }
+  });
+
+  app.patch('/api/admin/banners/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { imageUrl } = req.body;
+      const { storage } = await import('./storage');
+      
+      await storage.updateBanner(parseInt(id), imageUrl);
+      res.json({ success: true, message: 'Banner updated successfully' });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to update banner', message: error.message });
+    }
+  });
+
+  app.get('/api/admin/gallery', async (req, res) => {
+    try {
+      const { storage } = await import('./storage');
+      const images = await storage.getGalleryImages();
+      res.json({ images });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to fetch gallery', message: error.message });
+    }
+  });
+
+  app.post('/api/admin/gallery', async (req, res) => {
+    try {
+      const { imageUrl, title } = req.body;
+      const { storage } = await import('./storage');
+      
+      await storage.addGalleryImage({ imageUrl, title });
+      res.json({ success: true, message: 'Image added to gallery' });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to add image', message: error.message });
     }
   });
 

@@ -26,6 +26,7 @@ export interface IStorage {
   removeFeaturedItem(localId: number): Promise<void>;
   updateItemStock(localId: number, inStock: boolean): Promise<void>;
   updateFeaturedItemStock(localId: number, inStock: boolean): Promise<void>;
+  updateFeaturedItemImage(localId: number, imageUrl: string): Promise<void>;
   
   // Menu synchronization
   getMenuItems(): Promise<LocalMenuItem[]>;
@@ -49,6 +50,12 @@ export interface IStorage {
   createOrder(orderData: any): Promise<any>;
   getOrder(orderId: string): Promise<any>;
   updateOrderStatus(orderId: string, status: string): Promise<any>;
+
+  // Simple photo management
+  getBanners(): Promise<any[]>;
+  updateBanner(id: number, imageUrl: string): Promise<void>;
+  getGalleryImages(): Promise<any[]>;
+  addGalleryImage(image: { imageUrl: string; title: string }): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -165,6 +172,16 @@ class MemoryStorage implements IStorage {
     if (itemIndex >= 0) {
       this.featuredItems[itemIndex].inStock = inStock;
       console.log(`Updated featured item stock for ${localId}: ${inStock}`);
+    } else {
+      throw new Error(`Featured item with localId ${localId} not found`);
+    }
+  }
+
+  async updateFeaturedItemImage(localId: number, imageUrl: string): Promise<void> {
+    const itemIndex = this.featuredItems.findIndex(item => item.localId === localId);
+    if (itemIndex >= 0) {
+      this.featuredItems[itemIndex].image = imageUrl;
+      console.log(`Updated featured item image for ${localId}: ${imageUrl}`);
     } else {
       throw new Error(`Featured item with localId ${localId} not found`);
     }
@@ -493,6 +510,41 @@ class MemoryStorage implements IStorage {
     } else {
       throw new Error(`Order ${orderId} not found`);
     }
+  }
+
+  // Simple photo management
+  private banners: any[] = [
+    { id: 1, name: 'Hero Banner', imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?auto=format&fit=crop&w=1200&q=80' },
+    { id: 2, name: 'About Banner', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80' }
+  ];
+  private galleryImages: any[] = [];
+
+  async getBanners(): Promise<any[]> {
+    return [...this.banners];
+  }
+
+  async updateBanner(id: number, imageUrl: string): Promise<void> {
+    const bannerIndex = this.banners.findIndex(banner => banner.id === id);
+    if (bannerIndex >= 0) {
+      this.banners[bannerIndex].imageUrl = imageUrl;
+      console.log(`Updated banner ${id} with new image: ${imageUrl}`);
+    } else {
+      throw new Error(`Banner with id ${id} not found`);
+    }
+  }
+
+  async getGalleryImages(): Promise<any[]> {
+    return [...this.galleryImages];
+  }
+
+  async addGalleryImage(image: { imageUrl: string; title: string }): Promise<void> {
+    const newImage = {
+      id: this.galleryImages.length + 1,
+      ...image,
+      createdAt: new Date()
+    };
+    this.galleryImages.push(newImage);
+    console.log(`Added gallery image: ${image.title}`);
   }
 }
 
