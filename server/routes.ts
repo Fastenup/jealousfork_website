@@ -1343,62 +1343,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Square webhook endpoint for payment notifications
-  app.post('/api/webhooks/square', (req, res, next) => {
-    // Parse raw body for webhook signature verification
-    let data = '';
-    req.on('data', chunk => data += chunk);
-    req.on('end', async () => {
-      req.body = data;
-      next();
+  // Test webhook endpoint to verify it's working
+  app.get('/api/webhooks/square/test', async (req, res) => {
+    res.status(200).json({ 
+      message: 'Webhook endpoint is working',
+      timestamp: new Date().toISOString(),
+      endpoint: '/api/webhooks/square'
     });
-  }, async (req, res) => {
+  });
+
+  // Square webhook endpoint for payment notifications
+  app.post('/api/webhooks/square', async (req, res) => {
     try {
-      const signature = req.headers['x-square-signature'] as string;
-      const body = req.body;
+      // Immediately acknowledge receipt to Square to prevent retries
+      res.status(200).json({ message: 'Webhook received successfully' });
       
-      // Log webhook for debugging
-      console.log('Square webhook received:', {
-        signature: signature ? 'present' : 'missing',
-        bodyLength: body?.length || 0,
-        headers: req.headers
+      // Log webhook for monitoring
+      console.log('Square webhook received and acknowledged:', {
+        timestamp: new Date().toISOString(),
+        signature: req.headers['x-square-signature'] ? 'present' : 'missing',
+        body: req.body
       });
 
-      // For now, acknowledge receipt
-      // In production, you'd verify the signature and process events
-      res.status(200).json({ message: 'Webhook received' });
+      // Process webhook events asynchronously after responding to Square
+      // This prevents timeout issues that cause Square to retry
+      setImmediate(() => {
+        try {
+          if (req.body?.data) {
+            console.log('Processing Square webhook event:', req.body.data);
+            // Add actual event processing here if needed
+          }
+        } catch (processingError) {
+          console.error('Async webhook processing error:', processingError);
+        }
+      });
+
     } catch (error) {
       console.error('Webhook processing error:', error);
-      res.status(500).json({ error: 'Webhook processing failed' });
+      res.status(200).json({ message: 'Webhook received' }); // Still return 200 to prevent retries
     }
   });
 
   // Square subscription webhook endpoint
-  app.post('/api/webhooks/square/subscriptions', (req, res, next) => {
-    // Parse raw body for webhook signature verification
-    let data = '';
-    req.on('data', chunk => data += chunk);
-    req.on('end', async () => {
-      req.body = data;
-      next();
-    });
-  }, async (req, res) => {
+  app.post('/api/webhooks/square/subscriptions', async (req, res) => {
     try {
-      const signature = req.headers['x-square-signature'] as string;
-      const body = req.body;
+      // Immediately acknowledge receipt to Square to prevent retries
+      res.status(200).json({ message: 'Subscription webhook received successfully' });
       
-      // Log subscription webhook for debugging
-      console.log('Square subscription webhook received:', {
-        signature: signature ? 'present' : 'missing',
-        bodyLength: body?.length || 0,
-        headers: req.headers
+      // Log subscription webhook for monitoring
+      console.log('Square subscription webhook received and acknowledged:', {
+        timestamp: new Date().toISOString(),
+        signature: req.headers['x-square-signature'] ? 'present' : 'missing',
+        body: req.body
       });
 
-      // Acknowledge receipt for subscription events
-      res.status(200).json({ message: 'Subscription webhook received' });
+      // Process subscription events asynchronously after responding to Square
+      setImmediate(() => {
+        try {
+          if (req.body?.data) {
+            console.log('Processing Square subscription webhook event:', req.body.data);
+            // Add actual subscription event processing here if needed
+          }
+        } catch (processingError) {
+          console.error('Async subscription webhook processing error:', processingError);
+        }
+      });
+
     } catch (error) {
       console.error('Subscription webhook processing error:', error);
-      res.status(500).json({ error: 'Subscription webhook processing failed' });
+      res.status(200).json({ message: 'Subscription webhook received' }); // Still return 200 to prevent retries
     }
   });
 
