@@ -25,6 +25,7 @@ export interface IStorage {
   addFeaturedItem(item: FeaturedItemConfig): Promise<void>;
   removeFeaturedItem(localId: number): Promise<void>;
   updateItemStock(localId: number, inStock: boolean): Promise<void>;
+  updateFeaturedItemStock(localId: number, inStock: boolean): Promise<void>;
   
   // Menu synchronization
   getMenuItems(): Promise<LocalMenuItem[]>;
@@ -110,7 +111,7 @@ class MemoryStorage implements IStorage {
       price: 17,
       image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=800&q=80",
       featured: true,
-      inStock: false,
+      inStock: true,
       displayOrder: 5
     },
     {
@@ -154,6 +155,16 @@ class MemoryStorage implements IStorage {
     if (itemIndex >= 0) {
       this.featuredItems[itemIndex].inStock = inStock;
       console.log(`Updated item ${localId} stock to ${inStock}`);
+    } else {
+      throw new Error(`Featured item with localId ${localId} not found`);
+    }
+  }
+
+  async updateFeaturedItemStock(localId: number, inStock: boolean): Promise<void> {
+    const itemIndex = this.featuredItems.findIndex(item => item.localId === localId);
+    if (itemIndex >= 0) {
+      this.featuredItems[itemIndex].inStock = inStock;
+      console.log(`Updated featured item stock for ${localId}: ${inStock}`);
     } else {
       throw new Error(`Featured item with localId ${localId} not found`);
     }

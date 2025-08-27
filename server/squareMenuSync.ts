@@ -250,3 +250,61 @@ export class SquareMenuSyncService {
       .trim();
   }
 }
+
+// Export function for scheduled syncing
+export async function syncMenuWithSquare() {
+  try {
+    console.log('Starting Square menu sync...');
+    const syncService = new SquareMenuSyncService();
+    
+    // Get current featured items to sync
+    const { storage } = await import('./storage');
+    const featuredItems = await storage.getFeaturedItems();
+    
+    // Convert to LocalMenuItem format
+    const localItems = featuredItems.map(item => ({
+      localId: item.localId,
+      squareId: item.squareId || '',
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      category: item.category,
+      image: item.image,
+      featured: item.featured,
+      inStock: item.inStock,
+      lastSync: item.lastSync
+    }));
+
+    const syncResult = await syncService.syncMenuItems(localItems);
+    
+    // Update featured items with sync results
+    const updatedFeatured = syncResult.syncedItems.map(item => ({
+      localId: item.localId,
+      squareId: item.squareId || '',
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      category: item.category,
+      image: item.image,
+      featured: item.featured,
+      inStock: item.inStock,
+      lastSync: item.lastSync,
+      displayOrder: featuredItems.find(f => f.localId === item.localId)?.displayOrder || 0
+    }));
+
+    await storage.setFeaturedItems(updatedFeatured);
+    
+    console.log('Square menu sync completed successfully');
+    return {
+      success: true,
+      syncedItems: syncResult.syncedItems.length,
+      message: 'Menu items synced successfully'
+    };
+  } catch (error) {
+    console.error('Square menu sync failed:', error);
+    return {
+      success: false,
+      error: error.message || 'Sync failed'
+    };
+  }
+}

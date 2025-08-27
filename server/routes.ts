@@ -1145,6 +1145,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update featured item stock status
+  app.patch('/api/featured-items/:localId/stock', async (req, res) => {
+    try {
+      const { localId } = req.params;
+      const { inStock } = req.body;
+      const { storage } = await import('./storage');
+      
+      await storage.updateFeaturedItemStock(parseInt(localId), inStock);
+      
+      // Invalidate featured items cache when updating stock
+      serverCache.invalidate(CACHE_KEYS.FEATURED_ITEMS);
+      
+      res.json({ success: true, message: 'Stock status updated successfully' });
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to update stock status', message: error.message });
+    }
+  });
+
   app.delete('/api/featured-items/:localId', async (req, res) => {
     try {
       const { localId } = req.params;
