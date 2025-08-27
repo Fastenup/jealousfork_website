@@ -1466,8 +1466,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         try {
           if (req.body?.data && req.body?.type) {
             // Only process critical events to reduce load
-            const criticalEvents = ['payment.created', 'payment.updated', 'payment.completed'];
-            if (criticalEvents.includes(req.body.type)) {
+            const criticalEvents = ['payment.created', 'payment.completed'];
+            
+            // HEAVILY LIMIT payment.updated events (major cost saver)
+            if (req.body.type === 'payment.updated') {
+              // Only process 1 payment.updated event per payment ID per 30 minutes
+              const paymentId = req.body.data?.id;
+              const paymentUpdateKey = `payment_update_${paymentId}`;
+              const lastProcessed = serverCache.get(paymentUpdateKey);
+              const now = Date.now();
+              
+              if (lastProcessed && (now - lastProcessed) < 30 * 60 * 1000) {
+                console.log(`Skipping payment.updated for ${paymentId} - processed ${Math.round((now - lastProcessed) / 1000 / 60)}min ago`);
+                return; // Skip processing
+              }
+              
+              // Cache this processing time for 30 minutes
+              serverCache.set(paymentUpdateKey, now, 30 * 60);
+              console.log(`Processing rate-limited payment.updated: ${paymentId}`);
+              // Add minimal payment.updated processing here if needed
+            } else if (criticalEvents.includes(req.body.type)) {
               console.log(`Processing critical event: ${req.body.type} ${req.body.data.id}`);
               // Add actual critical event processing here if needed
             }
