@@ -5,6 +5,7 @@ import { storage } from "./storage";
 import { createSquareServiceFixed } from "./squareServiceFixed";
 import { z } from "zod";
 import { serverCache, CACHE_KEYS } from "./cache";
+import { ipTracker } from "./ipTracker";
 import { insertContactSubmissionSchema, restaurantLocations, squareMenuItems } from "../shared/schema";
 import { BrevoEmailService } from "./brevoService";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
@@ -69,14 +70,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Main menu endpoint (CACHED - most important for cost reduction!)
+  // Main menu endpoint (IP-LIMITED - absolute minimum Square API usage!)
   app.get('/api/menu', async (req, res) => {
     try {
-      // Check cache first - this will eliminate most Square API calls
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+      
+      // Check cache first - always serve cached if available
       const cachedMenu = serverCache.get(CACHE_KEYS.SQUARE_CATALOG);
       if (cachedMenu) {
-        console.log('Serving cached menu - no Square API call needed');
-        return res.json(cachedMenu);
+        console.log(`Serving cached menu to IP ${clientIP.split('.').slice(0, 2).join('.')}.* - no Square API call`);
+        return res.json({
+          ...cachedMenu,
+          source: 'cached',
+          ipLimited: true
+        });
+      }
+
+      // Only pull fresh data if IP tracking allows it (new IP + store open + 1hr cooldown)
+      if (!ipTracker.shouldPullFreshData(clientIP)) {
+        // Serve cached data even if expired rather than making API call
+        const staleData = serverCache.get(CACHE_KEYS.SQUARE_CATALOG);
+        if (staleData) {
+          console.log('Serving stale cached data due to IP/store restrictions');
+          return res.json({
+            ...staleData,
+            source: 'cached_stale',
+            ipLimited: true
+          });
+        }
+        
+        // No cached data and can't pull fresh - return service unavailable
+        return res.status(503).json({ 
+          success: false,
+          error: 'Menu temporarily unavailable. Store may be closed or too many recent requests.',
+          ipLimited: true
+        });
       }
 
       if (!squareService) {
@@ -86,17 +114,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      console.log('Cache miss - fetching full menu from Square API');
+      console.log(`IP-approved fresh Square API call for ${clientIP.split('.').slice(0, 2).join('.')}.* - pulling menu`);
       const allItems = await squareService.getCatalogItems();
       
       const responseData = { 
         success: true, 
         items: allItems,
-        source: 'square_api',
-        timestamp: new Date().toISOString()
+        source: 'square_api_fresh',
+        timestamp: new Date().toISOString(),
+        ipLimited: true
       };
       
-      // Cache for 4 hours - this will dramatically reduce API calls
+      // Cache for 4 hours - but IP tracking ensures minimal fresh pulls
       serverCache.set(CACHE_KEYS.SQUARE_CATALOG, responseData, 240);
       
       res.json(responseData);
@@ -546,17 +575,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get specific menu category (CACHED - no more constant Square API calls!)
+  // Get specific menu category (IP-LIMITED + CACHED)
   app.get('/api/menu/:category', async (req, res) => {
     try {
       const { category } = req.params;
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
       const cacheKey = `${CACHE_KEYS.MENU_CATEGORY}${category}`;
       
       // Check cache first - avoid Square API call
       const cachedData = serverCache.get(cacheKey);
       if (cachedData) {
-        console.log(`Serving cached menu for category: ${category}`);
-        return res.json(cachedData);
+        console.log(`Serving cached category ${category} to IP ${clientIP.split('.').slice(0, 2).join('.')}.* - no API call`);
+        return res.json({
+          ...cachedData,
+          source: 'cached',
+          ipLimited: true
+        });
+      }
+
+      // Only pull fresh data if IP tracking allows it
+      if (!ipTracker.shouldPullFreshData(clientIP)) {
+        return res.status(503).json({ 
+          error: 'Category menu temporarily unavailable. Store may be closed or too many recent requests.',
+          ipLimited: true,
+          category
+        });
       }
 
       if (!squareService) {
@@ -565,15 +608,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      console.log(`Cache miss - fetching category ${category} from Square API`);
+      console.log(`IP-approved fresh API call for category ${category} from ${clientIP.split('.').slice(0, 2).join('.')}.* `);
       const allItems = await squareService.getCatalogItems();
       const categoryItems = allItems.filter((item: any) => 
         item.category.toLowerCase() === category.toLowerCase()
       );
       
-      const responseData = { success: true, items: categoryItems, category };
+      const responseData = { 
+        success: true, 
+        items: categoryItems, 
+        category,
+        source: 'square_api_fresh',
+        ipLimited: true
+      };
       
-      // Cache for 4 hours - dramatically reduces API calls
+      // Cache for 4 hours
       serverCache.set(cacheKey, responseData, 240);
       
       res.json(responseData);
@@ -586,10 +635,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get inventory status for specific items (CACHED - major cost savings!)
+  // Get inventory status for specific items (IP-LIMITED + CACHED)
   app.post('/api/inventory/check', async (req, res) => {
     try {
       const { itemIds } = req.body;
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+      
       if (!itemIds || !Array.isArray(itemIds)) {
         return res.status(400).json({ error: 'itemIds array required' });
       }
@@ -599,8 +650,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check cache first - avoid Square API call
       const cachedInventory = serverCache.get(cacheKey);
       if (cachedInventory) {
-        console.log(`Serving cached inventory for ${itemIds.length} items`);
-        return res.json(cachedInventory);
+        console.log(`Serving cached inventory for ${itemIds.length} items to IP ${clientIP.split('.').slice(0, 2).join('.')}.* - no API call`);
+        return res.json({
+          ...cachedInventory,
+          source: 'cached',
+          ipLimited: true
+        });
+      }
+
+      // Only pull fresh data if IP tracking allows it
+      if (!ipTracker.shouldPullFreshData(clientIP)) {
+        return res.status(503).json({ 
+          error: 'Inventory temporarily unavailable. Store may be closed or too many recent requests.',
+          ipLimited: true
+        });
       }
 
       if (!squareService) {
@@ -609,13 +672,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      console.log(`Cache miss - fetching inventory for ${itemIds.length} items from Square API`);
+      console.log(`IP-approved fresh inventory call for ${itemIds.length} items from ${clientIP.split('.').slice(0, 2).join('.')}.* `);
       const inventory = await squareService.getInventoryCounts(itemIds);
       const inventoryStatus = Object.fromEntries(inventory);
       
-      const responseData = { success: true, inventory: inventoryStatus };
+      const responseData = { 
+        success: true, 
+        inventory: inventoryStatus,
+        source: 'square_api_fresh',
+        ipLimited: true
+      };
       
-      // Cache inventory for 30 minutes - inventory changes less frequently
+      // Cache inventory for 30 minutes
       serverCache.set(cacheKey, responseData, 30);
       
       res.json(responseData);
@@ -977,6 +1045,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       await storage.setFeaturedItems(updatedFeatured);
 
+      // Invalidate featured items cache after sync
+      serverCache.invalidate(CACHE_KEYS.FEATURED_ITEMS);
+
       res.json({
         success: true,
         syncedItems: syncResult.syncedItems,
@@ -1064,6 +1135,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       await storage.addFeaturedItem(newFeaturedItem);
+      
+      // Invalidate featured items cache when adding new items
+      serverCache.invalidate(CACHE_KEYS.FEATURED_ITEMS);
       
       res.json({ success: true, item: newFeaturedItem });
     } catch (error: any) {
@@ -1471,6 +1545,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error('Error fetching banners:', error);
       res.status(500).json({ error: 'Failed to fetch banners' });
+    }
+  });
+
+  // IP tracking statistics endpoint for monitoring API usage optimization
+  app.get('/api/admin/ip-stats', async (req, res) => {
+    try {
+      const stats = ipTracker.getStats();
+      const cacheStats = serverCache.getStats();
+      
+      res.json({
+        success: true,
+        ipTracking: {
+          ...stats,
+          storeOpen: ipTracker.isStoreOpen()
+        },
+        cache: cacheStats,
+        message: 'IP-based Square API limiting is active - only new IPs after 1hr cooldown + store open hours trigger fresh API calls'
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get IP tracking stats',
+        message: error.message
+      });
     }
   });
 
