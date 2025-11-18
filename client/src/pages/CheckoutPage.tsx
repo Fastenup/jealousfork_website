@@ -38,9 +38,9 @@ export default function CheckoutPage() {
   const [isLoading, setIsLoading] = useState(true);
   const hasRedirected = useRef(false);
 
-  // Square credentials - use the actual values from Replit secrets
-  const SQUARE_APPLICATION_ID = 'sq0idp-Tv7vHFlv14KExKQf_KAgJA';
-  const SQUARE_LOCATION_ID = 'LWMD4B2R5DZ6J';
+  // Square credentials - loaded from environment variables
+  const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || '';
+  const SQUARE_LOCATION_ID = import.meta.env.VITE_SQUARE_LOCATION_ID || '';
   
 
 

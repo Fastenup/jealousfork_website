@@ -6,7 +6,8 @@ export default function Testimonials() {
       source: "Yelp Review",
       rating: 5,
       text: "Absolutely incredible! The pancakes are truly Instagram-worthy and taste even better than they look. Worth the wait and definitely worth traveling for!",
-      initial: "S"
+      initial: "S",
+      datePublished: "2024-09-15"
     },
     {
       id: 2,
@@ -14,7 +15,8 @@ export default function Testimonials() {
       source: "Google Review",
       rating: 5,
       text: "From food truck to restaurant, these guys haven't lost their touch. The burgers are amazing and the atmosphere is perfect for brunch with friends.",
-      initial: "M"
+      initial: "M",
+      datePublished: "2024-08-22"
     },
     {
       id: 3,
@@ -22,9 +24,32 @@ export default function Testimonials() {
       source: "TripAdvisor",
       rating: 5,
       text: "Best breakfast spot in Miami! The vegan options are fantastic and the service is always friendly. I drive 30 minutes just to eat here!",
-      initial: "A"
+      initial: "A",
+      datePublished: "2024-10-01"
     }
   ];
+
+  // Generate Review schema for SEO
+  const reviewSchema = {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Jealous Fork",
+    "review": testimonials.map(testimonial => ({
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": testimonial.name
+      },
+      "datePublished": testimonial.datePublished,
+      "reviewBody": testimonial.text,
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": testimonial.rating,
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }))
+  };
 
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-white">
@@ -116,6 +141,12 @@ export default function Testimonials() {
           </div>
         </div>
       </div>
+
+      {/* Review Schema for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
+      />
     </section>
   );
 }

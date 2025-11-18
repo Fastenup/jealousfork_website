@@ -4,25 +4,27 @@ import AdminLogin from '@/components/AdminLogin';
 import { LocationManager } from '@/components/LocationManager';
 import { FeaturedItemsManager } from '@/components/FeaturedItemsManager';
 import { SimplePhotoManager } from '@/components/SimplePhotoManager';
+import { FolderUploadManager } from '@/components/FolderUploadManager';
 import SquareStatusIndicator from '@/components/SquareStatusIndicator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Settings, 
-  LogOut, 
-  Images, 
-  MapPin, 
-  Square, 
-  Users, 
+import {
+  Settings,
+  LogOut,
+  Images,
+  MapPin,
+  Square,
+  Users,
   Database,
   Activity,
   AlertCircle,
   Star,
   Layout,
   Grid,
-  RefreshCw
+  RefreshCw,
+  FolderUp
 } from 'lucide-react';
 import { ManualSyncButton } from '@/components/ManualSyncButton';
 
@@ -243,8 +245,12 @@ export default function ProfessionalAdminPage() {
         </Card>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="featured-items" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+        <Tabs defaultValue="folder-upload" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-7">
+            <TabsTrigger value="folder-upload" className="flex items-center gap-2">
+              <FolderUp className="w-4 h-4" />
+              Folder Upload
+            </TabsTrigger>
             <TabsTrigger value="featured-items" className="flex items-center gap-2">
               <Star className="w-4 h-4" />
               Featured
@@ -270,6 +276,10 @@ export default function ProfessionalAdminPage() {
               System
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="folder-upload" className="space-y-6">
+            <FolderUploadManager />
+          </TabsContent>
 
           <TabsContent value="featured-items" className="space-y-6">
             <Card>

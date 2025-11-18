@@ -52,44 +52,6 @@ export default function Home() {
           </svg>
         </a>
       </div>
-
-      {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Restaurant",
-            "name": "Jealous Fork",
-            "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630",
-            "description": "Miami's first artisan pancake restaurant serving Instagram-worthy pancakes and gourmet burgers.",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "14417 SW 42nd Street",
-              "addressLocality": "Miami",
-              "addressRegion": "FL",
-              "postalCode": "33175",
-              "addressCountry": "US"
-            },
-            "geo": {
-              "@type": "GeoCoordinates",
-              "latitude": "25.7294624",
-              "longitude": "-80.4281851"
-            },
-            "telephone": "(305) 699-1430",
-            "servesCuisine": ["American", "Breakfast", "Brunch"],
-            "priceRange": "$$",
-            "openingHours": [
-              "Mo-Su 07:00-22:00"
-            ],
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.5",
-              "reviewCount": "461"
-            }
-          })
-        }}
-      />
     </>
   );
 }

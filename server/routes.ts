@@ -1565,6 +1565,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Admin Routes for Image Management
 
+  // File Watcher Routes - Auto-process images from upload folder
+  app.get('/api/images/naming-guide', async (req, res) => {
+    try {
+      const { getNamingGuide } = await import('./fileWatcher');
+      const guide = getNamingGuide();
+      res.json(guide);
+    } catch (error: any) {
+      console.error('Error getting naming guide:', error);
+      res.status(500).json({ error: 'Failed to get naming guide' });
+    }
+  });
+
+  app.get('/api/images/upload-status', async (req, res) => {
+    try {
+      const { getUploadFolderStatus } = await import('./fileWatcher');
+      const status = getUploadFolderStatus();
+      res.json(status);
+    } catch (error: any) {
+      console.error('Error getting upload folder status:', error);
+      res.status(500).json({ error: 'Failed to get upload folder status' });
+    }
+  });
+
+  app.post('/api/images/scan', async (req, res) => {
+    try {
+      const { scanAndProcessImages } = await import('./fileWatcher');
+      const results = await scanAndProcessImages();
+      res.json(results);
+    } catch (error: any) {
+      console.error('Error scanning images:', error);
+      res.status(500).json({ error: 'Failed to scan images', message: error.message });
+    }
+  });
+
+  app.post('/api/images/process/:filename', async (req, res) => {
+    try {
+      const { processImage } = await import('./fileWatcher');
+      const result = await processImage(req.params.filename);
+      if (result.success) {
+        res.json(result);
+      } else {
+        res.status(400).json(result);
+      }
+    } catch (error: any) {
+      console.error('Error processing image:', error);
+      res.status(500).json({ error: 'Failed to process image', message: error.message });
+    }
+  });
+
   // Get all locations
   app.get('/api/admin/locations', async (req, res) => {
     try {
