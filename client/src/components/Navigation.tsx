@@ -61,15 +61,9 @@ export default function Navigation() {
               >
                 About
               </button>
-              <button 
-                onClick={() => scrollToSection('menu')}
-                className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
-              >
-                Menu
-              </button>
               <Link href="/full-menu">
                 <a className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors">
-                  Full Menu
+                  Menu
                 </a>
               </Link>
               <button 
@@ -141,19 +135,12 @@ export default function Navigation() {
             >
               About
             </button>
-            <button 
-              onClick={() => {
-                scrollToSection('menu');
-                setIsMenuOpen(false);
-              }}
-              className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left rounded-lg transition-colors"
-            >Featured Items</button>
             <Link href="/full-menu">
-              <span 
+              <span
                 onClick={() => setIsMenuOpen(false)}
                 className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left cursor-pointer rounded-lg transition-colors"
               >
-                Full Menu
+                Menu
               </span>
             </Link>
             <button 
