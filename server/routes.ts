@@ -70,74 +70,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Main menu endpoint (IP-LIMITED - absolute minimum Square API usage!)
-  app.get('/api/menu', async (req, res) => {
-    try {
-      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
-      
-      // Check cache first - always serve cached if available
-      const cachedMenu = serverCache.get(CACHE_KEYS.SQUARE_CATALOG);
-      if (cachedMenu) {
-        console.log(`Serving cached menu to IP ${clientIP.split('.').slice(0, 2).join('.')}.* - no Square API call`);
-        return res.json({
-          ...cachedMenu,
-          source: 'cached',
-          ipLimited: true
-        });
-      }
-
-      // Only pull fresh data if IP tracking allows it (new IP + store open + 1hr cooldown)
-      if (!ipTracker.shouldPullFreshData(clientIP)) {
-        // Serve cached data even if expired rather than making API call
-        const staleData = serverCache.get(CACHE_KEYS.SQUARE_CATALOG);
-        if (staleData) {
-          console.log('Serving stale cached data due to IP/store restrictions');
-          return res.json({
-            ...staleData,
-            source: 'cached_stale',
-            ipLimited: true
-          });
-        }
-        
-        // No cached data and can't pull fresh - return service unavailable
-        return res.status(503).json({ 
-          success: false,
-          error: 'Menu temporarily unavailable. Store may be closed or too many recent requests.',
-          ipLimited: true
-        });
-      }
-
-      if (!squareService) {
-        return res.status(503).json({ 
-          success: false,
-          error: 'Square API not configured.' 
-        });
-      }
-
-      console.log(`IP-approved fresh Square API call for ${clientIP.split('.').slice(0, 2).join('.')}.* - pulling menu`);
-      const allItems = await squareService.getCatalogItems();
-      
-      const responseData = { 
-        success: true, 
-        items: allItems,
-        source: 'square_api_fresh',
-        timestamp: new Date().toISOString(),
-        ipLimited: true
-      };
-      
-      // Cache for 4 hours - but IP tracking ensures minimal fresh pulls
-      serverCache.set(CACHE_KEYS.SQUARE_CATALOG, responseData, 240);
-      
-      res.json(responseData);
-    } catch (error: any) {
-      console.error('Menu API error:', error);
-      res.status(500).json({ 
-        success: false,
-        error: 'Failed to fetch menu',
-        message: error?.message || 'Unknown error'
-      });
-    }
-  });
+  // Removed duplicate /api/menu endpoint - using better implementation below at line ~257
 
   // Manual Square sync trigger (on-demand)
   app.post('/api/square/sync', async (req, res) => {
@@ -382,7 +315,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log('Direct Square API also failed');
       }
       
-      // Final fallback to static menu
+      // Final fallback to static menu from featured items
       const staticMenu = [
         {
           id: 'static-1',
@@ -391,9 +324,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
           price: 17,
           category: 'pancakes',
           inStock: true
+        },
+        {
+          id: 'static-2',
+          name: 'Jesse James Burger',
+          description: 'Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese',
+          price: 16,
+          category: 'burgers',
+          inStock: true
+        },
+        {
+          id: 'static-3',
+          name: 'Peanut Butter Maple Pancakes',
+          description: 'Reese\'s Cups, Nutter Butter Whipped Cream, Peanut Butter Maple Syrup',
+          price: 17,
+          category: 'pancakes',
+          inStock: true
+        },
+        {
+          id: 'static-4',
+          name: 'Brunch Still Hungover',
+          description: 'House Buttermilk Pancakes, Applewood Bacon, Two Eggs Your Way',
+          price: 15,
+          category: 'breakfast',
+          inStock: true
+        },
+        {
+          id: 'static-5',
+          name: 'Banana Walnut Smoked Maple',
+          description: 'Fresh Bananas, Toasted Walnuts, Smoked Maple Syrup',
+          price: 16,
+          category: 'pancakes',
+          inStock: true
+        },
+        {
+          id: 'static-6',
+          name: 'Viking Telle',
+          description: 'Nutella, Strawberries, Banana, Whipped Cream',
+          price: 16,
+          category: 'pancakes',
+          inStock: true
         }
       ];
-      res.json({ items: staticMenu, source: 'static' });
+      console.log('Serving static fallback menu - Square API unavailable');
+      res.json({
+        success: true,
+        items: staticMenu,
+        source: 'static-fallback',
+        count: staticMenu.length
+      });
     } catch (error: any) {
       console.error('Menu fetch error:', error);
       res.status(500).json({
