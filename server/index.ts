@@ -54,7 +54,8 @@ app.use((req, res, next) => {
   });
 
   // Add static file serving for both development and production
-  const publicPath = path.resolve(import.meta.dirname, "..", "public");
+  // Use process.cwd() for reliable path resolution in both dev and bundled production
+  const publicPath = path.resolve(process.cwd(), "public");
   app.use(express.static(publicPath));
 
   // importantly only setup vite in development and after
