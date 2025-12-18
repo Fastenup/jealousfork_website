@@ -1,7 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import path from "path";
-import fs from "fs";
 import { storage } from "./storage";
 import { createSquareServiceFixed } from "./squareServiceFixed";
 import { z } from "zod";
@@ -52,42 +51,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   } catch (error: any) {
     console.warn('Square service not configured:', error?.message || 'Unknown error');
   }
-
-  // Debug endpoint to check dist directory contents (helps diagnose deployment issues)
-  app.get('/api/debug/files', async (req, res) => {
-    try {
-      const cwd = process.cwd();
-      const distPath = path.resolve(cwd, 'dist');
-      const distPublicPath = path.resolve(cwd, 'dist', 'public');
-
-      const result: any = {
-        cwd,
-        nodeEnv: process.env.NODE_ENV,
-        distExists: fs.existsSync(distPath),
-        distPublicExists: fs.existsSync(distPublicPath),
-        distContents: [],
-        distPublicContents: [],
-        indexHtmlExists: false,
-        indexHtmlPath: path.resolve(distPublicPath, 'index.html')
-      };
-
-      if (result.distExists) {
-        result.distContents = fs.readdirSync(distPath);
-      }
-
-      if (result.distPublicExists) {
-        result.distPublicContents = fs.readdirSync(distPublicPath);
-        result.indexHtmlExists = fs.existsSync(path.resolve(distPublicPath, 'index.html'));
-      }
-
-      res.json(result);
-    } catch (error: any) {
-      res.status(500).json({
-        error: 'Failed to check files',
-        message: error.message
-      });
-    }
-  });
 
   // Test Square API images
   app.get('/api/test-square-images', async (req, res) => {
