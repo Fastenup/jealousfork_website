@@ -43,14 +43,15 @@ export const featuredItemsConfig: FeaturedItemConfig[] = [
   },
   {
     id: 3,
-    name: "Peanut Butter Maple Pancakes",
-    slug: "peanut-butter-maple-pancakes",
-    description: "Reese's Cups, Nutter Butter Whipped Cream, Peanut Butter Maple Syrup",
+    name: "Peanut Butter Cup Pancake",
+    slug: "peanut-butter-cup-pancake",
+    description: "Reese's cups, nutter butter whipped cream, and peanut butter maple syrup",
     price: 17,
-    image: "/Peanut Butter Maple Web_1751734772054.jpg",
+    image: "https://items-images-production.s3.us-west-2.amazonaws.com/files/623e30505496c45b6eef8d9133208c466c34fa22/original.jpeg",
     category: "pancakes",
     featured: true,
     inStock: true,
+    squareId: "X3LFZ5CDB6UFLWTD6725QFB2",
     lastUpdated: "2025-01-23"
   },
   {

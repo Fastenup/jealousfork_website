@@ -87,12 +87,12 @@ class MemoryStorage implements IStorage {
     },
     {
       localId: 3,
-      squareId: undefined,
-      name: "Peanut Butter Maple Pancakes",
-      description: "Fluffy pancakes with creamy peanut butter and pure maple syrup drizzle",
+      squareId: "X3LFZ5CDB6UFLWTD6725QFB2",
+      name: "Peanut Butter Cup Pancake",
+      description: "Reese's cups, nutter butter whipped cream, and peanut butter maple syrup",
       category: "pancakes",
-      price: 16,
-      image: "https://images.unsplash.com/photo-1528722744605-dc661d2ed2b0?auto=format&fit=crop&w=800&q=80",
+      price: 17,
+      image: "https://items-images-production.s3.us-west-2.amazonaws.com/files/623e30505496c45b6eef8d9133208c466c34fa22/original.jpeg",
       featured: true,
       inStock: true,
       displayOrder: 3
