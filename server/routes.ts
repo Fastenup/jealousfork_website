@@ -994,7 +994,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Featured items management endpoints (CACHED - no Square API calls)
+  // Featured items management endpoints - Auto-sync with Square on first request
   app.get('/api/featured-items', async (req, res) => {
     try {
       // Check cache first
@@ -1005,21 +1005,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const { storage } = await import('./storage');
+      const { SquareMenuSyncService } = await import('./squareMenuSync');
+
       let items = await storage.getFeaturedItems();
-      
-      // For now, just return items as-is with default stock status
-      // Square sync will be handled through the separate sync endpoint
+
+      // Auto-sync with Square to get latest images and prices
+      try {
+        const syncService = new SquareMenuSyncService();
+        const localItems = items.map(item => ({
+          localId: item.localId,
+          squareId: item.squareId,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          category: item.category,
+          image: item.image,
+          featured: item.featured,
+          inStock: item.inStock,
+          lastSync: item.lastSync
+        }));
+
+        const syncResult = await syncService.syncMenuItems(localItems);
+
+        // Update storage with synced data including Square images
+        const updatedItems = syncResult.syncedItems.map(item => ({
+          localId: item.localId,
+          squareId: item.squareId,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          category: item.category,
+          image: item.image, // This now includes Square image URL
+          featured: item.featured,
+          inStock: item.inStock,
+          lastSync: item.lastSync,
+          displayOrder: items.find(f => f.localId === item.localId)?.displayOrder || 0
+        }));
+
+        await storage.setFeaturedItems(updatedItems);
+        items = updatedItems;
+        console.log('Auto-synced featured items with Square');
+      } catch (syncError) {
+        console.log('Square sync failed, using cached items:', syncError);
+      }
+
+      // Add availability flags
       items = items.map(item => ({
         ...item,
-        inStock: item.inStock ?? true, // Keep existing stock status or default to true
+        inStock: item.inStock ?? true,
         isAvailable: item.inStock ?? true
       }));
-      
+
       const responseData = { items };
-      
+
       // Cache featured items for 2 hours
       serverCache.set(CACHE_KEYS.FEATURED_ITEMS, responseData, 120);
-      
+
       res.json(responseData);
     } catch (error: any) {
       res.status(500).json({ error: 'Failed to fetch featured items', message: error.message });
