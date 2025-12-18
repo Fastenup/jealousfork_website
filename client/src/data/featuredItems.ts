@@ -15,31 +15,33 @@ export interface FeaturedItemConfig {
   lastUpdated?: string;
 }
 
-// Configure exactly 6 featured items for homepage
+// Configure exactly 6 featured items for homepage - synced with Square
 export const featuredItemsConfig: FeaturedItemConfig[] = [
   {
     id: 1,
-    name: "Chocolate Oreo Chip Pancakes",
-    slug: "chocolate-oreo-chip-pancakes",
-    description: "Crushed Oreos, Chocolate Chips, Oreo Whipped Cream, Chocolate Ganache",
-    price: 17,
-    image: "/Oreo Chocolate Chip Web_1751734772045.jpg",
+    name: "Hot Maple Flatbread",
+    slug: "hot-maple-flatbread",
+    description: "Cup and char pepperoni, double cream mozzarella, and red chili-black pepper maple",
+    price: 16,
+    image: "https://items-images-production.s3.us-west-2.amazonaws.com/files/e9d5adcfaf84a1c5408679722db6bdc0919e835e/original.jpeg",
     category: "pancakes",
     featured: true,
     inStock: true,
-    lastUpdated: "2025-01-23"
+    squareId: "LPQXTMGM7RNLH5SFCCPOF7XB",
+    lastUpdated: "2025-12-18"
   },
   {
     id: 2,
-    name: "Jesse James Burger",
-    slug: "jesse-james-burger",
-    description: "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese",
-    price: 16,
-    image: "/Jesse James Burger web_1751726904658.jpg",
-    category: "burgers",
+    name: "Chocolate Oreo Chip Pancake",
+    slug: "chocolate-oreo-chip-pancake",
+    description: "Crushed Oreos, Chocolate Chips, Oreo Whipped Cream, Chocolate Ganache",
+    price: 17,
+    image: "https://items-images-production.s3.us-west-2.amazonaws.com/files/b1c057b03932f8ab7073e6ee5df72542539b14f5/original.jpeg",
+    category: "pancakes",
     featured: true,
-    inStock: false, // Manually set as out of stock for testing
-    lastUpdated: "2025-01-23"
+    inStock: true,
+    squareId: "LBLTJBZWN6YCRHWAZP77K6Y6",
+    lastUpdated: "2025-12-18"
   },
   {
     id: 3,
@@ -52,43 +54,46 @@ export const featuredItemsConfig: FeaturedItemConfig[] = [
     featured: true,
     inStock: true,
     squareId: "X3LFZ5CDB6UFLWTD6725QFB2",
-    lastUpdated: "2025-01-23"
+    lastUpdated: "2025-12-18"
   },
   {
     id: 4,
-    name: "Brunch And Still Hungover",
-    slug: "brunch-still-hungover",
-    description: "Smoked Salmon, Avocado, Capers, Everything Bagel Seasoning",
-    price: 19,
-    image: "/Brunch And Still Hungover web_1751726904716.jpg",
-    category: "breakfast",
-    featured: true,
-    inStock: false, // Manually set as out of stock for testing
-    lastUpdated: "2025-01-23"
-  },
-  {
-    id: 5,
-    name: "Banana Walnut Smoked Maple",
-    slug: "banana-walnut-smoked-maple",
-    description: "Candied Walnuts, Banana Foster, Smoked Maple Syrup, Cinnamon Butter",
-    price: 16,
-    image: "/Banana Walnut Smoked Maple Web_1751726904724.jpg",
+    name: "Lemon Curd and Blueberry Pancake",
+    slug: "lemon-curd-blueberry-pancake",
+    description: "Light pancakes topped with fresh blueberries and tangy lemon curd",
+    price: 15,
+    image: "https://items-images-production.s3.us-west-2.amazonaws.com/files/9113997b920747abdb8652d80cd0d45ebd145057/original.jpeg",
     category: "pancakes",
     featured: true,
     inStock: true,
-    lastUpdated: "2025-01-23"
+    squareId: "6U5GVIO5TA4YQBERIBPTKZAO",
+    lastUpdated: "2025-12-18"
+  },
+  {
+    id: 5,
+    name: "Banana Walnut Pancake",
+    slug: "banana-walnut-pancake",
+    description: "Caramelized bananas, toasted walnuts, and house-smoked maple syrup",
+    price: 17,
+    image: "https://items-images-production.s3.us-west-2.amazonaws.com/files/268ec5eda55553d9357c955abe7838952a240717/original.jpeg",
+    category: "pancakes",
+    featured: true,
+    inStock: true,
+    squareId: "64EUHLG4LI7LYNJXKQ7HORY7",
+    lastUpdated: "2025-12-18"
   },
   {
     id: 6,
-    name: "Viking Telle",
-    slug: "viking-telle",
-    description: "Crispy Pancetta, Poached Eggs, Hollandaise, Truffle Oil",
-    price: 22,
-    image: "/Viking Telle Web_1751726904731.jpg",
-    category: "breakfast",
+    name: "Jesse James Burger",
+    slug: "jesse-james-burger",
+    description: "Premium beef patty with bacon, aged cheddar, and BBQ sauce",
+    price: 18,
+    image: "https://items-images-production.s3.us-west-2.amazonaws.com/files/a1bd6a278117dc06f529c12073e57bbcb2ef0868/original.jpeg",
+    category: "burgers",
     featured: true,
     inStock: true,
-    lastUpdated: "2025-01-23"
+    squareId: "U55RAYK5K5MLS2FI4AEKNVR2",
+    lastUpdated: "2025-12-18"
   }
 ];
 
