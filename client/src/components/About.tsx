@@ -25,28 +25,28 @@ export default function About() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <img 
-              src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
-              alt="Modern restaurant interior" 
-              className="rounded-xl shadow-lg"
+            <img
+              src="/images/about/JO_HT Food Truck.jpg"
+              alt="Jealous Fork Food Truck - where it all started"
+              className="rounded-xl shadow-lg object-cover h-48 w-full"
               loading="lazy"
             />
-            <img 
-              src="https://images.unsplash.com/photo-1506084868230-bb9d95c24759?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
-              alt="Artisan pancakes with berries" 
-              className="rounded-xl shadow-lg mt-8"
+            <img
+              src="/images/about/Restaurant Telemundo National.jpg"
+              alt="Jealous Fork featured on Telemundo National"
+              className="rounded-xl shadow-lg mt-8 object-cover h-48 w-full"
               loading="lazy"
             />
-            <img 
-              src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
-              alt="Chef preparing food" 
-              className="rounded-xl shadow-lg -mt-8"
+            <img
+              src="/images/about/PSX_20231111_065623.jpg"
+              alt="Jealous Fork restaurant experience"
+              className="rounded-xl shadow-lg -mt-8 object-cover h-48 w-full"
               loading="lazy"
             />
-            <img 
-              src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
-              alt="Gourmet burger" 
-              className="rounded-xl shadow-lg"
+            <img
+              src="/images/about/GGG1.jpg"
+              alt="Jealous Fork signature dishes"
+              className="rounded-xl shadow-lg object-cover h-48 w-full"
               loading="lazy"
             />
           </div>
