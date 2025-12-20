@@ -118,7 +118,26 @@ export class SquareMenuSyncService {
         }
 
         // Get category name from Square categories
-        const categoryName = categoryMap.get(itemData?.category_id) || 'Menu Items';
+        // Check both category_id (legacy) and categories array (newer API)
+        let categoryName = 'Menu Items';
+        let categoryId = itemData?.category_id;
+
+        // Try legacy category_id first
+        if (categoryId && categoryMap.has(categoryId)) {
+          categoryName = categoryMap.get(categoryId)!;
+        }
+        // Try categories array (newer Square API uses this)
+        else if (itemData?.categories && itemData.categories.length > 0) {
+          categoryId = itemData.categories[0].id;
+          if (categoryMap.has(categoryId)) {
+            categoryName = categoryMap.get(categoryId)!;
+          }
+        }
+        // Try reporting_category
+        else if (itemData?.reporting_category?.id && categoryMap.has(itemData.reporting_category.id)) {
+          categoryId = itemData.reporting_category.id;
+          categoryName = categoryMap.get(categoryId)!;
+        }
 
         return {
           id: item.id,
@@ -126,7 +145,7 @@ export class SquareMenuSyncService {
           description: itemData?.description || '',
           price: price / 100, // Convert from cents
           category: categoryName,
-          categoryId: itemData?.category_id,
+          categoryId: categoryId,
           variations: itemData?.variations || [],
           inStock: true, // Default to in stock, check inventory separately
           imageUrl: realImageUrl || itemData?.image_url, // Use Square image first, fallback to any existing URL

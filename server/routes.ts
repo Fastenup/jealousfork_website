@@ -304,12 +304,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const firstVariation = itemData?.variations?.[0];
             const price = firstVariation?.item_variation_data?.price_money?.amount || 0;
 
+            // Get category name from Square categories
+            // Check both category_id (legacy) and categories array (newer API)
+            let categoryName = 'Menu Items';
+            let categoryId = itemData?.category_id;
+
+            // Try legacy category_id first
+            if (categoryId && categoryMap.has(categoryId)) {
+              categoryName = categoryMap.get(categoryId)!;
+            }
+            // Try categories array (newer Square API uses this)
+            else if (itemData?.categories && itemData.categories.length > 0) {
+              categoryId = itemData.categories[0].id;
+              if (categoryMap.has(categoryId)) {
+                categoryName = categoryMap.get(categoryId)!;
+              }
+            }
+            // Try reporting_category
+            else if (itemData?.reporting_category?.id && categoryMap.has(itemData.reporting_category.id)) {
+              categoryId = itemData.reporting_category.id;
+              categoryName = categoryMap.get(categoryId)!;
+            }
+
             return {
               id: item.id,
               name: itemData?.name || 'Unknown Item',
               description: itemData?.description || '',
               price: price / 100,
-              category: categoryMap.get(itemData?.category_id) || 'Menu Items',
+              category: categoryName,
+              categoryId: categoryId,
               inStock: true
             };
           }) || [];
