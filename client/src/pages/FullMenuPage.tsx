@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Navigation from '@/components/Navigation';
 import SEOHead from '@/components/SEOHead';
@@ -10,101 +10,111 @@ interface MenuItem {
   description: string;
   price: number;
   category: string;
+  categoryId?: string;
   inStock: boolean;
+  imageUrl?: string;
 }
 
-interface MenuSection {
-  id: number;
+interface CategoryInfo {
+  id: string;
   name: string;
-  description: string;
-  operatingHours: string;
-  operatingDays: string;
-  isOpen: boolean;
-  items: MenuItem[];
+  description?: string;
+  operatingHours?: string;
+  operatingDays?: string;
 }
 
-function isTimeInRange(startTime: string, endTime: string, currentTime: Date): boolean {
-  const [startHour, startMin] = startTime.split(':').map(Number);
-  const [endHour, endMin] = endTime.split(':').map(Number);
-  
-  const start = new Date(currentTime);
-  start.setHours(startHour, startMin, 0, 0);
-  
-  const end = new Date(currentTime);
-  end.setHours(endHour, endMin, 0, 0);
-  
-  return currentTime >= start && currentTime <= end;
-}
+// Category configuration with display info
+const categoryConfig: Record<string, CategoryInfo> = {
+  'pancakes': { id: 'pancakes', name: 'Pancakes', description: 'Artisan pancakes made fresh daily' },
+  'flatbread': { id: 'flatbread', name: 'Flatbreads', description: 'Savory flatbread creations' },
+  'flatbreads': { id: 'flatbreads', name: 'Flatbreads', description: 'Savory flatbread creations' },
+  'burgers': { id: 'burgers', name: 'Burgers', description: 'Gourmet burgers (Fri-Sat)', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
+  'appetizers': { id: 'appetizers', name: 'Appetizers', description: 'Start your meal right' },
+  'starters': { id: 'starters', name: 'Starters', description: 'Start your meal right' },
+  'beverages': { id: 'beverages', name: 'Beverages', description: 'Drinks and refreshments' },
+  'drinks': { id: 'drinks', name: 'Drinks', description: 'Drinks and refreshments' },
+  'cocktails': { id: 'cocktails', name: 'Cocktails', description: 'Craft cocktails' },
+  'coffee': { id: 'coffee', name: 'Coffee', description: 'Fresh brewed coffee' },
+  'desserts': { id: 'desserts', name: 'Desserts', description: 'Sweet endings' },
+  'breakfast': { id: 'breakfast', name: 'Breakfast', description: 'Morning favorites' },
+  'brunch': { id: 'brunch', name: 'Brunch', description: 'Weekend brunch specials' },
+};
 
-function isDayInRange(operatingDays: string, currentDay: number): boolean {
-  const dayMap = { 0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday' };
-  const currentDayName = dayMap[currentDay as keyof typeof dayMap];
-  
-  if (operatingDays.includes('Monday') && currentDay === 1) return false; // Closed Mondays
-  if (operatingDays.includes('Tuesday - Sunday') && currentDay >= 2) return true;
-  if (operatingDays.includes('Friday - Saturday') && (currentDay === 5 || currentDay === 6)) return true;
-  
-  return operatingDays.includes(currentDayName);
-}
+// Default fallback image
+const fallbackImage = 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop';
 
 export default function FullMenuPage() {
   const { addItem } = useCart();
-  const [currentTime] = useState(new Date());
-  
+  const [activeCategory, setActiveCategory] = useState<string>('');
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const navRef = useRef<HTMLDivElement>(null);
+
   // Fetch all menu items with real-time Square sync
   const { data: menuData, isLoading, error } = useQuery({
     queryKey: ['/api/menu'],
-    refetchInterval: false, // Disable automatic polling
+    refetchInterval: false,
   });
 
   const menuItems: MenuItem[] = menuData?.items || [];
 
-  // Create time-based menu sections with Square items
-  const menuSections: MenuSection[] = [
-    {
-      id: 1,
-      name: "Jealous Fork",
-      description: "Miami's Original Artisan Pancake Restaurant",
-      operatingHours: "9:00 AM - 3:00 PM",
-      operatingDays: "Tuesday - Sunday",
-      isOpen: isDayInRange("Tuesday - Sunday", currentTime.getDay()) && 
-              isTimeInRange("09:00", "15:00", currentTime),
-      items: menuItems.filter(item => 
-        item.category === 'pancakes' || 
-        item.category === 'flatbread' || 
-        item.name.toLowerCase().includes('pancake') ||
-        item.name.toLowerCase().includes('flatbread')
-      )
-    },
-    {
-      id: 2,
-      name: "Jealous Burger",
-      description: "Gourmet Burgers & Evening Specialties",
-      operatingHours: "5:00 PM - 9:00 PM",
-      operatingDays: "Friday - Saturday",
-      isOpen: isDayInRange("Friday - Saturday", currentTime.getDay()) && 
-              isTimeInRange("17:00", "21:00", currentTime),
-      items: menuItems.filter(item => 
-        item.category === 'burgers' || 
-        item.name.toLowerCase().includes('burger')
-      )
-    },
-    {
-      id: 3,
-      name: "Beverages",
-      description: "Cocktails, Coffee, Beer & Wine",
-      operatingHours: "Variable by location",
-      operatingDays: "Tuesday - Sunday",
-      isOpen: isDayInRange("Tuesday - Sunday", currentTime.getDay()),
-      items: menuItems.filter(item => 
-        item.category === 'beverages' || 
-        item.category === 'cocktails' ||
-        item.category === 'coffee' ||
-        item.name.toLowerCase().includes('drink') ||
-        item.name.toLowerCase().includes('coffee')
-      )
+  // Group items by category
+  const categorizedItems = menuItems.reduce<Record<string, MenuItem[]>>((acc, item) => {
+    const category = item.category?.toLowerCase() || 'other';
+    if (!acc[category]) {
+      acc[category] = [];
     }
-  ];
+    acc[category].push(item);
+    return acc;
+  }, {});
+
+  // Get ordered categories that have items
+  const orderedCategories = ['pancakes', 'flatbread', 'flatbreads', 'breakfast', 'brunch', 'burgers', 'appetizers', 'starters', 'beverages', 'drinks', 'cocktails', 'coffee', 'desserts'];
+  const activeCategories = orderedCategories.filter(cat => categorizedItems[cat]?.length > 0);
+
+  // Also add any categories not in our ordered list
+  Object.keys(categorizedItems).forEach(cat => {
+    if (!activeCategories.includes(cat) && categorizedItems[cat]?.length > 0) {
+      activeCategories.push(cat);
+    }
+  });
+
+  // Set initial active category
+  useEffect(() => {
+    if (activeCategories.length > 0 && !activeCategory) {
+      setActiveCategory(activeCategories[0]);
+    }
+  }, [activeCategories, activeCategory]);
+
+  // Scroll spy for active category
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200; // Offset for sticky nav
+
+      for (const category of activeCategories) {
+        const section = sectionRefs.current[category];
+        if (section) {
+          const { offsetTop, offsetHeight } = section;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveCategory(category);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeCategories]);
+
+  const scrollToCategory = (category: string) => {
+    const section = sectionRefs.current[category];
+    if (section) {
+      const navHeight = navRef.current?.offsetHeight || 120;
+      const offsetTop = section.offsetTop - navHeight - 20;
+      window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+      setActiveCategory(category);
+    }
+  };
 
   const handleAddToCart = (item: MenuItem) => {
     addItem({
@@ -117,37 +127,70 @@ export default function FullMenuPage() {
     });
   };
 
+  const getCategoryDisplayName = (category: string): string => {
+    return categoryConfig[category]?.name || category.charAt(0).toUpperCase() + category.slice(1);
+  };
+
+  const getCategoryDescription = (category: string): string | undefined => {
+    return categoryConfig[category]?.description;
+  };
+
   return (
     <>
-      <SEOHead 
-        title="Full Menu - Jealous Fork Miami"
-        description="Browse our complete menu featuring Jealous Fork artisan pancakes (Tue-Sun 9AM-3PM), Jealous Burger gourmet selections (Fri-Sat 5PM-9PM), and beverages. Real-time pricing and availability."
-        canonical="https://jealousfork.com/menu"
+      <SEOHead
+        title="Full Menu - Jealous Fork Miami | Pancakes, Burgers & More"
+        description="Browse our complete menu featuring artisan pancakes, gourmet burgers (Fri-Sat), flatbreads, and more. Real-time pricing and availability from Square."
+        canonical="https://jealousfork.com/full-menu"
+        keywords="Jealous Fork menu, Miami pancakes menu, gourmet burgers menu, artisan pancakes, breakfast Miami"
       />
-      
+
       <div className="min-h-screen bg-gray-50">
         <Navigation />
-        
-        {/* Hero Section */}
-        <section className="bg-black text-white py-20">
+
+        {/* Hero Section - Simplified */}
+        <section className="bg-black text-white pt-20 pb-8 sm:pt-24 sm:pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Our Complete Menu
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
+              Our Menu
             </h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Time-based menus with real-time pricing and availability
+            <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
+              Fresh ingredients, real-time availability
             </p>
           </div>
         </section>
 
-        {/* Menu Sections */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Sticky Category Navigation */}
+        <div
+          ref={navRef}
+          className="sticky top-16 z-40 bg-white border-b shadow-sm"
+        >
+          <div className="max-w-7xl mx-auto">
+            <div className="flex overflow-x-auto scrollbar-hide gap-1 sm:gap-2 py-3 px-3 sm:px-6 lg:px-8 lg:justify-center">
+              {activeCategories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => scrollToCategory(category)}
+                  className={`flex-shrink-0 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full text-sm sm:text-base font-medium transition-all whitespace-nowrap min-h-[44px] ${
+                    activeCategory === category
+                      ? 'bg-gray-900 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {getCategoryDisplayName(category)}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Menu Content */}
+        <section className="py-6 sm:py-8 lg:py-12">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             {/* Loading State */}
             {isLoading && (
               <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
-                <p className="mt-4 text-gray-600">Loading menu sections...</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                <p className="mt-4 text-gray-600">Loading menu...</p>
               </div>
             )}
 
@@ -158,130 +201,148 @@ export default function FullMenuPage() {
               </div>
             )}
 
-            {/* Menu Sections */}
+            {/* Menu Categories */}
             {!isLoading && !error && (
-              <div className="space-y-16">
-                {menuSections.map((section) => (
-                  <div key={section.id} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                    {/* Section Header */}
-                    <div className="bg-gradient-to-r from-gray-900 to-gray-700 text-white p-8">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h2 className="text-3xl font-bold mb-2">{section.name}</h2>
-                          <p className="text-gray-300 mb-4">{section.description}</p>
-                          <div className="flex items-center gap-6 text-sm">
-                            <div className="flex items-center gap-2">
-                              <span className="text-gray-400">Hours:</span>
-                              <span>{section.operatingHours}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-gray-400">Days:</span>
-                              <span>{section.operatingDays}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className={`px-4 py-2 rounded-full text-sm font-medium ${
-                            section.isOpen
-                              ? 'bg-green-500 text-white'
-                              : 'bg-red-500 text-white'
-                          }`}>
-                            {section.isOpen ? 'OPEN NOW' : 'CLOSED'}
-                          </div>
-                        </div>
+              <div className="space-y-10 sm:space-y-12 lg:space-y-16">
+                {activeCategories.map((category) => (
+                  <section
+                    key={category}
+                    ref={(el) => (sectionRefs.current[category] = el)}
+                    id={`category-${category}`}
+                    className="scroll-mt-40"
+                  >
+                    {/* Category Header */}
+                    <div className="mb-4 sm:mb-6">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+                          {getCategoryDisplayName(category)}
+                        </h2>
+                        {categoryConfig[category]?.operatingDays && (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-amber-100 text-amber-800">
+                            {categoryConfig[category].operatingDays} {categoryConfig[category].operatingHours}
+                          </span>
+                        )}
                       </div>
-                    </div>
-
-                    {/* Section Items */}
-                    <div className="p-8">
-                      {section.items.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {section.items.map((item) => (
-                            <div key={item.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                              <div className="flex items-start justify-between mb-4">
-                                <div className="flex-1">
-                                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                                    {item.name}
-                                  </h3>
-                                  <p className="text-gray-600 text-sm leading-relaxed">
-                                    {item.description}
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-2xl font-bold text-green-600">
-                                    ${item.price}
-                                  </span>
-                                  <span className={`text-xs px-2 py-1 rounded-full ${
-                                    item.inStock
-                                      ? 'bg-green-100 text-green-800'
-                                      : 'bg-red-100 text-red-800'
-                                  }`}>
-                                    {item.inStock ? 'Available' : 'Out of Stock'}
-                                  </span>
-                                </div>
-
-                                <button
-                                  onClick={() => handleAddToCart(item)}
-                                  disabled={!item.inStock || !section.isOpen}
-                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                                    item.inStock && section.isOpen
-                                      ? 'bg-black text-white hover:bg-gray-800'
-                                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                  }`}
-                                >
-                                  {!section.isOpen ? 'Closed' : 
-                                   !item.inStock ? 'Unavailable' : 'Add to Cart'}
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-center py-12">
-                          <p className="text-gray-600">
-                            No items available in this section. Check back during operating hours.
-                          </p>
-                        </div>
+                      {getCategoryDescription(category) && (
+                        <p className="text-gray-600 mt-1 text-sm sm:text-base">
+                          {getCategoryDescription(category)}
+                        </p>
                       )}
                     </div>
-                  </div>
+
+                    {/* Items Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+                      {categorizedItems[category]?.map((item) => (
+                        <div
+                          key={item.id}
+                          className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden flex flex-col"
+                        >
+                          {/* Item Image */}
+                          <div className="relative h-40 sm:h-48 bg-gray-200 overflow-hidden">
+                            <img
+                              src={item.imageUrl || fallbackImage}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = fallbackImage;
+                              }}
+                            />
+                            {!item.inStock && (
+                              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                <span className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                  Sold Out
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Item Details */}
+                          <div className="p-4 flex-1 flex flex-col">
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
+                              {item.name}
+                            </h3>
+                            <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-1">
+                              {item.description || 'Delicious house specialty'}
+                            </p>
+
+                            <div className="flex items-center justify-between gap-3 mt-auto">
+                              <span className="text-lg sm:text-xl font-bold text-green-600">
+                                ${item.price.toFixed(2)}
+                              </span>
+                              <button
+                                onClick={() => handleAddToCart(item)}
+                                disabled={!item.inStock}
+                                className={`flex-shrink-0 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] min-w-[100px] ${
+                                  item.inStock
+                                    ? 'bg-gray-900 text-white hover:bg-gray-800 active:bg-gray-700'
+                                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                }`}
+                              >
+                                {item.inStock ? 'Add to Cart' : 'Sold Out'}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
                 ))}
               </div>
             )}
 
-            {/* Operating Hours Info */}
-            <div className="mt-16 bg-gray-900 text-white rounded-2xl p-8">
-              <h3 className="text-2xl font-bold mb-6 text-center">Operating Hours</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div>
-                  <h4 className="text-lg font-semibold text-green-400 mb-2">Jealous Fork</h4>
-                  <p className="text-gray-300">Tuesday - Sunday</p>
-                  <p className="text-gray-300">9:00 AM - 3:00 PM</p>
-                  <p className="text-sm text-gray-400 mt-2">Artisan Pancakes & Breakfast</p>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-green-400 mb-2">Jealous Burger</h4>
-                  <p className="text-gray-300">Friday - Saturday</p>
-                  <p className="text-gray-300">5:00 PM - 9:00 PM</p>
-                  <p className="text-sm text-gray-400 mt-2">Gourmet Burgers & Dinner</p>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-green-400 mb-2">Beverages</h4>
-                  <p className="text-gray-300">Tuesday - Sunday</p>
-                  <p className="text-gray-300">Variable Hours</p>
-                  <p className="text-sm text-gray-400 mt-2">Cocktails, Coffee, Beer & Wine</p>
-                </div>
+            {/* No Items State */}
+            {!isLoading && !error && activeCategories.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-600 text-lg">No menu items available at this time.</p>
+                <p className="text-gray-500 mt-2">Please check back later.</p>
               </div>
-              <p className="text-center text-red-400 mt-6 font-medium">
-                CLOSED MONDAYS
-              </p>
+            )}
+          </div>
+        </section>
+
+        {/* Operating Hours Footer */}
+        <section className="bg-gray-900 text-white py-8 sm:py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 className="text-xl sm:text-2xl font-bold mb-6 text-center">Operating Hours</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 text-center">
+              <div className="p-4">
+                <h4 className="text-base sm:text-lg font-semibold text-green-400 mb-2">Jealous Fork</h4>
+                <p className="text-gray-300 text-sm sm:text-base">Tuesday - Sunday</p>
+                <p className="text-gray-300 text-sm sm:text-base">9:00 AM - 3:00 PM</p>
+                <p className="text-xs sm:text-sm text-gray-400 mt-2">Artisan Pancakes & Breakfast</p>
+              </div>
+              <div className="p-4">
+                <h4 className="text-base sm:text-lg font-semibold text-green-400 mb-2">Jealous Burger</h4>
+                <p className="text-gray-300 text-sm sm:text-base">Friday - Saturday</p>
+                <p className="text-gray-300 text-sm sm:text-base">9:00 AM - 9:00 PM</p>
+                <p className="text-xs sm:text-sm text-gray-400 mt-2">Gourmet Burgers</p>
+              </div>
+              <div className="p-4 sm:col-span-2 lg:col-span-1">
+                <h4 className="text-base sm:text-lg font-semibold text-green-400 mb-2">Beverages</h4>
+                <p className="text-gray-300 text-sm sm:text-base">Tuesday - Sunday</p>
+                <p className="text-gray-300 text-sm sm:text-base">During operating hours</p>
+                <p className="text-xs sm:text-sm text-gray-400 mt-2">Cocktails, Coffee & More</p>
+              </div>
             </div>
+            <p className="text-center text-red-400 mt-6 font-medium text-sm sm:text-base">
+              CLOSED MONDAYS
+            </p>
           </div>
         </section>
       </div>
+
+      {/* Custom scrollbar hide utility */}
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </>
   );
 }
