@@ -261,54 +261,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const accessToken = process.env.SQUARE_ACCESS_TOKEN;
         const environment = accessToken?.startsWith('sandbox') ? 'sandbox' : 'production';
-        const baseUrl = environment === 'sandbox' 
-          ? 'https://connect.squareupsandbox.com' 
+        const baseUrl = environment === 'sandbox'
+          ? 'https://connect.squareupsandbox.com'
           : 'https://connect.squareup.com';
-        
-        const response = await fetch(`${baseUrl}/v2/catalog/list?types=ITEM`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Square-Version': '2024-06-04',
-            'Content-Type': 'application/json'
+
+        // Fetch items and categories in parallel
+        const [itemsResponse, categoriesResponse] = await Promise.all([
+          fetch(`${baseUrl}/v2/catalog/list?types=ITEM`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Square-Version': '2024-06-04',
+              'Content-Type': 'application/json'
+            }
+          }),
+          fetch(`${baseUrl}/v2/catalog/list?types=CATEGORY`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Square-Version': '2024-06-04',
+              'Content-Type': 'application/json'
+            }
+          })
+        ]);
+
+        if (itemsResponse.ok) {
+          const data = await itemsResponse.json();
+
+          // Build category map from Square categories
+          const categoryMap = new Map<string, string>();
+          if (categoriesResponse.ok) {
+            const catData = await categoriesResponse.json();
+            (catData.objects || []).forEach((cat: any) => {
+              if (cat.category_data?.name) {
+                categoryMap.set(cat.id, cat.category_data.name);
+              }
+            });
           }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
+
           const items = data.objects?.map((item: any) => {
             const itemData = item.item_data;
             const firstVariation = itemData?.variations?.[0];
             const price = firstVariation?.item_variation_data?.price_money?.amount || 0;
-            
+
             return {
               id: item.id,
               name: itemData?.name || 'Unknown Item',
               description: itemData?.description || '',
               price: price / 100,
-              category: itemData?.category_id || 'uncategorized',
+              category: categoryMap.get(itemData?.category_id) || 'Menu Items',
               inStock: true
             };
           }) || [];
-          
+
           // Add featured status to items
           const itemsWithFeaturedStatus = items.map((item: any) => ({
             ...item,
-            isFeatured: featuredItems.some(featured => 
+            isFeatured: featuredItems.some(featured =>
               featured.squareId === item.id || featured.squareId === item.squareId
             ),
-            localId: featuredItems.find(featured => 
+            localId: featuredItems.find(featured =>
               featured.squareId === item.id || featured.squareId === item.squareId
             )?.localId || item.id,
             isAvailable: true, // Default to available
             stockLevel: null
           }));
-          
-          return res.json({ 
-            success: true, 
-            items: itemsWithFeaturedStatus, 
-            source: 'square-direct', 
-            count: itemsWithFeaturedStatus.length 
+
+          return res.json({
+            success: true,
+            items: itemsWithFeaturedStatus,
+            source: 'square-direct',
+            count: itemsWithFeaturedStatus.length
           });
         }
       } catch (directError) {

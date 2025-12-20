@@ -23,21 +23,35 @@ interface CategoryInfo {
   operatingDays?: string;
 }
 
-// Category configuration with display info
+// Category configuration with display info - matches Square category names
 const categoryConfig: Record<string, CategoryInfo> = {
+  // Pancakes variations
   'pancakes': { id: 'pancakes', name: 'Pancakes', description: 'Artisan pancakes made fresh daily' },
+  'signature pancakes': { id: 'signature-pancakes', name: 'Signature Pancakes', description: 'Our famous creations' },
+  // Flatbreads
   'flatbread': { id: 'flatbread', name: 'Flatbreads', description: 'Savory flatbread creations' },
   'flatbreads': { id: 'flatbreads', name: 'Flatbreads', description: 'Savory flatbread creations' },
+  // Burgers
   'burgers': { id: 'burgers', name: 'Burgers', description: 'Gourmet burgers (Fri-Sat)', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
+  'gourmet burgers': { id: 'gourmet-burgers', name: 'Gourmet Burgers', description: 'Classic patties, creative toppings', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
+  'jealous burger': { id: 'jealous-burger', name: 'Jealous Burger', description: 'Our signature burgers', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
+  // Appetizers/Starters
   'appetizers': { id: 'appetizers', name: 'Appetizers', description: 'Start your meal right' },
   'starters': { id: 'starters', name: 'Starters', description: 'Start your meal right' },
+  'sides': { id: 'sides', name: 'Sides', description: 'Perfect accompaniments' },
+  // Beverages
   'beverages': { id: 'beverages', name: 'Beverages', description: 'Drinks and refreshments' },
   'drinks': { id: 'drinks', name: 'Drinks', description: 'Drinks and refreshments' },
   'cocktails': { id: 'cocktails', name: 'Cocktails', description: 'Craft cocktails' },
   'coffee': { id: 'coffee', name: 'Coffee', description: 'Fresh brewed coffee' },
+  'hot drinks': { id: 'hot-drinks', name: 'Hot Drinks', description: 'Warm beverages' },
+  'cold drinks': { id: 'cold-drinks', name: 'Cold Drinks', description: 'Refreshing cold beverages' },
+  // Other
   'desserts': { id: 'desserts', name: 'Desserts', description: 'Sweet endings' },
   'breakfast': { id: 'breakfast', name: 'Breakfast', description: 'Morning favorites' },
   'brunch': { id: 'brunch', name: 'Brunch', description: 'Weekend brunch specials' },
+  'specials': { id: 'specials', name: 'Specials', description: 'Limited time offerings' },
+  'menu items': { id: 'menu-items', name: 'Menu Items', description: 'More delicious options' },
 };
 
 // Default fallback image
@@ -68,7 +82,14 @@ export default function FullMenuPage() {
   }, {});
 
   // Get ordered categories that have items
-  const orderedCategories = ['pancakes', 'flatbread', 'flatbreads', 'breakfast', 'brunch', 'burgers', 'appetizers', 'starters', 'beverages', 'drinks', 'cocktails', 'coffee', 'desserts'];
+  const orderedCategories = [
+    'pancakes', 'signature pancakes', 'flatbread', 'flatbreads',
+    'breakfast', 'brunch',
+    'burgers', 'gourmet burgers', 'jealous burger',
+    'appetizers', 'starters', 'sides',
+    'beverages', 'drinks', 'hot drinks', 'cold drinks', 'cocktails', 'coffee',
+    'desserts', 'specials', 'menu items'
+  ];
   const activeCategories = orderedCategories.filter(cat => categorizedItems[cat]?.length > 0);
 
   // Also add any categories not in our ordered list

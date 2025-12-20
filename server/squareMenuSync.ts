@@ -40,11 +40,11 @@ export class SquareMenuSyncService {
       : 'https://connect.squareup.com';
   }
 
-  // Fetch all menu items from Square catalog with images
+  // Fetch all menu items from Square catalog with images and categories
   async fetchSquareMenuItems(): Promise<SquareMenuItem[]> {
     try {
-      // Fetch both items and images in parallel
-      const [itemsResponse, imagesResponse] = await Promise.all([
+      // Fetch items, images, and categories in parallel
+      const [itemsResponse, imagesResponse, categoriesResponse] = await Promise.all([
         fetch(`${this.baseUrl}/v2/catalog/list?types=ITEM`, {
           method: 'GET',
           headers: {
@@ -60,6 +60,14 @@ export class SquareMenuSyncService {
             'Square-Version': '2024-06-04',
             'Content-Type': 'application/json'
           }
+        }),
+        fetch(`${this.baseUrl}/v2/catalog/list?types=CATEGORY`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${this.accessToken}`,
+            'Square-Version': '2024-06-04',
+            'Content-Type': 'application/json'
+          }
         })
       ]);
 
@@ -68,7 +76,7 @@ export class SquareMenuSyncService {
       }
 
       const itemsData = await itemsResponse.json();
-      
+
       // Build image map from Square images
       const imageMap = new Map<string, string>();
       if (imagesResponse.ok) {
@@ -80,12 +88,24 @@ export class SquareMenuSyncService {
         });
         console.log(`Found ${imageMap.size} Square images for menu items`);
       }
-      
+
+      // Build category map from Square categories
+      const categoryMap = new Map<string, string>();
+      if (categoriesResponse.ok) {
+        const categoriesData = await categoriesResponse.json();
+        (categoriesData.objects || []).forEach((cat: any) => {
+          if (cat.category_data?.name) {
+            categoryMap.set(cat.id, cat.category_data.name);
+          }
+        });
+        console.log(`Found ${categoryMap.size} Square categories`);
+      }
+
       return (itemsData.objects || []).map((item: any) => {
         const itemData = item.item_data;
         const firstVariation = itemData?.variations?.[0];
         const price = firstVariation?.item_variation_data?.price_money?.amount || 0;
-        
+
         // Find the first image URL from imageIds
         let realImageUrl: string | undefined;
         const imageIds = itemData?.image_ids || [];
@@ -96,13 +116,16 @@ export class SquareMenuSyncService {
             break;
           }
         }
-        
+
+        // Get category name from Square categories
+        const categoryName = categoryMap.get(itemData?.category_id) || 'Menu Items';
+
         return {
           id: item.id,
           name: itemData?.name || 'Unknown Item',
           description: itemData?.description || '',
           price: price / 100, // Convert from cents
-          category: this.getCategoryName(itemData?.category_id),
+          category: categoryName,
           categoryId: itemData?.category_id,
           variations: itemData?.variations || [],
           inStock: true, // Default to in stock, check inventory separately
@@ -228,19 +251,6 @@ export class SquareMenuSyncService {
     } catch (error: any) {
       throw new Error(`Menu sync failed: ${error.message}`);
     }
-  }
-
-  private getCategoryName(categoryId?: string): string {
-    // Map category IDs to readable names
-    const categoryMap: Record<string, string> = {
-      'pancakes': 'Pancakes',
-      'burgers': 'Burgers', 
-      'flatbread': 'Flatbreads',
-      'appetizers': 'Appetizers',
-      'drinks': 'Beverages'
-    };
-    
-    return categoryMap[categoryId || ''] || 'Menu Items';
   }
 
   private normalizeItemName(name: string): string {
