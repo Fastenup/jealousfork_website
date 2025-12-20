@@ -23,34 +23,24 @@ interface CategoryInfo {
   operatingDays?: string;
 }
 
-// Category configuration with display info - matches Square category names
+// Category configuration with display info - matches actual Square category names
 const categoryConfig: Record<string, CategoryInfo> = {
-  // Pancakes variations
-  'pancakes': { id: 'pancakes', name: 'Pancakes', description: 'Artisan pancakes made fresh daily' },
-  'signature pancakes': { id: 'signature-pancakes', name: 'Signature Pancakes', description: 'Our famous creations' },
-  // Flatbreads
-  'flatbread': { id: 'flatbread', name: 'Flatbreads', description: 'Savory flatbread creations' },
-  'flatbreads': { id: 'flatbreads', name: 'Flatbreads', description: 'Savory flatbread creations' },
-  // Burgers
-  'burgers': { id: 'burgers', name: 'Burgers', description: 'Gourmet burgers (Fri-Sat)', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
-  'gourmet burgers': { id: 'gourmet-burgers', name: 'Gourmet Burgers', description: 'Classic patties, creative toppings', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
-  'jealous burger': { id: 'jealous-burger', name: 'Jealous Burger', description: 'Our signature burgers', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
-  // Appetizers/Starters
-  'appetizers': { id: 'appetizers', name: 'Appetizers', description: 'Start your meal right' },
-  'starters': { id: 'starters', name: 'Starters', description: 'Start your meal right' },
-  'sides': { id: 'sides', name: 'Sides', description: 'Perfect accompaniments' },
-  // Beverages
-  'beverages': { id: 'beverages', name: 'Beverages', description: 'Drinks and refreshments' },
-  'drinks': { id: 'drinks', name: 'Drinks', description: 'Drinks and refreshments' },
-  'cocktails': { id: 'cocktails', name: 'Cocktails', description: 'Craft cocktails' },
-  'coffee': { id: 'coffee', name: 'Coffee', description: 'Fresh brewed coffee' },
-  'hot drinks': { id: 'hot-drinks', name: 'Hot Drinks', description: 'Warm beverages' },
-  'cold drinks': { id: 'cold-drinks', name: 'Cold Drinks', description: 'Refreshing cold beverages' },
-  // Other
-  'desserts': { id: 'desserts', name: 'Desserts', description: 'Sweet endings' },
-  'breakfast': { id: 'breakfast', name: 'Breakfast', description: 'Morning favorites' },
-  'brunch': { id: 'brunch', name: 'Brunch', description: 'Weekend brunch specials' },
-  'specials': { id: 'specials', name: 'Specials', description: 'Limited time offerings' },
+  // Jealous Fork Categories
+  'starters': { id: 'starters', name: 'Starters & Shareable', description: 'Perfect for sharing or starting your meal' },
+  'pancakes': { id: 'pancakes', name: 'Award Winning Pancakes', description: 'Our signature pancakes that made us famous' },
+  'sandwiches': { id: 'sandwiches', name: 'Sandwiches & Burgers', description: 'Hearty sandwiches and gourmet burgers' },
+  'salads': { id: 'salads', name: 'Fresh Salads', description: 'Fresh, healthy options with premium ingredients' },
+  // Jealous Burger Categories (Fri-Sat)
+  'apps': { id: 'apps', name: 'Appetizers', description: 'Start your evening right', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
+  'burgers': { id: 'burgers', name: 'Gourmet Burgers', description: 'Our signature evening burgers', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
+  'fries': { id: 'fries', name: 'Fries', description: 'Perfect sides for any burger', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
+  'desserts': { id: 'desserts', name: 'Desserts', description: 'Sweet endings to your meal' },
+  // Beverage Categories
+  'cocktails': { id: 'cocktails', name: 'Signature Cocktails', description: 'Unique sake-based cocktails and classic favorites' },
+  'coffee': { id: 'coffee', name: 'Coffee & Specialty Drinks', description: 'Artisan coffee drinks and specialty beverages' },
+  'beer': { id: 'beer', name: 'Craft Beer', description: 'Carefully curated selection of craft beers' },
+  'wine': { id: 'wine', name: 'Wine Selection', description: 'Quality wines by the glass or bottle' },
+  // Fallback
   'menu items': { id: 'menu-items', name: 'Menu Items', description: 'More delicious options' },
 };
 
@@ -81,14 +71,16 @@ export default function FullMenuPage() {
     return acc;
   }, {});
 
-  // Get ordered categories that have items
+  // Get ordered categories that have items - matches actual Square categories
   const orderedCategories = [
-    'pancakes', 'signature pancakes', 'flatbread', 'flatbreads',
-    'breakfast', 'brunch',
-    'burgers', 'gourmet burgers', 'jealous burger',
-    'appetizers', 'starters', 'sides',
-    'beverages', 'drinks', 'hot drinks', 'cold drinks', 'cocktails', 'coffee',
-    'desserts', 'specials', 'menu items'
+    // Jealous Fork (Tue-Sun daytime)
+    'starters', 'pancakes', 'sandwiches', 'salads',
+    // Jealous Burger (Fri-Sat evening)
+    'apps', 'burgers', 'fries', 'desserts',
+    // Beverages
+    'cocktails', 'coffee', 'beer', 'wine',
+    // Fallback
+    'menu items'
   ];
   const activeCategories = orderedCategories.filter(cat => categorizedItems[cat]?.length > 0);
 
