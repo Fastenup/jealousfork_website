@@ -5,7 +5,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://jealousfork.com/</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -13,15 +13,27 @@
   <!-- Full Menu -->
   <url>
     <loc>https://jealousfork.com/full-menu</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+  </url>
+
+  <!-- Burgers Landing Page (Jealous Burger) -->
+  <url>
+    <loc>https://jealousfork.com/burgers</loc>
+    <lastmod>2025-12-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1200&h=630&fit=crop</image:loc>
+      <image:title>Gourmet Burgers at Jealous Burger Miami</image:title>
+    </image:image>
   </url>
 
   <!-- Checkout -->
   <url>
     <loc>https://jealousfork.com/checkout</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -29,7 +41,7 @@
   <!-- Privacy Policy -->
   <url>
     <loc>https://jealousfork.com/privacy</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
@@ -37,176 +49,176 @@
   <!-- Terms of Service -->
   <url>
     <loc>https://jealousfork.com/terms</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-  
-  <!-- Local Area Pages -->
+
+  <!-- Local Area Pages - Priority Areas -->
   <url>
-    <loc>https://jealousfork.com/near/edgewater</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/westchester</loc>
+    <lastmod>2025-12-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://jealousfork.com/near/tamiami</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/midtown-miami</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/fontainebleau</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/wynwood</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/sweetwater</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/design-district</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/kendall-west</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://jealousfork.com/near/upper-east-side</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://jealousfork.com/near/downtown-miami</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://jealousfork.com/near/brickell</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://jealousfork.com/near/south-beach</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://jealousfork.com/near/aventura</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
 
   <url>
     <loc>https://jealousfork.com/near/coral-gables</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/coconut-grove</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/doral</loc>
+    <lastmod>2025-12-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://jealousfork.com/near/downtown-miami</loc>
+    <lastmod>2025-12-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://jealousfork.com/near/brickell</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
     <loc>https://jealousfork.com/near/little-havana</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/kendall-west</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/coconut-grove</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/kendale-lakes</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/wynwood</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/tamiami</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/midtown-miami</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/westwood-lakes</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/design-district</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/olympia-heights</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/edgewater</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/westchester</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/upper-east-side</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/sunset</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://jealousfork.com/near/fontainebleau</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://jealousfork.com/near/sweetwater</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/south-beach</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://jealousfork.com/near/doral</loc>
-    <lastmod>2025-10-21</lastmod>
+    <loc>https://jealousfork.com/near/aventura</loc>
+    <lastmod>2025-12-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://jealousfork.com/near/kendale-lakes</loc>
+    <lastmod>2025-12-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://jealousfork.com/near/westwood-lakes</loc>
+    <lastmod>2025-12-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://jealousfork.com/near/olympia-heights</loc>
+    <lastmod>2025-12-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://jealousfork.com/near/sunset</loc>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>https://jealousfork.com/near/the-hammocks</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>https://jealousfork.com/near/the-crossings</loc>
-    <lastmod>2025-10-21</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

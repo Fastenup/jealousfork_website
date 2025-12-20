@@ -52,6 +52,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.warn('Square service not configured:', error?.message || 'Unknown error');
   }
 
+  // IndexNow API for Bing instant indexing
+  const INDEXNOW_KEY = '504b28f2e729d75f2deb57345daf9cb9';
+
+  app.post('/api/indexnow', async (req, res) => {
+    try {
+      const { urls } = req.body;
+      const urlList = urls || [
+        'https://jealousfork.com/',
+        'https://jealousfork.com/full-menu',
+        'https://jealousfork.com/burgers'
+      ];
+
+      // Submit to Bing IndexNow
+      const response = await fetch('https://api.indexnow.org/indexnow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          host: 'jealousfork.com',
+          key: INDEXNOW_KEY,
+          keyLocation: `https://jealousfork.com/${INDEXNOW_KEY}.txt`,
+          urlList
+        })
+      });
+
+      res.json({
+        success: response.ok,
+        status: response.status,
+        message: response.ok ? 'URLs submitted to Bing IndexNow' : 'Failed to submit'
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Test Square API images
   app.get('/api/test-square-images', async (req, res) => {
     try {

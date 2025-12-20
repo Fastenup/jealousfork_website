@@ -1,9 +1,28 @@
+# Jealous Fork Miami - Robots.txt
+# https://jealousfork.com
+
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /admin/
 
 # Priority pages for crawling
 Allow: /full-menu
+Allow: /burgers
 Allow: /near/
+
+# Bing Bot - Welcome!
+User-agent: bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: msnbot
+Allow: /
+Crawl-delay: 1
+
+# Google Bot
+User-agent: Googlebot
+Allow: /
 
 # Social media and review platforms
 User-agent: facebookexternalhit
@@ -15,8 +34,24 @@ Allow: /
 User-agent: LinkedInBot
 Allow: /
 
+# AI/LLM Crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
 # Sitemap location
 Sitemap: https://jealousfork.com/sitemap.xml
 
-# Crawl delay for respectful crawling
-Crawl-delay: 1
+# Host
+Host: https://jealousfork.com
