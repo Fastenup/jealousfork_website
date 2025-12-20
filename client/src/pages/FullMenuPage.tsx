@@ -23,23 +23,28 @@ interface CategoryInfo {
   operatingDays?: string;
 }
 
-// Category configuration with display info - matches actual Square category names
+// Category configuration with display info - keys match Square category names (lowercased)
 const categoryConfig: Record<string, CategoryInfo> = {
-  // Jealous Fork Categories
-  'starters': { id: 'starters', name: 'Starters & Shareable', description: 'Perfect for sharing or starting your meal' },
-  'pancakes': { id: 'pancakes', name: 'Award Winning Pancakes', description: 'Our signature pancakes that made us famous' },
-  'sandwiches': { id: 'sandwiches', name: 'Sandwiches & Burgers', description: 'Hearty sandwiches and gourmet burgers' },
-  'salads': { id: 'salads', name: 'Fresh Salads', description: 'Fresh, healthy options with premium ingredients' },
+  // Jealous Fork Food Categories
+  'starters & shareable': { id: 'starters', name: 'Starters & Shareable', description: 'Perfect for sharing or starting your meal' },
+  'award-winning pancakes': { id: 'pancakes', name: 'Award-Winning Pancakes', description: 'Our signature pancakes that made us famous' },
+  'sandwiches, buns, & bread': { id: 'sandwiches', name: 'Sandwiches, Buns & Bread', description: 'Hearty sandwiches and gourmet burgers' },
   // Jealous Burger Categories (Fri-Sat)
   'apps': { id: 'apps', name: 'Appetizers', description: 'Start your evening right', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
   'burgers': { id: 'burgers', name: 'Gourmet Burgers', description: 'Our signature evening burgers', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
   'fries': { id: 'fries', name: 'Fries', description: 'Perfect sides for any burger', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
-  'desserts': { id: 'desserts', name: 'Desserts', description: 'Sweet endings to your meal' },
   // Beverage Categories
-  'cocktails': { id: 'cocktails', name: 'Signature Cocktails', description: 'Unique sake-based cocktails and classic favorites' },
-  'coffee': { id: 'coffee', name: 'Coffee & Specialty Drinks', description: 'Artisan coffee drinks and specialty beverages' },
-  'beer': { id: 'beer', name: 'Craft Beer', description: 'Carefully curated selection of craft beers' },
-  'wine': { id: 'wine', name: 'Wine Selection', description: 'Quality wines by the glass or bottle' },
+  'cocktails': { id: 'cocktails', name: 'Cocktails', description: 'Unique sake-based cocktails and classic favorites' },
+  'hot & cold n/a bev': { id: 'na-bev', name: 'Hot & Cold Beverages', description: 'Coffee, tea, and non-alcoholic drinks' },
+  // Beer Categories
+  'pilsner, lager & misc': { id: 'pilsner-lager', name: 'Pilsner, Lager & More', description: 'Crisp, refreshing beers' },
+  'ale': { id: 'ale', name: 'Ales', description: 'Hoppy and flavorful ales' },
+  'porter & stout': { id: 'porter-stout', name: 'Porter & Stout', description: 'Rich, dark beers' },
+  'wit, weiss & wheat': { id: 'wheat', name: 'Wheat Beers', description: 'Light and refreshing wheat beers' },
+  // Wine Categories
+  'sparkling & white wine': { id: 'white-wine', name: 'Sparkling & White Wine', description: 'Light and refreshing wines' },
+  // Non-alcoholic
+  'soda & water': { id: 'soda-water', name: 'Soda & Water', description: 'Refreshing non-alcoholic options' },
   // Fallback
   'menu items': { id: 'menu-items', name: 'Menu Items', description: 'More delicious options' },
 };
@@ -71,14 +76,20 @@ export default function FullMenuPage() {
     return acc;
   }, {});
 
-  // Get ordered categories that have items - matches actual Square categories
+  // Get ordered categories that have items - matches actual Square category names (lowercased)
   const orderedCategories = [
-    // Jealous Fork (Tue-Sun daytime)
-    'starters', 'pancakes', 'sandwiches', 'salads',
+    // Jealous Fork Food (Tue-Sun daytime)
+    'starters & shareable', 'award-winning pancakes', 'sandwiches, buns, & bread',
     // Jealous Burger (Fri-Sat evening)
-    'apps', 'burgers', 'fries', 'desserts',
+    'apps', 'burgers', 'fries',
     // Beverages
-    'cocktails', 'coffee', 'beer', 'wine',
+    'cocktails', 'hot & cold n/a bev',
+    // Beer
+    'pilsner, lager & misc', 'ale', 'porter & stout', 'wit, weiss & wheat',
+    // Wine
+    'sparkling & white wine',
+    // Non-alcoholic
+    'soda & water',
     // Fallback
     'menu items'
   ];
