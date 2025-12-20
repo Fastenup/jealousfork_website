@@ -33,8 +33,8 @@ const burgerSchema = {
   "acceptsReservations": "True",
   "menu": "https://jealousfork.com/burgers",
   "openingHoursSpecification": [
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "21:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "21:00" }
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "15:00", "closes": "21:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "15:00", "closes": "21:00" }
   ],
   "aggregateRating": {
     "@type": "AggregateRating",
@@ -78,7 +78,7 @@ export default function BurgersPage() {
       metaDesc.name = 'description';
       document.head.appendChild(metaDesc);
     }
-    metaDesc.content = "Miami's best gourmet burgers at Jealous Burger. Classic patties with creative toppings like The Classic, Jesse James, and Que Bola Meng. Friday & Saturday 9AM-9PM. Order online or dine in at 14417 SW 42nd St.";
+    metaDesc.content = "Miami's best gourmet burgers at Jealous Burger. Classic patties with creative toppings like The Classic, Jesse James, and Que Bola Meng. Friday & Saturday 3PM-9PM. Pancakes still available! Order online or dine in at 14417 SW 42nd St.";
 
     // Set keywords
     let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
@@ -163,7 +163,8 @@ export default function BurgersPage() {
       <section className="bg-gray-900 text-white py-4">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-lg">
-            <span className="font-semibold">Burger Hours:</span> Friday & Saturday 9:00 AM - 9:00 PM
+            <span className="font-semibold">Jealous Burger:</span> Friday & Saturday 3:00 PM - 9:00 PM
+            <span className="text-gray-400 ml-2">| Pancakes still available!</span>
           </p>
         </div>
       </section>
@@ -239,9 +240,10 @@ export default function BurgersPage() {
             About Jealous Burger
           </h2>
           <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-            Jealous Burger is our evening concept serving Miami's best gourmet burgers every Friday and Saturday.
-            We use classic patties (not smash burgers) with creative, chef-driven toppings that range from
-            traditional American to Miami-inspired flavors like our Que Bola Meng with guava and queso.
+            Jealous Burger is our evening concept at Jealous Fork, expanding our menu every Friday and Saturday from 3PM-9PM.
+            We brought the same creativity from our award-winning pancakes to craft 9 unique gourmet burgers with chef-driven toppings.
+            From traditional American classics to Miami-inspired flavors like our Que Bola Meng with guava and queso.
+            And yes, you can still order our famous pancakes during burger hours!
           </p>
           <div className="grid sm:grid-cols-3 gap-6">
             <div className="p-6 bg-gray-50 rounded-xl">
@@ -275,8 +277,9 @@ export default function BurgersPage() {
                   Miami, FL 33175
                 </p>
                 <p className="text-lg">
-                  <strong>Burger Hours:</strong><br />
-                  Friday & Saturday: 9:00 AM - 9:00 PM
+                  <strong>Jealous Burger Hours:</strong><br />
+                  Friday & Saturday: 3:00 PM - 9:00 PM<br />
+                  <span className="text-gray-400 text-sm">(Pancakes available all day!)</span>
                 </p>
                 <p className="text-lg">
                   <strong>Phone:</strong><br />
@@ -338,8 +341,9 @@ export default function BurgersPage() {
                 When is Jealous Burger open?
               </h3>
               <p className="text-gray-600">
-                Jealous Burger serves gourmet burgers Friday and Saturday from 9:00 AM to 9:00 PM at our Miami location
-                (14417 SW 42nd St). During the day we serve our famous artisan pancakes.
+                Jealous Burger serves gourmet burgers Friday and Saturday from 3:00 PM to 9:00 PM at our Miami location
+                (14417 SW 42nd St). During burger hours, we serve BOTH our full burger menu AND our award-winning pancakes -
+                so you can have the best of both worlds!
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow">

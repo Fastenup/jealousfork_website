@@ -167,6 +167,7 @@ export default function Contact() {
                   <div className="text-gray-600 space-y-1">
                     <p className="ml-2">Tuesday - Thursday: 9:00 AM - 3:00 PM</p>
                     <p className="ml-2">Friday & Saturday: 9:00 AM - 9:00 PM</p>
+                    <p className="ml-2 text-sm text-gray-500">(Burgers available 3PM-9PM, Pancakes all day)</p>
                     <p className="ml-2">Sunday: 9:00 AM - 3:00 PM</p>
                     <p className="text-sm text-red-600 font-medium mt-2">Closed Mondays</p>
                   </div>

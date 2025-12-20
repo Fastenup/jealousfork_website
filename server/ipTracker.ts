@@ -65,9 +65,9 @@ class IPTracker {
     const minutes = now.getMinutes();
     const currentTime = hour * 60 + minutes; // Convert to minutes since midnight
 
-    // Store hours based on replit.md:
+    // Store hours:
     // Jealous Fork (day menu): Tue-Sun 9AM-3PM
-    // Jealous Burger (evening menu): Fri-Sat 5PM-9PM  
+    // Jealous Burger (evening menu): Fri-Sat 3PM-9PM (pancakes still available!)
     // Closed Mondays
 
     // Monday (day 1) - Closed
@@ -75,8 +75,8 @@ class IPTracker {
       return false;
     }
 
-    // Tuesday-Sunday - Day menu (9AM-3PM)  
-    if (day >= 2 || day === 0) { // Tue-Sun (2-6, 0)
+    // Tuesday-Thursday, Sunday - Day menu only (9AM-3PM)
+    if (day >= 2 && day <= 4 || day === 0) { // Tue-Thu, Sun
       const dayMenuStart = 9 * 60; // 9AM
       const dayMenuEnd = 15 * 60; // 3PM
       if (currentTime >= dayMenuStart && currentTime < dayMenuEnd) {
@@ -84,20 +84,11 @@ class IPTracker {
       }
     }
 
-    // Friday-Saturday - Evening menu (5PM-9PM)
+    // Friday-Saturday - Full hours (9AM-9PM, burgers from 3PM)
     if (day === 5 || day === 6) { // Fri-Sat
-      const eveningMenuStart = 17 * 60; // 5PM
-      const eveningMenuEnd = 21 * 60; // 9PM
-      if (currentTime >= eveningMenuStart && currentTime < eveningMenuEnd) {
-        return true;
-      }
-    }
-
-    // Sunday - Day menu only (9AM-3PM)
-    if (day === 0) {
-      const dayMenuStart = 9 * 60; // 9AM
-      const dayMenuEnd = 15 * 60; // 3PM
-      if (currentTime >= dayMenuStart && currentTime < dayMenuEnd) {
+      const openTime = 9 * 60; // 9AM
+      const closeTime = 21 * 60; // 9PM
+      if (currentTime >= openTime && currentTime < closeTime) {
         return true;
       }
     }

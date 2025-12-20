@@ -29,10 +29,10 @@ const categoryConfig: Record<string, CategoryInfo> = {
   'starters & shareable': { id: 'starters', name: 'Starters & Shareable', description: 'Perfect for sharing or starting your meal' },
   'award-winning pancakes': { id: 'pancakes', name: 'Award-Winning Pancakes', description: 'Our signature pancakes that made us famous' },
   'sandwiches, buns, & bread': { id: 'sandwiches', name: 'Sandwiches, Buns & Bread', description: 'Hearty sandwiches and gourmet burgers' },
-  // Jealous Burger Categories (Fri-Sat)
-  'apps': { id: 'apps', name: 'Appetizers', description: 'Start your evening right', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
-  'burgers': { id: 'burgers', name: 'Gourmet Burgers', description: 'Our signature evening burgers', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
-  'fries': { id: 'fries', name: 'Fries', description: 'Perfect sides for any burger', operatingHours: '9AM-9PM', operatingDays: 'Fri-Sat' },
+  // Jealous Burger Categories (Fri-Sat 3PM-9PM)
+  'apps': { id: 'apps', name: 'Appetizers', description: 'Start your evening right', operatingHours: '3PM-9PM', operatingDays: 'Fri-Sat' },
+  'burgers': { id: 'burgers', name: 'Gourmet Burgers', description: 'Our signature evening burgers', operatingHours: '3PM-9PM', operatingDays: 'Fri-Sat' },
+  'fries': { id: 'fries', name: 'Fries', description: 'Perfect sides for any burger', operatingHours: '3PM-9PM', operatingDays: 'Fri-Sat' },
   // Beverage Categories
   'cocktails': { id: 'cocktails', name: 'Cocktails', description: 'Unique sake-based cocktails and classic favorites' },
   'hot & cold n/a bev': { id: 'na-bev', name: 'Hot & Cold Beverages', description: 'Coffee, tea, and non-alcoholic drinks' },
@@ -340,8 +340,8 @@ export default function FullMenuPage() {
               <div className="p-4">
                 <h4 className="text-base sm:text-lg font-semibold text-green-400 mb-2">Jealous Burger</h4>
                 <p className="text-gray-300 text-sm sm:text-base">Friday - Saturday</p>
-                <p className="text-gray-300 text-sm sm:text-base">9:00 AM - 9:00 PM</p>
-                <p className="text-xs sm:text-sm text-gray-400 mt-2">Gourmet Burgers</p>
+                <p className="text-gray-300 text-sm sm:text-base">3:00 PM - 9:00 PM</p>
+                <p className="text-xs sm:text-sm text-gray-400 mt-2">Gourmet Burgers + Pancakes</p>
               </div>
               <div className="p-4 sm:col-span-2 lg:col-span-1">
                 <h4 className="text-base sm:text-lg font-semibold text-green-400 mb-2">Beverages</h4>

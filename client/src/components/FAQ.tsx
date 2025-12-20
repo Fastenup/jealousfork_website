@@ -13,7 +13,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "What are your operating hours and days?",
-    answer: "Jealous Fork operates Tuesday-Sunday 9AM-3PM for breakfast and brunch. Jealous Burger operates Friday-Saturday 5PM-9PM for dinner. We're closed Mondays to ensure our team is rested and our ingredients are always fresh."
+    answer: "Jealous Fork operates Tuesday-Sunday 9AM-3PM for breakfast and brunch. Jealous Burger expands our menu Friday-Saturday 3PM-9PM with gourmet burgers - and yes, pancakes are still available during burger hours! We're closed Mondays to ensure our team is rested and our ingredients are always fresh."
   },
   {
     question: "Do you take reservations for breakfast and brunch?",
@@ -29,7 +29,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "What's the difference between Jealous Fork and Jealous Burger?",
-    answer: "Jealous Fork is our breakfast and brunch concept (Tue-Sun 9AM-3PM) featuring artisan pancakes, gourmet breakfast items, and craft beverages. Jealous Burger is our evening concept (Fri-Sat 5PM-9PM) offering gourmet burgers, fries, and dinner items."
+    answer: "Jealous Fork is our breakfast and brunch concept (Tue-Sun 9AM-3PM) featuring artisan pancakes, gourmet breakfast items, and craft beverages. Jealous Burger is our evening concept (Fri-Sat 3PM-9PM) that expands our menu with 9 gourmet burgers crafted with the same creativity as our pancakes. During burger hours, you can order from BOTH menus!"
   },
   {
     question: "Do you have parking available?",

@@ -212,8 +212,8 @@ class MemoryStorage implements IStorage {
     {
       id: 2,
       name: "Jealous Burger",
-      description: "Gourmet burgers and dinner items",
-      operatingHours: "5:00 PM - 9:00 PM",
+      description: "Gourmet burgers and dinner items (pancakes still available!)",
+      operatingHours: "3:00 PM - 9:00 PM",
       operatingDays: "Friday - Saturday",
       displayOrder: 2,
       isActive: true
