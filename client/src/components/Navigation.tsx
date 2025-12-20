@@ -90,12 +90,11 @@ export default function Navigation() {
           {/* Cart and CTA Button */}
           <div className="hidden lg:flex items-center gap-4">
             <ShoppingCart onCheckout={() => setLocation('/checkout')} />
-            <button 
-              onClick={() => scrollToSection('reservations')}
-              className="bg-gray-900 text-white px-4 xl:px-6 py-2 rounded-full text-sm xl:text-base font-medium hover:bg-gray-800 transition-colors"
-            >
-              Reserve Table
-            </button>
+            <Link href="/full-menu">
+              <a className="bg-gray-900 text-white px-4 xl:px-6 py-2 rounded-full text-sm xl:text-base font-medium hover:bg-gray-800 transition-colors">
+                Order Online
+              </a>
+            </Link>
           </div>
           
           {/* Mobile cart and menu button */}
@@ -170,15 +169,14 @@ export default function Navigation() {
             >
               Contact
             </button>
-            <button 
-              onClick={() => {
-                scrollToSection('reservations');
-                setIsMenuOpen(false);
-              }}
-              className="block px-4 py-3 text-base font-medium bg-gray-900 text-white rounded-lg mt-4 text-center hover:bg-gray-800 transition-colors"
-            >
-              Reserve Table
-            </button>
+            <Link href="/full-menu">
+              <span
+                onClick={() => setIsMenuOpen(false)}
+                className="block px-4 py-3 text-base font-medium bg-gray-900 text-white rounded-lg mt-4 text-center hover:bg-gray-800 transition-colors cursor-pointer"
+              >
+                Order Online
+              </span>
+            </Link>
           </div>
         </div>
       )}

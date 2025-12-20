@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Link } from "wouter";
 
 export default function Hero() {
   const scrollToSection = (sectionId: string) => {
@@ -49,7 +50,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section id="home" className="relative h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden">
       {/* Hero background image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
@@ -67,20 +68,17 @@ export default function Hero() {
         <p className="text-xl md:text-2xl mb-8 font-light">
           From food truck to restaurant - Florida's best pancakes & gourmet burgers
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button 
-            onClick={() => scrollToSection('menu')}
-            className="bg-gray-900 text-white py-3 rounded-sm font-semibold text-lg hover:bg-gray-800 transition-all transform hover:scale-105"
-            style={{ width: '196px', paddingLeft: '32px', paddingRight: '32px' }}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full px-4 sm:px-0">
+          <Link href="/full-menu">
+            <a className="bg-gray-900 text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-gray-800 hover:shadow-lg transition-all w-full sm:w-auto min-w-[180px] text-center block">
+              Order Online
+            </a>
+          </Link>
+          <div
+            id="resyButtonHero"
+            className="border-2 border-white text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 hover:shadow-lg transition-all cursor-pointer text-center flex items-center justify-center w-full sm:w-auto min-w-[180px]"
           >
-            View Menu
-          </button>
-          <div 
-            id="resyButtonHero" 
-            className="border-2 border-white text-white py-3 rounded-sm font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all cursor-pointer text-center flex items-center justify-center"
-            style={{ width: '196px', paddingLeft: '32px', paddingRight: '32px' }}
-          >
-            Make Reservation
+            Reserve Table
           </div>
         </div>
       </div>
