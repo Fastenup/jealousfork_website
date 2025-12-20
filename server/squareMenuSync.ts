@@ -101,6 +101,17 @@ export class SquareMenuSyncService {
         console.log(`Found ${categoryMap.size} Square categories`);
       }
 
+      // Log first item's category fields for debugging
+      if (itemsData.objects && itemsData.objects.length > 0) {
+        const sampleItem = itemsData.objects[0].item_data;
+        console.log('Sample item category fields:', {
+          name: sampleItem?.name,
+          category_id: sampleItem?.category_id,
+          categories: sampleItem?.categories,
+          reporting_category: sampleItem?.reporting_category
+        });
+      }
+
       return (itemsData.objects || []).map((item: any) => {
         const itemData = item.item_data;
         const firstVariation = itemData?.variations?.[0];

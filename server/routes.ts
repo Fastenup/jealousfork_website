@@ -186,6 +186,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Debug endpoint to see raw Square category data
+  app.get('/api/debug/square-categories', async (req, res) => {
+    try {
+      const accessToken = process.env.SQUARE_ACCESS_TOKEN;
+      if (!accessToken) {
+        return res.status(500).json({ error: 'Square API not configured' });
+      }
+
+      const environment = accessToken.startsWith('sandbox') ? 'sandbox' : 'production';
+      const baseUrl = environment === 'sandbox'
+        ? 'https://connect.squareupsandbox.com'
+        : 'https://connect.squareup.com';
+
+      // Fetch categories and a sample item
+      const [categoriesRes, itemsRes] = await Promise.all([
+        fetch(`${baseUrl}/v2/catalog/list?types=CATEGORY`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Square-Version': '2024-06-04',
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch(`${baseUrl}/v2/catalog/list?types=ITEM`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Square-Version': '2024-06-04',
+            'Content-Type': 'application/json'
+          }
+        })
+      ]);
+
+      const categoriesData = await categoriesRes.json();
+      const itemsData = await itemsRes.json();
+
+      // Get sample items with their category fields
+      const sampleItems = (itemsData.objects || []).slice(0, 5).map((item: any) => ({
+        name: item.item_data?.name,
+        category_id: item.item_data?.category_id,
+        categories: item.item_data?.categories,
+        reporting_category: item.item_data?.reporting_category
+      }));
+
+      const categories = (categoriesData.objects || []).map((cat: any) => ({
+        id: cat.id,
+        name: cat.category_data?.name
+      }));
+
+      res.json({
+        categories,
+        sampleItems,
+        categoryCount: categories.length,
+        itemCount: itemsData.objects?.length || 0
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Get all menu items with Square API integration and sync
   app.get('/api/menu', async (req, res) => {
     try {
