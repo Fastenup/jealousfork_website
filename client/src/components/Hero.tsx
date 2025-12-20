@@ -70,7 +70,7 @@ export default function Hero() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full px-4 sm:px-0">
           <Link href="/full-menu">
-            <a className="bg-gray-900 text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-gray-800 hover:shadow-lg transition-all w-full sm:w-auto min-w-[180px] text-center block">
+            <a className="bg-gray-900 text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-gray-800 hover:shadow-lg transition-all w-full sm:w-auto min-w-[180px] text-center block border-2 border-gray-900">
               Order Online
             </a>
           </Link>
@@ -81,13 +81,6 @@ export default function Hero() {
             Reserve Table
           </div>
         </div>
-      </div>
-      
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-        </svg>
       </div>
     </section>
   );
