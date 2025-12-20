@@ -1,0 +1,370 @@
+import { useEffect } from "react";
+import { Link } from "wouter";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { useCart } from "@/contexts/CartContext";
+import { jealousBurgerMenuItems } from "@/data/jealousBurgerMenuData";
+
+// Burger-specific structured data for SEO
+const burgerSchema = {
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Jealous Burger",
+  "alternateName": "Jealous Fork Burgers",
+  "image": "https://jealousfork.com/images/food/jesse-james-burger.jpg",
+  "description": "Miami's best gourmet burgers. Classic patties with creative toppings, served Friday and Saturday nights. From The Classic to our signature Jesse James burger.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "14417 SW 42nd St",
+    "addressLocality": "Miami",
+    "addressRegion": "FL",
+    "postalCode": "33175",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 25.7323,
+    "longitude": -80.4168
+  },
+  "url": "https://jealousfork.com/burgers",
+  "telephone": "(305) 699-1430",
+  "servesCuisine": ["Burgers", "American", "Gourmet Burgers"],
+  "priceRange": "$$",
+  "acceptsReservations": "True",
+  "menu": "https://jealousfork.com/burgers",
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "21:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "21:00" }
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.7",
+    "reviewCount": "400",
+    "bestRating": "5"
+  },
+  "hasMenu": {
+    "@type": "Menu",
+    "name": "Gourmet Burger Menu",
+    "hasMenuSection": {
+      "@type": "MenuSection",
+      "name": "Gourmet Burgers",
+      "hasMenuItem": [
+        { "@type": "MenuItem", "name": "The Classic", "description": "Cheddar Cheese, That Secret Sauce, Tomato, Onion, Spring Greens", "offers": { "@type": "Offer", "price": "13", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "Jesse James", "description": "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "La La Land", "description": "Guac, Tomato, Cilantro, Sunflower Seeds, Dried Cranberries, White Cheddar, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "The Devil's Advocate", "description": "Smokehouse Chili, Cheddar Cheese, Hot Hot Shake First, Fried Egg", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "Lé French", "description": "Brie Cheese, Caramelized Onions, Framboise, Spring Greens", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "The OG JB", "description": "Pickled Onions, Smoked Gouda, Tomato-Poblano Jam", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "Billie Holiday", "description": "Maytag Blue Cheese, Caramelized Onions, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "Que Bola Meng", "description": "Guava & Queso, Caramelized Onions, Papitas", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "VEGburger", "description": "Black Bean-Chipotle Patty, Aged White Cheddar, Tomato, Onion, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } }
+      ]
+    }
+  }
+};
+
+export default function BurgersPage() {
+  const { addItem } = useCart();
+  const burgers = jealousBurgerMenuItems.filter(item => item.category === 'burgers');
+
+  useEffect(() => {
+    // Set page title and meta tags
+    document.title = "Best Gourmet Burgers in Miami | Jealous Burger | Friday & Saturday";
+
+    // Set meta description
+    let metaDesc = document.querySelector('meta[name="description"]') as HTMLMetaElement;
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.name = 'description';
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.content = "Miami's best gourmet burgers at Jealous Burger. Classic patties with creative toppings like The Classic, Jesse James, and Que Bola Meng. Friday & Saturday 9AM-9PM. Order online or dine in at 14417 SW 42nd St.";
+
+    // Set keywords
+    let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
+    if (!metaKeywords) {
+      metaKeywords = document.createElement('meta');
+      metaKeywords.name = 'keywords';
+      document.head.appendChild(metaKeywords);
+    }
+    metaKeywords.content = "best burgers Miami, gourmet burgers Miami FL, burgers near me, classic burgers Miami, Friday night burgers, burger restaurant Miami, Jealous Burger, Miami burger joint";
+
+    // Add structured data
+    let scriptElement = document.querySelector('script[data-burger-schema]') as HTMLScriptElement;
+    if (!scriptElement) {
+      scriptElement = document.createElement('script');
+      scriptElement.type = 'application/ld+json';
+      scriptElement.setAttribute('data-burger-schema', 'true');
+      document.head.appendChild(scriptElement);
+    }
+    scriptElement.textContent = JSON.stringify(burgerSchema);
+
+    // Set canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      document.head.appendChild(canonical);
+    }
+    canonical.href = 'https://jealousfork.com/burgers';
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleAddToCart = (burger: typeof burgers[0]) => {
+    addItem({
+      id: burger.id,
+      name: burger.name,
+      price: burger.price,
+      category: 'burgers',
+      description: burger.description
+    });
+  };
+
+  return (
+    <>
+      <Navigation />
+
+      {/* Hero Section */}
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1920&h=1080&fit=crop)'
+          }}
+        ></div>
+        <div className="absolute inset-0 bg-black/60"></div>
+
+        <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
+          <h1 className="font-playfair text-4xl md:text-6xl font-bold mb-4 leading-tight">
+            Gourmet Burgers in Miami
+          </h1>
+          <p className="text-xl md:text-2xl mb-6 font-light">
+            Classic patties, creative toppings, unforgettable flavors
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link href="/full-menu">
+              <a className="bg-white text-gray-900 py-3 px-8 rounded-full font-semibold text-lg hover:bg-gray-100 transition-all">
+                Order Online
+              </a>
+            </Link>
+            <a
+              href="tel:(305)699-1430"
+              className="border-2 border-white text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all"
+            >
+              Call to Reserve
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Hours Banner */}
+      <section className="bg-gray-900 text-white py-4">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-lg">
+            <span className="font-semibold">Burger Hours:</span> Friday & Saturday 9:00 AM - 9:00 PM
+          </p>
+        </div>
+      </section>
+
+      {/* Burger Menu Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="font-playfair text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+              Our Burger Menu
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              9 gourmet burgers crafted with premium ingredients. From our classic cheeseburger to Miami-inspired creations like the Que Bola Meng.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {burgers.map((burger) => (
+              <article
+                key={burger.id}
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                itemScope
+                itemType="https://schema.org/MenuItem"
+              >
+                <img
+                  src={burger.image}
+                  alt={`${burger.name} - gourmet burger Miami`}
+                  className="w-full h-48 object-cover"
+                  loading="lazy"
+                  itemProp="image"
+                />
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3
+                      className="font-playfair text-xl font-semibold text-gray-900"
+                      itemProp="name"
+                    >
+                      {burger.name}
+                    </h3>
+                    <span
+                      className="text-2xl font-bold text-gray-900"
+                      itemProp="offers"
+                      itemScope
+                      itemType="https://schema.org/Offer"
+                    >
+                      <span itemProp="price">${burger.price}</span>
+                      <meta itemProp="priceCurrency" content="USD" />
+                    </span>
+                  </div>
+                  <p
+                    className="text-gray-600 mb-4 leading-relaxed"
+                    itemProp="description"
+                  >
+                    {burger.description}
+                  </p>
+                  <button
+                    onClick={() => handleAddToCart(burger)}
+                    className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About Jealous Burger Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold mb-6 text-gray-900">
+            About Jealous Burger
+          </h2>
+          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+            Jealous Burger is our evening concept serving Miami's best gourmet burgers every Friday and Saturday.
+            We use classic patties (not smash burgers) with creative, chef-driven toppings that range from
+            traditional American to Miami-inspired flavors like our Que Bola Meng with guava and queso.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-6">
+            <div className="p-6 bg-gray-50 rounded-xl">
+              <div className="text-3xl font-bold text-gray-900 mb-2">9</div>
+              <div className="text-gray-600">Gourmet Burgers</div>
+            </div>
+            <div className="p-6 bg-gray-50 rounded-xl">
+              <div className="text-3xl font-bold text-gray-900 mb-2">$13-17</div>
+              <div className="text-gray-600">Price Range</div>
+            </div>
+            <div className="p-6 bg-gray-50 rounded-xl">
+              <div className="text-3xl font-bold text-gray-900 mb-2">Fri-Sat</div>
+              <div className="text-gray-600">Burger Nights</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Location Section */}
+      <section className="py-16 bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="font-playfair text-3xl md:text-4xl font-bold mb-6">
+                Visit Us in Miami
+              </h2>
+              <div className="space-y-4">
+                <p className="text-lg">
+                  <strong>Address:</strong><br />
+                  14417 SW 42nd St<br />
+                  Miami, FL 33175
+                </p>
+                <p className="text-lg">
+                  <strong>Burger Hours:</strong><br />
+                  Friday & Saturday: 9:00 AM - 9:00 PM
+                </p>
+                <p className="text-lg">
+                  <strong>Phone:</strong><br />
+                  <a href="tel:(305)699-1430" className="hover:text-gray-300 transition-colors">
+                    (305) 699-1430
+                  </a>
+                </p>
+              </div>
+              <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                <a
+                  href="https://maps.google.com/?q=14417+SW+42nd+St+Miami+FL+33175"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center bg-white text-gray-900 py-3 px-6 rounded-full font-semibold hover:bg-gray-100 transition-colors"
+                >
+                  Get Directions
+                </a>
+                <Link href="/full-menu">
+                  <a className="inline-flex items-center justify-center border-2 border-white text-white py-3 px-6 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-colors">
+                    View Full Menu
+                  </a>
+                </Link>
+              </div>
+            </div>
+            <div className="h-80 rounded-xl overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3594.123456789!2d-80.4168!3d25.7323!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDQzJzU2LjMiTiA4MMKwMjQnNTkuOSJX!5e0!3m2!1sen!2sus!4v1234567890"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Jealous Burger location in Miami"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section for SEO */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-playfair text-3xl font-bold mb-8 text-center text-gray-900">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-xl shadow">
+              <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                What are the best burgers in Miami?
+              </h3>
+              <p className="text-gray-600">
+                Jealous Burger serves some of Miami's best gourmet burgers. Our most popular include the Jesse James
+                with applewood bacon and BBQ sauce, and the Que Bola Meng featuring guava and queso - a true Miami flavor.
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow">
+              <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                When is Jealous Burger open?
+              </h3>
+              <p className="text-gray-600">
+                Jealous Burger serves gourmet burgers Friday and Saturday from 9:00 AM to 9:00 PM at our Miami location
+                (14417 SW 42nd St). During the day we serve our famous artisan pancakes.
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow">
+              <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                Do you have vegetarian burger options?
+              </h3>
+              <p className="text-gray-600">
+                Yes! Our VEGburger features a black bean-chipotle patty with aged white cheddar, tomato, onion, and
+                spring greens for $16.
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow">
+              <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                Are these smash burgers?
+              </h3>
+              <p className="text-gray-600">
+                No, we serve classic gourmet patties, not smash burgers. Our burgers are thick, juicy, and cooked to
+                perfection with premium toppings.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </>
+  );
+}

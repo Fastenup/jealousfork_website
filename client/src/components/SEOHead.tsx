@@ -68,7 +68,15 @@ const restaurantSchema = {
         "@type": "MenuSection",
         "name": "Gourmet Burgers",
         "hasMenuItem": [
-          { "@type": "MenuItem", "name": "Jesse James Burger", "description": "Premium beef patty with bacon, aged cheddar, and BBQ sauce", "offers": { "@type": "Offer", "price": "18", "priceCurrency": "USD" } }
+          { "@type": "MenuItem", "name": "The Classic", "description": "Cheddar Cheese, That Secret Sauce, Tomato, Onion, Spring Greens", "offers": { "@type": "Offer", "price": "13", "priceCurrency": "USD" } },
+          { "@type": "MenuItem", "name": "Jesse James", "description": "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
+          { "@type": "MenuItem", "name": "La La Land", "description": "Guac, Tomato, Cilantro, Sunflower Seeds, Dried Cranberries, White Cheddar, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
+          { "@type": "MenuItem", "name": "The Devil's Advocate", "description": "Smokehouse Chili, Cheddar Cheese, Hot Hot Shake First, Fried Egg", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
+          { "@type": "MenuItem", "name": "Lé French", "description": "Brie Cheese, Caramelized Onions, Framboise, Spring Greens", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
+          { "@type": "MenuItem", "name": "The OG JB", "description": "Pickled Onions, Smoked Gouda, Tomato-Poblano Jam", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
+          { "@type": "MenuItem", "name": "Billie Holiday", "description": "Maytag Blue Cheese, Caramelized Onions, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
+          { "@type": "MenuItem", "name": "Que Bola Meng", "description": "Guava & Queso, Caramelized Onions, Papitas", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
+          { "@type": "MenuItem", "name": "VEGburger", "description": "Black Bean-Chipotle Patty, Aged White Cheddar, Tomato, Onion, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } }
         ]
       }
     ]
