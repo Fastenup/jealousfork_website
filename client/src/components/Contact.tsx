@@ -165,10 +165,9 @@ export default function Contact() {
                 <div>
                   <p className="font-semibold text-lg mb-2">Hours</p>
                   <div className="text-gray-600 space-y-1">
-                    <p><strong className="text-gray-900">Jealous Fork:</strong></p>
-                    <p className="ml-2">Tuesday - Sunday: 9:00 AM - 3:00 PM</p>
-                    <p><strong className="text-gray-900">Jealous Burger:</strong></p>
-                    <p className="ml-2">Friday & Saturday: 5:00 PM - 9:00 PM</p>
+                    <p className="ml-2">Tuesday - Thursday: 9:00 AM - 3:00 PM</p>
+                    <p className="ml-2">Friday & Saturday: 9:00 AM - 9:00 PM</p>
+                    <p className="ml-2">Sunday: 9:00 AM - 3:00 PM</p>
                     <p className="text-sm text-red-600 font-medium mt-2">Closed Mondays</p>
                   </div>
                 </div>
