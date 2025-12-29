@@ -867,7 +867,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }],
           fulfillments: [{
             type: orderData.orderType === 'pickup' ? 'PICKUP' : 'SHIPMENT',
-            state: 'RESERVED', // Use RESERVED instead of PROPOSED for active kitchen orders
+            state: 'PROPOSED', // Square requires PROPOSED when creating fulfillments
             pickup_details: orderData.orderType === 'pickup' ? {
               recipient: {
                 display_name: orderData.customerInfo.name,
