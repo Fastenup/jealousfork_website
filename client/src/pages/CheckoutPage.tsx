@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
@@ -135,13 +135,13 @@ export default function CheckoutPage() {
     }
   };
 
-  const handlePaymentError = (error: string) => {
+  const handlePaymentError = useCallback((error: string) => {
     toast({
       title: 'Payment Error',
       description: error,
       variant: 'destructive',
     });
-  };
+  }, [toast]);
 
   if (isLoading) {
     return (

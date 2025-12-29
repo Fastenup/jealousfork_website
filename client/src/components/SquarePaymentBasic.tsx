@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -26,6 +26,18 @@ export default function SquarePaymentBasic({
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [squareLoaded, setSquareLoaded] = useState(false);
+  const [cardReady, setCardReady] = useState(false);
+
+  // Use refs for callbacks to prevent re-initialization on callback changes
+  const onPaymentSuccessRef = useRef(onPaymentSuccess);
+  const onPaymentErrorRef = useRef(onPaymentError);
+  const isInitializedRef = useRef(false);
+
+  // Keep refs updated with latest callbacks
+  useEffect(() => {
+    onPaymentSuccessRef.current = onPaymentSuccess;
+    onPaymentErrorRef.current = onPaymentError;
+  });
 
   useEffect(() => {
     const loadSquareSDK = async () => {
@@ -50,79 +62,87 @@ export default function SquarePaymentBasic({
         
         script.onerror = () => {
           console.error('Failed to load Square SDK');
-          onPaymentError('Failed to load payment system');
+          onPaymentErrorRef.current('Failed to load payment system');
           setIsLoading(false);
         };
 
         document.head.appendChild(script);
       } catch (error) {
         console.error('Error loading Square SDK:', error);
-        onPaymentError('Payment system initialization failed');
+        onPaymentErrorRef.current('Payment system initialization failed');
         setIsLoading(false);
       }
     };
 
     loadSquareSDK();
-  }, [onPaymentError]);
+  }, []); // Empty deps - SDK loads once
 
   useEffect(() => {
     if (!squareLoaded) return;
 
+    // Prevent re-initialization if already initialized
+    if (isInitializedRef.current) {
+      console.log('Square card already initialized, skipping');
+      return;
+    }
+
     const initializeSquarePayments = async () => {
       try {
         console.log('Initializing Square payments with ID:', applicationId, 'Location:', locationId);
-        
+
         // Wait for DOM to be ready
         await new Promise(resolve => setTimeout(resolve, 200));
-        
-        // Clear any existing Square card instance
-        if ((window as any).squareCard) {
-          try {
-            await (window as any).squareCard.destroy();
-          } catch (e) {
-            console.log('No existing card to destroy');
-          }
+
+        // Check if already initialized (double-check)
+        if ((window as any).squareCard && isInitializedRef.current) {
+          console.log('Square card already exists, skipping initialization');
+          return;
         }
-        
+
         // Check if container exists
         const container = document.getElementById('square-card-form');
         if (!container) {
           console.error('Square container not found in DOM');
           throw new Error('Square container not found');
         }
-        
+
         console.log('Container found, initializing Square payments...');
-        
+
         // Initialize payments
         const payments = window.Square.payments(applicationId, locationId);
         console.log('Square payments object created');
-        
+
         // Create card payment method - minimal styling to avoid selector errors
         const card = await payments.card();
         console.log('Square card object created');
-        
-        // Clear container first
-        container.innerHTML = '';
-        
-        // Attach to the card container
-        await card.attach('#square-card-form');
-        console.log('Square payment form attached successfully');
-        
-        // Store card instance for payment processing
-        (window as any).squareCard = card;
-        
+
+        // Only clear and attach if not already initialized
+        if (!isInitializedRef.current) {
+          // Clear container first
+          container.innerHTML = '';
+
+          // Attach to the card container
+          await card.attach('#square-card-form');
+          console.log('Square payment form attached successfully');
+
+          // Store card instance for payment processing
+          (window as any).squareCard = card;
+          isInitializedRef.current = true;
+          setCardReady(true);
+        }
+
       } catch (error: any) {
         console.error('Square initialization error:', error);
-        onPaymentError(`Payment form initialization failed: ${error?.message || 'Unknown error'}`);
+        onPaymentErrorRef.current(`Payment form initialization failed: ${error?.message || 'Unknown error'}`);
       }
     };
 
     initializeSquarePayments();
-  }, [squareLoaded, applicationId, locationId, onPaymentError]);
+  }, [squareLoaded, applicationId, locationId]); // Removed onPaymentError from deps
 
   const handlePayment = async () => {
     if (!window.Square || !(window as any).squareCard) {
-      onPaymentError('Payment system not ready');
+      onPaymentErrorRef.current('Payment system not ready');
       return;
     }
 
@@ -155,18 +175,18 @@ export default function SquarePaymentBasic({
       
       if (result.status === 'OK') {
         console.log('Payment tokenized successfully with token:', result.token.substring(0, 20) + '...');
-        onPaymentSuccess(result.token);
+        onPaymentSuccessRef.current(result.token);
       } else {
         let errorMessage = 'Payment failed';
         if (result.errors) {
           errorMessage = result.errors.map((error: any) => error.message || error.detail).join(', ');
         }
         console.error('Tokenization failed:', result.errors);
-        onPaymentError(errorMessage);
+        onPaymentErrorRef.current(errorMessage);
       }
     } catch (error) {
       console.error('Payment processing error:', error);
-      onPaymentError('Payment processing failed');
+      onPaymentErrorRef.current('Payment processing failed');
     } finally {
       setIsProcessing(false);
     }
@@ -210,9 +230,9 @@ export default function SquarePaymentBasic({
           )}
         </div>
         
-        <Button 
+        <Button
           onClick={handlePayment}
-          disabled={isProcessing || !squareLoaded}
+          disabled={isProcessing || !squareLoaded || !cardReady}
           className="w-full"
           size="lg"
         >
