@@ -34,7 +34,7 @@ Allow: /
 User-agent: LinkedInBot
 Allow: /
 
-# AI/LLM Crawlers
+# AI/LLM Crawlers - Welcome all AI search and answer engines
 User-agent: GPTBot
 Allow: /
 
@@ -49,6 +49,33 @@ Allow: /
 
 User-agent: PerplexityBot
 Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# LLMs.txt for AI-readable content
+# See: https://jealousfork.com/llms.txt
 
 # Sitemap location
 Sitemap: https://jealousfork.com/sitemap.xml

@@ -10,23 +10,31 @@ import { localAreas } from "@/data/localAreas";
 export default function LocalPage() {
   const params = useParams();
   const area = params.area;
-  
+
   const areaInfo = localAreas.find(loc => loc.slug === area) || {
     name: area?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Miami Area',
     slug: area || 'miami',
-    description: `Experience Miami's best artisan pancakes and gourmet burgers in ${area?.replace(/-/g, ' ')}. Jealous Fork delivers exceptional dining experiences across all Miami neighborhoods.`
+    description: `Experience Miami's best artisan pancakes and gourmet burgers in ${area?.replace(/-/g, ' ')}. Jealous Fork delivers exceptional dining experiences across all Miami neighborhoods.`,
+    distance: "nearby"
   };
 
-  const title = `Best Pancakes & Burgers in ${areaInfo.name} | Jealous Fork Miami`;
-  const description = `Craving artisan pancakes in ${areaInfo.name}? Jealous Fork serves Instagram-worthy pancakes, gourmet burgers, and exceptional breakfast in Miami, FL. Order online or visit us today!`;
+  // SEO-optimized title targeting "near me" and location-specific searches
+  const title = `Best Pancakes & Breakfast Near ${areaInfo.name} | Jealous Fork Miami FL`;
+  const description = `Looking for the best pancakes near ${areaInfo.name}? Jealous Fork serves award-winning artisan pancakes, fluffy breakfast stacks & gourmet burgers. 4.7★ Rating. Open Tue-Sun 9AM. Order online!`;
+
+  // Location-specific keywords for AI/LLM optimization
+  const keywords = `pancakes near ${areaInfo.name.toLowerCase()}, breakfast ${areaInfo.name.toLowerCase()}, brunch ${areaInfo.name.toLowerCase()}, best pancakes ${areaInfo.name.toLowerCase()} FL, breakfast near me ${areaInfo.name.toLowerCase()}, pancakes near me, brunch near me, Miami pancakes, artisan pancakes Miami`;
 
   return (
     <>
-      <SEOHead 
+      <SEOHead
         title={title}
         description={description}
         canonical={`https://jealousfork.com/near/${areaInfo.slug}`}
         ogImage="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
+        keywords={keywords}
+        includeFAQ={true}
+        areaName={areaInfo.name}
       />
       <Navigation />
       
@@ -80,12 +88,12 @@ export default function LocalPage() {
                 </p>
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="text-center p-6 bg-gray-50 rounded-xl">
-                    <div className="text-3xl font-bold text-warm-amber mb-2">15 min</div>
-                    <div className="text-gray-600">Delivery to {areaInfo.name}</div>
+                    <div className="text-3xl font-bold text-warm-amber mb-2">{areaInfo.distance || "nearby"}</div>
+                    <div className="text-gray-600">From {areaInfo.name}</div>
                   </div>
                   <div className="text-center p-6 bg-gray-50 rounded-xl">
-                    <div className="text-3xl font-bold text-warm-amber mb-2">4.5★</div>
-                    <div className="text-gray-600">Customer Rating</div>
+                    <div className="text-3xl font-bold text-warm-amber mb-2">4.7★</div>
+                    <div className="text-gray-600">Google Rating</div>
                   </div>
                 </div>
               </div>
@@ -119,10 +127,61 @@ export default function LocalPage() {
           </div>
         </section>
 
+        {/* Local FAQ Section for AI/LLM and Featured Snippets */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="font-playfair text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900">
+              Frequently Asked Questions About Pancakes Near {areaInfo.name}
+            </h2>
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                  What are the best pancakes near {areaInfo.name}?
+                </h3>
+                <p className="text-gray-600">
+                  Jealous Fork serves award-winning artisan pancakes just {areaInfo.distance || "minutes"} from {areaInfo.name}. Our most popular items include the Chocolate Oreo Chip Pancake, Peanut Butter Cup Pancake, and our signature Hot Maple Flatbread. We're known for Instagram-worthy presentations and have been featured on Telemundo National.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                  What are Jealous Fork's hours for {areaInfo.name} residents?
+                </h3>
+                <p className="text-gray-600">
+                  We're open Tuesday through Sunday from 9AM to 3PM for breakfast and brunch. On Friday and Saturday, we extend our hours to 9PM and also serve Jealous Burger (gourmet burgers from 3PM-9PM). You can enjoy both pancakes AND burgers during evening hours. We're closed on Mondays.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                  Does Jealous Fork deliver to {areaInfo.name}?
+                </h3>
+                <p className="text-gray-600">
+                  Yes! We offer delivery to {areaInfo.name} through major delivery platforms. You can also order online for pickup at jealousfork.com. Our restaurant is located at 14417 SW 42nd St, Miami, FL 33175, just {areaInfo.distance || "a short drive"} from {areaInfo.name}.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                  Does Jealous Fork have gluten-free pancakes?
+                </h3>
+                <p className="text-gray-600">
+                  Yes! We offer gluten-free pancake options for guests with dietary restrictions. Just let your server know about any allergies or dietary needs, and we'll be happy to accommodate you.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                  Is Jealous Fork good for families with kids?
+                </h3>
+                <p className="text-gray-600">
+                  Absolutely! Jealous Fork is a family-friendly restaurant perfect for {areaInfo.name} families. Kids love our creative pancake presentations, and we have options for all ages. We also have outdoor patio seating that's dog-friendly.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <MenuPreview />
         <Contact />
       </main>
-      
+
       <Footer />
     </>
   );

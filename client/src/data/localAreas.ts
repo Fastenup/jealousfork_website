@@ -7,6 +7,18 @@ export interface LocalArea {
 
 export const localAreas: LocalArea[] = [
   {
+    name: "Kendall",
+    slug: "kendall",
+    description: "Located in the heart of Kendall at 14417 SW 42nd St, Jealous Fork is your neighborhood's favorite breakfast and brunch destination. We serve award-winning artisan pancakes, fluffy Japanese-style stacks, and gourmet burgers that have made us famous across Miami. Whether you're searching for the best pancakes near you or a perfect brunch spot in Kendall, we're right here in your community.",
+    distance: "5 min"
+  },
+  {
+    name: "West Kendall",
+    slug: "west-kendall",
+    description: "West Kendall's premier breakfast and brunch destination is just minutes away. Our award-winning artisan pancakes and gourmet burgers bring families together. From fluffy pancakes to Instagram-worthy breakfast creations, Jealous Fork delivers an exceptional dining experience worth the short drive from West Kendall.",
+    distance: "15 min"
+  },
+  {
     name: "Edgewater",
     slug: "edgewater",
     description: "Located right in the heart of Edgewater, we're Miami's original artisan pancake restaurant serving our local neighborhood with Instagram-worthy pancakes and gourmet burgers daily.",
@@ -78,13 +90,7 @@ export const localAreas: LocalArea[] = [
     description: "Where American breakfast classics meet Miami's cultural heart. Our thoughtful approach respects tradition while celebrating breakfast innovation in this vibrant community.",
     distance: "20 min"
   },
-  {
-    name: "Kendall West",
-    slug: "kendall-west",
-    description: "Serving the thriving Kendall West community with our famous artisan pancakes and gourmet burgers. A perfect family dining destination for this growing suburban area.",
-    distance: "32 min"
-  },
-  {
+    {
     name: "Kendale Lakes",
     slug: "kendale-lakes",
     description: "Bringing Miami's original artisan pancake experience to Kendale Lakes families and residents. Our Instagram-worthy breakfast creations are worth the drive from this vibrant community.",
@@ -137,12 +143,6 @@ export const localAreas: LocalArea[] = [
     slug: "doral",
     description: "Bringing our award-winning breakfast experience to Doral's vibrant community. Our artisan pancakes and gourmet burgers are perfect for families and business professionals alike.",
     distance: "38 min"
-  },
-  {
-    name: "Coral Gables",
-    slug: "coral-gables",
-    description: "Serving the City Beautiful with our artisan breakfast creations. Popular with University of Miami students, faculty, and Coral Gables families seeking quality brunch experiences.",
-    distance: "25 min"
   },
   {
     name: "The Hammocks",

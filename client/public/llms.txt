@@ -1,17 +1,30 @@
 # Jealous Fork - Miami's Original Artisan Pancake Restaurant
 # https://jealousfork.com
 
-> Jealous Fork is an artisan pancake and gourmet burger restaurant in Miami, Florida.
+> Jealous Fork is an award-winning artisan pancake and gourmet burger restaurant in Miami, Florida.
 > Founded by best friends Joaquin Ortiz and Henrik Telle, it evolved from the first artisan pancake food truck in the country.
-> Located at 14417 SW 42nd St, Miami, FL 33175. Phone: (305) 699-1430
+> Located at 14417 SW 42nd St, Miami, FL 33175 (Kendall area). Phone: (305) 699-1430
+
+## Quick Facts
+- Type: Restaurant (Breakfast, Brunch, Burgers)
+- Cuisine: American, Artisan Pancakes, Gourmet Burgers
+- Price Range: $$ (Moderate, $13-$17 entrees)
+- Rating: 4.7 stars on Google (400+ reviews), 4.6 on Yelp
+- Reservations: Yes, via Resy or phone
+- Parking: Free on-site parking
+- Dog-Friendly: Yes, outdoor patio
+- Family-Friendly: Yes
+- Delivery: Yes, via major platforms
+- Online Ordering: Yes, at jealousfork.com
 
 ## About
-Jealous Fork started as the first artisan pancake food truck in the country. After tremendous success with lines stretching around the block, founders Joaquin Ortiz and Henrik Telle opened a full restaurant. Known for Instagram-worthy pancakes and featured on Telemundo National. The restaurant has a 4.7 star Google rating with over 400 reviews.
+Jealous Fork started as the first artisan pancake food truck in the country. After tremendous success with lines stretching around the block, founders Joaquin Ortiz and Henrik Telle opened a full restaurant in Miami's Kendall neighborhood. Known for Instagram-worthy pancakes and featured on Telemundo National. The restaurant has a 4.7 star Google rating with over 400 reviews.
 
 ## Location
 14417 SW 42nd St
 Miami, FL 33175
 United States
+Neighborhood: Kendall, Miami-Dade County
 
 ## Hours of Operation
 - Tuesday: 9:00 AM - 3:00 PM (Jealous Fork - Pancakes)
@@ -20,18 +33,52 @@ United States
 - Friday: 9:00 AM - 9:00 PM (Pancakes all day, Burgers 3PM-9PM)
 - Saturday: 9:00 AM - 9:00 PM (Pancakes all day, Burgers 3PM-9PM)
 - Sunday: 9:00 AM - 3:00 PM (Jealous Fork - Pancakes)
-- Monday: Closed
+- Monday: CLOSED
 
 Note: Jealous Burger operates Friday-Saturday 3PM-9PM alongside our pancake menu. You can order both pancakes AND burgers during burger hours!
 
 ## Contact
 - Phone: (305) 699-1430
 - Website: https://jealousfork.com
-- Reservations: Available through Resy
+- Menu: https://jealousfork.com/full-menu
+- Burgers: https://jealousfork.com/burgers
+- Reservations: Available through Resy or by phone
+
+## Frequently Asked Questions
+
+Q: What are Jealous Fork's hours?
+A: Tuesday-Sunday 9AM-3PM for pancakes. Friday-Saturday we extend to 9PM and serve gourmet burgers from 3PM-9PM. Closed Mondays.
+
+Q: Where is Jealous Fork located?
+A: 14417 SW 42nd St, Miami, FL 33175, in the Kendall area of Miami-Dade County.
+
+Q: Does Jealous Fork take reservations?
+A: Yes, through Resy or by calling (305) 699-1430. Walk-ins welcome but reservations recommended for weekend brunch.
+
+Q: Is there parking available?
+A: Yes, free parking lot available on-site.
+
+Q: Are dogs allowed?
+A: Yes, on our outdoor patio. We're dog-friendly!
+
+Q: Does Jealous Fork have gluten-free options?
+A: Yes, we offer gluten-free pancake options. Please inform your server.
+
+Q: Is Jealous Fork good for kids?
+A: Absolutely! We're a family-friendly restaurant with options for all ages.
+
+Q: What is Jealous Fork known for?
+A: Award-winning artisan pancakes, Instagram-worthy presentations, and being the first artisan pancake food truck in America. Featured on Telemundo National.
+
+Q: What are the best pancakes at Jealous Fork?
+A: Our most popular: Chocolate Oreo Chip Pancake ($17), Peanut Butter Cup Pancake ($17), Hot Maple Flatbread ($16), and Lemon Curd and Blueberry Pancake ($15).
+
+Q: Does Jealous Fork deliver?
+A: Yes, through major delivery platforms and online ordering at jealousfork.com.
 
 ## Menu Highlights
 
-### Signature Pancakes
+### Signature Pancakes (Available All Day)
 - Hot Maple Flatbread ($16) - Cup and char pepperoni, double cream mozzarella, and red chili-black pepper maple
 - Chocolate Oreo Chip Pancake ($17) - Crushed Oreos, chocolate chips, Oreo whipped cream, chocolate ganache
 - Peanut Butter Cup Pancake ($17) - Reese's cups, nutter butter whipped cream, peanut butter maple syrup
@@ -45,28 +92,64 @@ Miami's best gourmet burgers with classic patties (not smash burgers) and creati
 - Jesse James ($16) - Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese
 - La La Land ($16) - Guac, Tomato, Cilantro, Sunflower Seeds, Dried Cranberries, White Cheddar, Spring Greens
 - The Devil's Advocate ($17) - Smokehouse Chili, Cheddar Cheese, Hot Hot Shake First, Fried Egg
-- Lé French ($17) - Brie Cheese, Caramelized Onions, Framboise, Spring Greens
+- Le French ($17) - Brie Cheese, Caramelized Onions, Framboise, Spring Greens
 - The OG JB ($17) - Pickled Onions, Smoked Gouda, Tomato-Poblano Jam
 - Billie Holiday ($16) - Maytag Blue Cheese, Caramelized Onions, Spring Greens
 - Que Bola Meng ($16) - Guava & Queso, Caramelized Onions, Papitas (Miami-inspired!)
-- VEGburger ($16) - Black Bean-Chipotle Patty, Aged White Cheddar, Tomato, Onion, Spring Greens
+- VEGburger ($16) - Black Bean-Chipotle Patty, Aged White Cheddar, Tomato, Onion, Spring Greens (Vegetarian)
 
-## Cuisine
-American, Breakfast, Brunch, Pancakes, Gourmet Burgers
+## Dietary Options
+- Gluten-free pancakes available
+- Vegetarian burger option (VEGburger - black bean-chipotle patty)
+- Vegan options available upon request
+- Allergy accommodations - please inform your server
 
-## Price Range
-$$ (Moderate)
+## Service Areas
+We serve all Miami-Dade County neighborhoods. Distance from our restaurant:
 
-## Features
-- Dine-in available
-- Takeout available
-- Delivery available
-- Reservations accepted
-- Instagram-worthy food presentation
-- Featured on national television (Telemundo)
+**Kendall Area (Our Home):**
+- Kendall (5 min) - Our home neighborhood
+- West Kendall (15 min)
+- Kendale Lakes (30 min)
+- The Crossings (42 min)
+- The Hammocks (40 min)
+
+**West Miami-Dade:**
+- Westchester (22 min)
+- Tamiami (28 min)
+- Fontainebleau (28 min)
+- Sweetwater (35 min)
+- Doral (38 min)
+- Olympia Heights (24 min)
+- Westwood Lakes (26 min)
+- Sunset (25 min)
+
+**Greater Miami:**
+- Coral Gables (25 min)
+- Little Havana (20 min)
+- Coconut Grove (28 min)
+- Downtown Miami (12 min)
+- Brickell (18 min)
+- South Beach (25 min)
+- Aventura (35 min)
+
+## Awards & Recognition
+- Featured on Telemundo National
+- First artisan pancake food truck in the United States
+- 4.7 star Google rating (400+ reviews)
+- 4.6 star Yelp rating
+- Known as "Miami's Original Artisan Pancake Restaurant"
+
+## Social Media
+- Instagram: @jealousfork
+- TikTok: @jealousfork
 
 ## Keywords
-Miami pancakes, best pancakes in Miami, artisan pancakes Florida, gourmet burgers Miami, best burgers Miami, burger restaurant Miami FL, classic burgers Miami, Friday night burgers, Instagram food Miami, brunch Miami, breakfast Miami, Jealous Fork restaurant, Jealous Burger
+Miami pancakes, best pancakes in Miami, best pancakes in Kendall, artisan pancakes Florida, fluffy pancakes Miami, gourmet burgers Miami, best burgers Miami, burger restaurant Miami FL, classic burgers Miami, Friday night burgers, Instagram food Miami, brunch Miami, breakfast Miami, Jealous Fork restaurant, Jealous Burger, pancakes near me, breakfast near me, brunch near me, breakfast Kendall, brunch Kendall, best breakfast Miami, gluten-free pancakes Miami, dog-friendly restaurant Miami, family restaurant Miami
 
-## Burger Landing Page
-https://jealousfork.com/burgers - Dedicated page for Miami's best gourmet burgers
+## Landing Pages
+- Homepage: https://jealousfork.com
+- Full Menu: https://jealousfork.com/full-menu
+- Burgers: https://jealousfork.com/burgers
+- Kendall: https://jealousfork.com/near/kendall
+- West Kendall: https://jealousfork.com/near/west-kendall

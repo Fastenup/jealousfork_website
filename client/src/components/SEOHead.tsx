@@ -6,7 +6,81 @@ interface SEOHeadProps {
   canonical: string;
   ogImage?: string;
   keywords?: string;
+  includeFAQ?: boolean;
+  areaName?: string;
 }
+
+// FAQ Schema for AI/LLM search optimization (GEO/AEO) and featured snippets
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are Jealous Fork's hours?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Jealous Fork is open Tuesday-Sunday 9AM-3PM for pancakes and breakfast. On Friday and Saturday, we extend hours to 9PM and serve Jealous Burger (gourmet burgers from 3PM-9PM). You can order both pancakes AND burgers during evening hours. We are closed on Mondays."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is Jealous Fork located?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Jealous Fork is located at 14417 SW 42nd St, Miami, FL 33175, in the Kendall area of Miami-Dade County. We serve breakfast and brunch to all Miami neighborhoods including Kendall, West Kendall, Westchester, Doral, Coral Gables, and surrounding areas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Jealous Fork have gluten-free options?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! Jealous Fork offers gluten-free pancake options. Please inform your server about any dietary restrictions or allergies, and we'll accommodate your needs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Jealous Fork dog-friendly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Jealous Fork welcomes well-behaved dogs on our outdoor patio area. It's a great spot for brunch with your furry friend!"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Jealous Fork take reservations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Jealous Fork accepts reservations through Resy or by calling (305) 699-1430. Walk-ins are also welcome, but reservations are recommended for weekend brunch."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Jealous Fork known for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Jealous Fork is known for award-winning artisan pancakes and Instagram-worthy breakfast creations. We started as the first artisan pancake food truck in the country and are now a Miami institution. Our signature pancakes include the Chocolate Oreo Chip Pancake, Peanut Butter Cup Pancake, and Hot Maple Flatbread. We've been featured on Telemundo National and have a 4.7 star Google rating."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best pancakes at Jealous Fork?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our most popular pancakes include: 1) Chocolate Oreo Chip Pancake ($17) - crushed Oreos, chocolate chips, Oreo whipped cream, chocolate ganache. 2) Peanut Butter Cup Pancake ($17) - Reese's cups, nutter butter whipped cream, peanut butter maple syrup. 3) Hot Maple Flatbread ($16) - cup and char pepperoni, double cream mozzarella, red chili-black pepper maple. 4) Lemon Curd and Blueberry Pancake ($15) - fresh blueberries and tangy lemon curd."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Jealous Fork offer delivery?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Jealous Fork offers delivery through major delivery platforms. You can also order online for pickup directly from our website at jealousfork.com."
+      }
+    }
+  ]
+};
 
 // Restaurant structured data for AI/LLM search optimization (GEO/AEO)
 const restaurantSchema = {
@@ -88,17 +162,32 @@ export default function SEOHead({
   description,
   canonical,
   ogImage = "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630",
-  keywords = "pancakes Miami, artisan pancakes, gourmet burgers, Miami restaurant, Instagram food, pancake restaurant, food truck, Miami dining"
+  keywords = "pancakes Miami, artisan pancakes, gourmet burgers, Miami restaurant, Instagram food, pancake restaurant, food truck, Miami dining",
+  includeFAQ = true,
+  areaName
 }: SEOHeadProps) {
   useEffect(() => {
-    // Add JSON-LD structured data for AI/LLM crawlers
-    let scriptElement = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement;
-    if (!scriptElement) {
-      scriptElement = document.createElement('script');
-      scriptElement.type = 'application/ld+json';
-      document.head.appendChild(scriptElement);
+    // Add JSON-LD structured data for AI/LLM crawlers (Restaurant schema)
+    let restaurantScript = document.querySelector('script[data-schema="restaurant"]') as HTMLScriptElement;
+    if (!restaurantScript) {
+      restaurantScript = document.createElement('script');
+      restaurantScript.type = 'application/ld+json';
+      restaurantScript.setAttribute('data-schema', 'restaurant');
+      document.head.appendChild(restaurantScript);
     }
-    scriptElement.textContent = JSON.stringify(restaurantSchema);
+    restaurantScript.textContent = JSON.stringify(restaurantSchema);
+
+    // Add FAQ schema for AI answer engines and featured snippets
+    if (includeFAQ) {
+      let faqScript = document.querySelector('script[data-schema="faq"]') as HTMLScriptElement;
+      if (!faqScript) {
+        faqScript = document.createElement('script');
+        faqScript.type = 'application/ld+json';
+        faqScript.setAttribute('data-schema', 'faq');
+        document.head.appendChild(faqScript);
+      }
+      faqScript.textContent = JSON.stringify(faqSchema);
+    }
 
     // Set document title
     document.title = title;
@@ -151,7 +240,7 @@ export default function SEOHead({
     }
     canonicalLink.href = canonical;
     
-  }, [title, description, canonical, ogImage, keywords]);
+  }, [title, description, canonical, ogImage, keywords, includeFAQ, areaName]);
 
   return null;
 }

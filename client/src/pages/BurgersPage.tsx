@@ -68,26 +68,26 @@ export default function BurgersPage() {
   const burgers = jealousBurgerMenuItems.filter(item => item.category === 'burgers');
 
   useEffect(() => {
-    // Set page title and meta tags
-    document.title = "Best Gourmet Burgers in Miami | Jealous Burger | Friday & Saturday";
+    // Set page title and meta tags - optimized for CTR and AI search
+    document.title = "Best Gourmet Burgers in Kendall & Miami FL | Jealous Burger | Fri-Sat 3PM-9PM";
 
-    // Set meta description
+    // Set meta description - optimized for CTR with rating and USPs
     let metaDesc = document.querySelector('meta[name="description"]') as HTMLMetaElement;
     if (!metaDesc) {
       metaDesc = document.createElement('meta');
       metaDesc.name = 'description';
       document.head.appendChild(metaDesc);
     }
-    metaDesc.content = "Miami's best gourmet burgers at Jealous Burger. Classic patties with creative toppings like The Classic, Jesse James, and Que Bola Meng. Friday & Saturday 3PM-9PM. Pancakes still available! Order online or dine in at 14417 SW 42nd St.";
+    metaDesc.content = "Miami's best gourmet burgers from $13-$17. 9 unique creations including The Classic, Jesse James & Miami-inspired Que Bola Meng. 4.7 star Rating. Fri-Sat 3PM-9PM. Order online at Jealous Burger!";
 
-    // Set keywords
+    // Set keywords - optimized for local search and AI
     let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
     if (!metaKeywords) {
       metaKeywords = document.createElement('meta');
       metaKeywords.name = 'keywords';
       document.head.appendChild(metaKeywords);
     }
-    metaKeywords.content = "best burgers Miami, gourmet burgers Miami FL, burgers near me, classic burgers Miami, Friday night burgers, burger restaurant Miami, Jealous Burger, Miami burger joint";
+    metaKeywords.content = "best burgers Miami, gourmet burgers Miami FL, burgers near me, best burgers Kendall, burgers near Kendall, classic burgers Miami, Friday night burgers Miami, burger restaurant Miami, Jealous Burger, Miami burger joint, burgers 33175";
 
     // Add structured data
     let scriptElement = document.querySelector('script[data-burger-schema]') as HTMLScriptElement;
