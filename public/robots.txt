@@ -10,6 +10,9 @@ Disallow: /admin/
 Allow: /full-menu
 Allow: /burgers
 Allow: /near/
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /llms.txt
 
 # Bing Bot - Welcome!
 User-agent: bingbot
