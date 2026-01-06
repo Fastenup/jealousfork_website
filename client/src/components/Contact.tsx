@@ -128,165 +128,161 @@ export default function Contact() {
           <p className="text-xl text-gray-600">Located in the heart of Miami - Easy parking and accessible by public transport</p>
         </div>
         
-        {/* Contact Information and Map Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-12">
-          <h3 className="font-playfair text-2xl md:text-3xl font-semibold mb-8 text-center">Contact Information</h3>
-          
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Contact Details - Left Side */}
-            <div className="space-y-6">
-              <div className="flex items-start">
-                <svg className="w-6 h-6 text-gray-900 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-                <div>
-                  <p className="font-semibold text-lg mb-1">Address</p>
-                  <p className="text-gray-600">14417 SW 42nd Street</p>
-                  <p className="text-gray-600">Miami, FL 33175</p>
+        {/* Contact Information, Map, and Form Section */}
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Left Column - Contact Info + Map */}
+          <div className="space-y-6">
+            {/* Contact Details */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+              <h3 className="font-playfair text-2xl md:text-3xl font-semibold mb-6">Contact Information</h3>
+
+              <div className="space-y-5">
+                <div className="flex items-start">
+                  <svg className="w-6 h-6 text-gray-900 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                  <div>
+                    <p className="font-semibold text-lg mb-1">Address</p>
+                    <p className="text-gray-600">14417 SW 42nd Street</p>
+                    <p className="text-gray-600">Miami, FL 33175</p>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex items-start">
-                <svg className="w-6 h-6 text-gray-900 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                </svg>
-                <div>
-                  <p className="font-semibold text-lg mb-1">Phone</p>
-                  <a href="tel:(305)699-1430" className="text-gray-600 hover:text-gray-900 transition-colors">
-                    (305) 699-1430
-                  </a>
+
+                <div className="flex items-start">
+                  <svg className="w-6 h-6 text-gray-900 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                  </svg>
+                  <div>
+                    <p className="font-semibold text-lg mb-1">Phone</p>
+                    <a href="tel:(305)699-1430" className="text-gray-600 hover:text-gray-900 transition-colors">
+                      (305) 699-1430
+                    </a>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex items-start">
-                <svg className="w-6 h-6 text-gray-900 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <div>
-                  <p className="font-semibold text-lg mb-2">Hours</p>
-                  <OperatingHours variant="full" className="text-gray-600" />
+
+                <div className="flex items-start">
+                  <svg className="w-6 h-6 text-gray-900 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div>
+                    <p className="font-semibold text-lg mb-2">Hours</p>
+                    <OperatingHours variant="full" className="text-gray-600" />
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex items-start">
-                <svg className="w-6 h-6 text-gray-900 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
-                </svg>
-                <div>
-                  <p className="font-semibold text-lg mb-1">Email</p>
-                  <a href="mailto:hello@jealousfork.com" className="text-gray-600 hover:text-gray-900 transition-colors">
-                    hello@jealousfork.com
-                  </a>
+
+                <div className="flex items-start">
+                  <svg className="w-6 h-6 text-gray-900 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                  </svg>
+                  <div>
+                    <p className="font-semibold text-lg mb-1">Email</p>
+                    <a href="mailto:hello@jealousfork.com" className="text-gray-600 hover:text-gray-900 transition-colors">
+                      hello@jealousfork.com
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-            
-            {/* Map - Right Side */}
-            <div className="bg-gray-100 rounded-xl overflow-hidden h-[300px] lg:h-[400px]">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.7280444847775!2d-80.43037368508314!3d25.729462283679888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b92e2e4ad5f5%3A0x123456789abcdef!2s14417%20SW%2042nd%20St%2C%20Miami%2C%20FL%2033175!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus" 
-                width="100%" 
-                height="100%" 
-                style={{border:0}} 
+
+            {/* Map - Below Contact Info */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.7280444847775!2d-80.43037368508314!3d25.729462283679888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b92e2e4ad5f5%3A0x123456789abcdef!2s14417%20SW%2042nd%20St%2C%20Miami%2C%20FL%2033175!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus"
+                width="100%"
+                height="300"
+                style={{border:0}}
                 allowFullScreen={true}
-                loading="lazy" 
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Jealous Fork Location - 14417 SW 42nd Street, Miami, FL 33175"
-                className="rounded-xl"
               ></iframe>
             </div>
           </div>
-        </div>
 
-        {/* Contact Form and Additional Info */}
-        <div className="grid lg:grid-cols-2 gap-12">
-          <div className="space-y-8">
-
-            {/* Contact Form */}
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
-              <h3 className="font-playfair text-2xl font-semibold mb-6">Send Us a Message</h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                      First Name *
-                    </label>
-                    <input 
-                      type="text" 
-                      id="firstName" 
-                      name="firstName" 
-                      required 
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-warm-amber focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                      Last Name *
-                    </label>
-                    <input 
-                      type="text" 
-                      id="lastName" 
-                      name="lastName" 
-                      required 
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-warm-amber focus:border-transparent"
-                    />
-                  </div>
-                </div>
+          {/* Right Column - Contact Form */}
+          <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg h-fit">
+            <h3 className="font-playfair text-2xl md:text-3xl font-semibold mb-6">Send Us a Message</h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email *
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+                    First Name *
                   </label>
-                  <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    required 
-                    value={formData.email}
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    required
+                    value={formData.firstName}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-warm-amber focus:border-transparent"
                   />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone (Optional)
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name *
                   </label>
-                  <input 
-                    type="tel" 
-                    id="phone" 
-                    name="phone" 
-                    value={formData.phone}
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    required
+                    value={formData.lastName}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-warm-amber focus:border-transparent"
                   />
                 </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                    Message *
-                  </label>
-                  <textarea 
-                    id="message" 
-                    name="message" 
-                    rows={4} 
-                    required 
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-warm-amber focus:border-transparent"
-                  ></textarea>
-                </div>
-                <button 
-                  type="submit" 
-                  disabled={contactMutation.isPending}
-                  className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-                >
-                  {contactMutation.isPending ? 'Sending...' : 'Send Message'}
-                </button>
-              </form>
-            </div>
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  Email *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-warm-amber focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone (Optional)
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-warm-amber focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                  Message *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={4}
+                  required
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-warm-amber focus:border-transparent"
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                disabled={contactMutation.isPending}
+                className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {contactMutation.isPending ? 'Sending...' : 'Send Message'}
+              </button>
+            </form>
           </div>
         </div>
         
