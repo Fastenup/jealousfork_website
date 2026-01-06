@@ -104,10 +104,19 @@ class IPTracker {
       return false;
     }
 
-    // Tuesday-Thursday, Sunday - Day menu only (9AM-2PM)
-    if (day >= 2 && day <= 4 || day === 0) { // Tue-Thu, Sun
+    // Tuesday-Thursday - Day menu only (9AM-2PM)
+    if (day >= 2 && day <= 4) { // Tue-Thu
       const dayMenuStart = 9 * 60; // 9AM
       const dayMenuEnd = 14 * 60; // 2PM
+      if (currentTime >= dayMenuStart && currentTime < dayMenuEnd) {
+        return true;
+      }
+    }
+
+    // Sunday - Day menu (9AM-3PM)
+    if (day === 0) { // Sun
+      const dayMenuStart = 9 * 60; // 9AM
+      const dayMenuEnd = 15 * 60; // 3PM
       if (currentTime >= dayMenuStart && currentTime < dayMenuEnd) {
         return true;
       }

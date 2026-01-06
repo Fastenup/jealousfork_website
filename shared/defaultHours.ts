@@ -23,7 +23,7 @@ export const DEFAULT_HOURS: OperatingHoursData = {
     { dayOfWeek: "Thursday", opens: "09:00", closes: "14:00", isClosed: false },
     { dayOfWeek: "Friday", opens: "09:00", closes: "21:00", isClosed: false, note: "Burgers 3PM-9PM" },
     { dayOfWeek: "Saturday", opens: "09:00", closes: "21:00", isClosed: false, note: "Burgers 3PM-9PM" },
-    { dayOfWeek: "Sunday", opens: "09:00", closes: "14:00", isClosed: false },
+    { dayOfWeek: "Sunday", opens: "09:00", closes: "15:00", isClosed: false },
   ],
   lastSynced: null,
   source: 'fallback'

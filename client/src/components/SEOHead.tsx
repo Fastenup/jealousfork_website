@@ -21,7 +21,7 @@ const faqSchema = {
       "name": "What are Jealous Fork's hours?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Jealous Fork is open Tuesday-Thursday and Sunday 9AM-2PM for pancakes and breakfast. On Friday and Saturday, we're open 9AM-9PM and serve Jealous Burger (gourmet burgers from 3PM-9PM). You can order both pancakes AND burgers during evening hours. We are closed on Mondays."
+        "text": "Jealous Fork is open Tuesday-Thursday 9AM-2PM and Sunday 9AM-3PM for pancakes and breakfast. On Friday and Saturday, we're open 9AM-9PM and serve Jealous Burger (gourmet burgers from 3PM-9PM). You can order both pancakes AND burgers during evening hours. We are closed on Mondays."
       }
     },
     {
@@ -115,7 +115,7 @@ const restaurantSchema = {
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "14:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "21:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "21:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "09:00", "closes": "14:00" }
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "09:00", "closes": "15:00" }
   ],
   "aggregateRating": {
     "@type": "AggregateRating",
