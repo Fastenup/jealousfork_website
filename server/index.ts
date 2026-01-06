@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { initializeScheduledSync } from "./squareScheduler";
+import { initializeHoursSync } from "./hoursScheduler";
 import path from "path";
 import dotenv from "dotenv";
 
@@ -77,5 +78,7 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
     // Initialize Square API scheduled sync (9am and 12pm only)
     initializeScheduledSync();
+    // Initialize Google Business Profile hours sync (6am daily)
+    initializeHoursSync();
   });
 })();

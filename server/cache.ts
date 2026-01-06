@@ -84,5 +84,6 @@ export const CACHE_KEYS = {
   SQUARE_INVENTORY: 'square_inventory_',
   FEATURED_ITEMS: 'featured_items',
   MENU_CATEGORY: 'menu_category_',
-  SQUARE_STATUS: 'square_status'
+  SQUARE_STATUS: 'square_status',
+  OPERATING_HOURS: 'operating_hours'
 } as const;

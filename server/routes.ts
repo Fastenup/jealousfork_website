@@ -220,6 +220,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get operating hours (synced from Google Business Profile)
+  app.get('/api/hours', async (req, res) => {
+    try {
+      const { CACHE_KEYS, serverCache } = await import('./cache');
+      const { DEFAULT_HOURS } = await import('../shared/defaultHours');
+
+      // Check cache first
+      let hours = serverCache.get(CACHE_KEYS.OPERATING_HOURS);
+
+      if (!hours) {
+        // Return default hours if not cached (scheduler will sync from Google)
+        hours = DEFAULT_HOURS;
+      }
+
+      res.json(hours);
+    } catch (error: any) {
+      console.error('Failed to get operating hours:', error);
+      // Return fallback hours on error
+      const { DEFAULT_HOURS } = await import('../shared/defaultHours');
+      res.json(DEFAULT_HOURS);
+    }
+  });
+
+  // Admin: Manually trigger hours sync from Google Business Profile
+  app.post('/api/admin/hours/sync', async (req, res) => {
+    try {
+      const { triggerHoursSync } = await import('./hoursScheduler');
+      const result = await triggerHoursSync();
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+
+  // Admin: Get hours sync status
+  app.get('/api/admin/hours/status', async (req, res) => {
+    try {
+      const { isGoogleBusinessConfigured } = await import('./googleBusinessService');
+      const { CACHE_KEYS, serverCache } = await import('./cache');
+
+      const cachedHours = serverCache.get(CACHE_KEYS.OPERATING_HOURS);
+
+      res.json({
+        configured: isGoogleBusinessConfigured(),
+        lastSynced: cachedHours?.lastSynced || null,
+        source: cachedHours?.source || 'not_synced',
+        nextSync: '6:00 AM daily'
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Debug endpoint to see raw Square category data
   app.get('/api/debug/square-categories', async (req, res) => {
     try {

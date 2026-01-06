@@ -1,6 +1,9 @@
 // IP-based visitor tracking to minimize Square API calls
 // Only pull fresh data for new IPs after 1-hour cooldown + store hours check
 
+import { serverCache, CACHE_KEYS } from './cache';
+import type { OperatingHoursData } from '../shared/defaultHours';
+
 interface IPVisit {
   firstVisit: number;
   lastApiCall: number;
@@ -65,8 +68,34 @@ class IPTracker {
     const minutes = now.getMinutes();
     const currentTime = hour * 60 + minutes; // Convert to minutes since midnight
 
+    // Try to get hours from cache (synced from Google Business Profile)
+    const cachedHours = serverCache.get<OperatingHoursData>(CACHE_KEYS.OPERATING_HOURS);
+
+    if (cachedHours) {
+      // Use cached hours from Google Business Profile
+      const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const todayName = daysOfWeek[day];
+      const todayHours = cachedHours.regular.find(d => d.dayOfWeek === todayName);
+
+      if (!todayHours || todayHours.isClosed) {
+        return false;
+      }
+
+      if (todayHours.opens && todayHours.closes) {
+        const [openHour, openMin] = todayHours.opens.split(':').map(Number);
+        const [closeHour, closeMin] = todayHours.closes.split(':').map(Number);
+        const openTime = openHour * 60 + openMin;
+        const closeTime = closeHour * 60 + closeMin;
+
+        return currentTime >= openTime && currentTime < closeTime;
+      }
+
+      return false;
+    }
+
+    // Fallback to hardcoded hours if cache is empty
     // Store hours:
-    // Jealous Fork (day menu): Tue-Sun 9AM-3PM
+    // Jealous Fork (day menu): Tue-Thu, Sun 9AM-2PM
     // Jealous Burger (evening menu): Fri-Sat 3PM-9PM (pancakes still available!)
     // Closed Mondays
 
@@ -75,10 +104,10 @@ class IPTracker {
       return false;
     }
 
-    // Tuesday-Thursday, Sunday - Day menu only (9AM-3PM)
+    // Tuesday-Thursday, Sunday - Day menu only (9AM-2PM)
     if (day >= 2 && day <= 4 || day === 0) { // Tue-Thu, Sun
       const dayMenuStart = 9 * 60; // 9AM
-      const dayMenuEnd = 15 * 60; // 3PM
+      const dayMenuEnd = 14 * 60; // 2PM
       if (currentTime >= dayMenuStart && currentTime < dayMenuEnd) {
         return true;
       }

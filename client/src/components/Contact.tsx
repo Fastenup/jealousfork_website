@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import OperatingHours from "@/components/OperatingHours";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -164,13 +165,7 @@ export default function Contact() {
                 </svg>
                 <div>
                   <p className="font-semibold text-lg mb-2">Hours</p>
-                  <div className="text-gray-600 space-y-1">
-                    <p className="ml-2">Tuesday - Thursday: 9:00 AM - 3:00 PM</p>
-                    <p className="ml-2">Friday & Saturday: 9:00 AM - 9:00 PM</p>
-                    <p className="ml-2 text-sm text-gray-500">(Burgers available 3PM-9PM, Pancakes all day)</p>
-                    <p className="ml-2">Sunday: 9:00 AM - 3:00 PM</p>
-                    <p className="text-sm text-red-600 font-medium mt-2">Closed Mondays</p>
-                  </div>
+                  <OperatingHours variant="full" className="text-gray-600" />
                 </div>
               </div>
               

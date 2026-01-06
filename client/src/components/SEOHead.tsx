@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useOperatingHours, getOpeningHoursSpecification } from "@/hooks/useOperatingHours";
 
 interface SEOHeadProps {
   title: string;
@@ -20,7 +21,7 @@ const faqSchema = {
       "name": "What are Jealous Fork's hours?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Jealous Fork is open Tuesday-Sunday 9AM-3PM for pancakes and breakfast. On Friday and Saturday, we extend hours to 9PM and serve Jealous Burger (gourmet burgers from 3PM-9PM). You can order both pancakes AND burgers during evening hours. We are closed on Mondays."
+        "text": "Jealous Fork is open Tuesday-Thursday and Sunday 9AM-2PM for pancakes and breakfast. On Friday and Saturday, we're open 9AM-9PM and serve Jealous Burger (gourmet burgers from 3PM-9PM). You can order both pancakes AND burgers during evening hours. We are closed on Mondays."
       }
     },
     {
@@ -109,12 +110,12 @@ const restaurantSchema = {
   "acceptsReservations": "True",
   "menu": "https://jealousfork.com/full-menu",
   "openingHoursSpecification": [
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "15:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "15:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "15:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "14:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "14:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "14:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "21:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "21:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "09:00", "closes": "15:00" }
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "09:00", "closes": "14:00" }
   ],
   "aggregateRating": {
     "@type": "AggregateRating",
@@ -166,7 +167,16 @@ export default function SEOHead({
   includeFAQ = true,
   areaName
 }: SEOHeadProps) {
+  // Fetch dynamic operating hours
+  const { data: hours } = useOperatingHours();
+
   useEffect(() => {
+    // Generate dynamic restaurant schema with current hours
+    const dynamicRestaurantSchema = {
+      ...restaurantSchema,
+      openingHoursSpecification: hours ? getOpeningHoursSpecification(hours) : restaurantSchema.openingHoursSpecification
+    };
+
     // Add JSON-LD structured data for AI/LLM crawlers (Restaurant schema)
     let restaurantScript = document.querySelector('script[data-schema="restaurant"]') as HTMLScriptElement;
     if (!restaurantScript) {
@@ -175,7 +185,7 @@ export default function SEOHead({
       restaurantScript.setAttribute('data-schema', 'restaurant');
       document.head.appendChild(restaurantScript);
     }
-    restaurantScript.textContent = JSON.stringify(restaurantSchema);
+    restaurantScript.textContent = JSON.stringify(dynamicRestaurantSchema);
 
     // Add FAQ schema for AI answer engines and featured snippets
     if (includeFAQ) {
@@ -240,7 +250,7 @@ export default function SEOHead({
     }
     canonicalLink.href = canonical;
     
-  }, [title, description, canonical, ogImage, keywords, includeFAQ, areaName]);
+  }, [title, description, canonical, ogImage, keywords, includeFAQ, areaName, hours]);
 
   return null;
 }
