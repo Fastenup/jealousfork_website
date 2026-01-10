@@ -74,12 +74,15 @@ export default function Hero() {
               Order Online
             </a>
           </Link>
-          <div
+          <a
             id="resyButtonHero"
+            href="https://resy.com/cities/miami-fl/venues/jealous-fork"
+            target="_blank"
+            rel="noopener noreferrer"
             className="border-2 border-white text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 hover:shadow-lg transition-all cursor-pointer text-center flex items-center justify-center w-full sm:w-auto min-w-[180px]"
           >
             Reserve Table
-          </div>
+          </a>
         </div>
       </div>
     </section>
