@@ -1,71 +1,97 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useCart } from "@/contexts/CartContext";
-import { jealousBurgerMenuItems } from "@/data/jealousBurgerMenuData";
 
-// Burger-specific structured data for SEO
-const burgerSchema = {
-  "@context": "https://schema.org",
-  "@type": "Restaurant",
-  "name": "Jealous Burger",
-  "alternateName": "Jealous Fork Burgers",
-  "image": "https://jealousfork.com/images/food/jesse-james-burger.jpg",
-  "description": "Miami's best gourmet burgers. Classic patties with creative toppings, served Friday and Saturday nights. From The Classic to our signature Jesse James burger.",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "14417 SW 42nd St",
-    "addressLocality": "Miami",
-    "addressRegion": "FL",
-    "postalCode": "33175",
-    "addressCountry": "US"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": 25.7323,
-    "longitude": -80.4168
-  },
-  "url": "https://jealousfork.com/burgers",
-  "telephone": "(305) 699-1430",
-  "servesCuisine": ["Burgers", "American", "Gourmet Burgers"],
-  "priceRange": "$$",
-  "acceptsReservations": "True",
-  "menu": "https://jealousfork.com/burgers",
-  "openingHoursSpecification": [
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "15:00", "closes": "21:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "15:00", "closes": "21:00" }
-  ],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.7",
-    "reviewCount": "400",
-    "bestRating": "5"
-  },
-  "hasMenu": {
-    "@type": "Menu",
-    "name": "Gourmet Burger Menu",
-    "hasMenuSection": {
-      "@type": "MenuSection",
-      "name": "Gourmet Burgers",
-      "hasMenuItem": [
-        { "@type": "MenuItem", "name": "The Classic", "description": "Cheddar Cheese, That Secret Sauce, Tomato, Onion, Spring Greens", "offers": { "@type": "Offer", "price": "13", "priceCurrency": "USD" } },
-        { "@type": "MenuItem", "name": "Jesse James", "description": "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
-        { "@type": "MenuItem", "name": "La La Land", "description": "Guac, Tomato, Cilantro, Sunflower Seeds, Dried Cranberries, White Cheddar, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
-        { "@type": "MenuItem", "name": "The Devil's Advocate", "description": "Smokehouse Chili, Cheddar Cheese, Hot Hot Shake First, Fried Egg", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
-        { "@type": "MenuItem", "name": "Lé French", "description": "Brie Cheese, Caramelized Onions, Framboise, Spring Greens", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
-        { "@type": "MenuItem", "name": "The OG JB", "description": "Pickled Onions, Smoked Gouda, Tomato-Poblano Jam", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
-        { "@type": "MenuItem", "name": "Billie Holiday", "description": "Maytag Blue Cheese, Caramelized Onions, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
-        { "@type": "MenuItem", "name": "Que Bola Meng", "description": "Guava & Queso, Caramelized Onions, Papitas", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
-        { "@type": "MenuItem", "name": "VEGburger", "description": "Black Bean-Chipotle Patty, Aged White Cheddar, Tomato, Onion, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } }
-      ]
+interface MenuItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  inStock: boolean;
+  imageUrl?: string;
+}
+
+// Default fallback image for burgers
+const fallbackImage = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop&crop=center';
+
+// Generate dynamic burger schema from menu data
+function generateBurgerSchema(burgers: MenuItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Jealous Burger",
+    "alternateName": "Jealous Fork Burgers",
+    "image": "https://jealousfork.com/images/food/jesse-james-burger.jpg",
+    "description": "Miami's best gourmet burgers. Classic patties with creative toppings, served Friday and Saturday nights. From The Classic to our signature Jesse James burger.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "14417 SW 42nd St",
+      "addressLocality": "Miami",
+      "addressRegion": "FL",
+      "postalCode": "33175",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 25.7323,
+      "longitude": -80.4168
+    },
+    "url": "https://jealousfork.com/burgers",
+    "telephone": "(305) 699-1430",
+    "servesCuisine": ["Burgers", "American", "Gourmet Burgers"],
+    "priceRange": "$$",
+    "acceptsReservations": "True",
+    "menu": "https://jealousfork.com/burgers",
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "15:00", "closes": "21:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "15:00", "closes": "21:00" }
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.7",
+      "reviewCount": "400",
+      "bestRating": "5"
+    },
+    "hasMenu": {
+      "@type": "Menu",
+      "name": "Gourmet Burger Menu",
+      "hasMenuSection": {
+        "@type": "MenuSection",
+        "name": "Gourmet Burgers",
+        "hasMenuItem": burgers.map(burger => ({
+          "@type": "MenuItem",
+          "name": burger.name,
+          "description": burger.description,
+          "offers": {
+            "@type": "Offer",
+            "price": burger.price.toString(),
+            "priceCurrency": "USD"
+          }
+        }))
+      }
     }
-  }
-};
+  };
+}
 
 export default function BurgersPage() {
   const { addItem } = useCart();
-  const burgers = jealousBurgerMenuItems.filter(item => item.category === 'burgers');
+
+  // Fetch menu from Square API
+  const { data: menuData, isLoading } = useQuery({
+    queryKey: ['/api/menu'],
+    refetchInterval: false,
+  });
+
+  // Filter for burgers category from Square data
+  const menuItems: MenuItem[] = menuData?.items || [];
+  const burgers = menuItems.filter(item => item.category?.toLowerCase() === 'burgers');
+
+  // Generate dynamic schema based on actual menu data
+  const burgerSchema = useMemo(() => generateBurgerSchema(burgers), [burgers]);
 
   useEffect(() => {
     // Set page title and meta tags - optimized for CTR and AI search
@@ -78,7 +104,7 @@ export default function BurgersPage() {
       metaDesc.name = 'description';
       document.head.appendChild(metaDesc);
     }
-    metaDesc.content = "Miami's best gourmet burgers from $13-$17. 9 unique creations including The Classic, Jesse James & Miami-inspired Que Bola Meng. 4.7 star Rating. Fri-Sat 3PM-9PM. Order online at Jealous Burger!";
+    metaDesc.content = "Miami's best gourmet burgers. Unique creations including The Classic, Jesse James & Miami-inspired Que Bola Meng. 4.7 star Rating. Fri-Sat 3PM-9PM. Order online at Jealous Burger!";
 
     // Set keywords - optimized for local search and AI
     let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
@@ -88,16 +114,6 @@ export default function BurgersPage() {
       document.head.appendChild(metaKeywords);
     }
     metaKeywords.content = "best burgers Miami, gourmet burgers Miami FL, burgers near me, best burgers Kendall, burgers near Kendall, classic burgers Miami, Friday night burgers Miami, burger restaurant Miami, Jealous Burger, Miami burger joint, burgers 33175";
-
-    // Add structured data
-    let scriptElement = document.querySelector('script[data-burger-schema]') as HTMLScriptElement;
-    if (!scriptElement) {
-      scriptElement = document.createElement('script');
-      scriptElement.type = 'application/ld+json';
-      scriptElement.setAttribute('data-burger-schema', 'true');
-      document.head.appendChild(scriptElement);
-    }
-    scriptElement.textContent = JSON.stringify(burgerSchema);
 
     // Set canonical URL
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
@@ -112,13 +128,28 @@ export default function BurgersPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleAddToCart = (burger: typeof burgers[0]) => {
+  // Update schema when burgers data changes
+  useEffect(() => {
+    if (burgers.length > 0) {
+      let scriptElement = document.querySelector('script[data-burger-schema]') as HTMLScriptElement;
+      if (!scriptElement) {
+        scriptElement = document.createElement('script');
+        scriptElement.type = 'application/ld+json';
+        scriptElement.setAttribute('data-burger-schema', 'true');
+        document.head.appendChild(scriptElement);
+      }
+      scriptElement.textContent = JSON.stringify(burgerSchema);
+    }
+  }, [burgerSchema, burgers.length]);
+
+  const handleAddToCart = (burger: MenuItem) => {
     addItem({
       id: burger.id,
       name: burger.name,
       price: burger.price,
-      category: 'burgers',
-      description: burger.description
+      quantity: 1,
+      squareId: burger.id,
+      inStock: burger.inStock
     });
   };
 
