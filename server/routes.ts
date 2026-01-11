@@ -413,8 +413,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ? 'https://connect.squareupsandbox.com'
           : 'https://connect.squareup.com';
 
-        // Fetch items and categories in parallel
-        const [itemsResponse, categoriesResponse] = await Promise.all([
+        // Fetch items, categories, and images in parallel
+        const [itemsResponse, categoriesResponse, imagesResponse] = await Promise.all([
           fetch(`${baseUrl}/v2/catalog/list?types=ITEM`, {
             method: 'GET',
             headers: {
@@ -424,6 +424,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }),
           fetch(`${baseUrl}/v2/catalog/list?types=CATEGORY`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Square-Version': '2024-06-04',
+              'Content-Type': 'application/json'
+            }
+          }),
+          fetch(`${baseUrl}/v2/catalog/list?types=IMAGE`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${accessToken}`,
@@ -443,6 +451,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
             (catData.objects || []).forEach((cat: any) => {
               if (cat.category_data?.name) {
                 categoryMap.set(cat.id, cat.category_data.name);
+              }
+            });
+          }
+
+          // Build image map from Square images
+          const imageMap = new Map<string, string>();
+          if (imagesResponse.ok) {
+            const imgData = await imagesResponse.json();
+            (imgData.objects || []).forEach((img: any) => {
+              if (img.image_data?.url) {
+                imageMap.set(img.id, img.image_data.url);
               }
             });
           }
@@ -474,6 +493,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
               categoryName = categoryMap.get(categoryId)!;
             }
 
+            // Get image URL from Square images
+            let imageUrl: string | undefined;
+            const imageIds = itemData?.image_ids || [];
+            for (const imageId of imageIds) {
+              const url = imageMap.get(imageId);
+              if (url) {
+                imageUrl = url;
+                break;
+              }
+            }
+
             return {
               id: item.id,
               name: itemData?.name || 'Unknown Item',
@@ -481,7 +511,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               price: price / 100,
               category: categoryName,
               categoryId: categoryId,
-              inStock: true
+              inStock: true,
+              imageUrl: imageUrl
             };
           }) || [];
 
