@@ -70,7 +70,7 @@ export default function Hero() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full px-4 sm:px-0">
           <Link href="/full-menu">
-            <a className="bg-gray-900 text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-gray-800 hover:shadow-lg transition-all w-full sm:w-auto min-w-[180px] text-center block border-2 border-gray-900">
+            <a className="bg-gray-900 text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-gray-800 hover:shadow-lg transition-all w-full sm:w-auto min-w-[180px] text-center flex items-center justify-center border-2 border-gray-900">
               Order Online
             </a>
           </Link>
@@ -79,7 +79,7 @@ export default function Hero() {
             href="https://resy.com/cities/miami-fl/venues/jealous-fork"
             target="_blank"
             rel="noopener noreferrer"
-            className="border-2 border-white text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 hover:shadow-lg transition-all cursor-pointer text-center flex items-center justify-center w-full sm:w-auto min-w-[180px]"
+            className="border-2 border-white text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 hover:shadow-lg transition-all w-full sm:w-auto min-w-[180px] text-center flex items-center justify-center"
           >
             Reserve Table
           </a>
