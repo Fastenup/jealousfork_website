@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/Navigation";
@@ -208,9 +208,25 @@ export default function BurgersPage() {
               Our Burger Menu
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              9 gourmet burgers crafted with premium ingredients. From our classic cheeseburger to Miami-inspired creations like the Que Bola Meng.
+              Gourmet burgers crafted with premium ingredients. From our classic cheeseburger to Miami-inspired creations like the Que Bola Meng.
             </p>
           </div>
+
+          {/* Loading State */}
+          {isLoading && (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+              <p className="mt-4 text-gray-600">Loading menu...</p>
+            </div>
+          )}
+
+          {/* No Burgers State */}
+          {!isLoading && burgers.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg">No burgers available at this time.</p>
+              <p className="text-gray-500 mt-2">Please check back later or view our full menu.</p>
+            </div>
+          )}
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {burgers.map((burger) => (
@@ -221,11 +237,14 @@ export default function BurgersPage() {
                 itemType="https://schema.org/MenuItem"
               >
                 <img
-                  src={burger.image}
+                  src={burger.imageUrl || fallbackImage}
                   alt={`${burger.name} - gourmet burger Miami`}
                   className="w-full h-48 object-cover"
                   loading="lazy"
                   itemProp="image"
+                  onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                    e.currentTarget.src = fallbackImage;
+                  }}
                 />
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-3">
@@ -272,17 +291,21 @@ export default function BurgersPage() {
           </h2>
           <p className="text-lg text-gray-600 mb-8 leading-relaxed">
             Jealous Burger is our evening concept at Jealous Fork, expanding our menu every Friday and Saturday from 3PM-9PM.
-            We brought the same creativity from our award-winning pancakes to craft 9 unique gourmet burgers with chef-driven toppings.
+            We brought the same creativity from our award-winning pancakes to craft unique gourmet burgers with chef-driven toppings.
             From traditional American classics to Miami-inspired flavors like our Que Bola Meng with guava and queso.
             And yes, you can still order our famous pancakes during burger hours!
           </p>
           <div className="grid sm:grid-cols-3 gap-6">
             <div className="p-6 bg-gray-50 rounded-xl">
-              <div className="text-3xl font-bold text-gray-900 mb-2">9</div>
+              <div className="text-3xl font-bold text-gray-900 mb-2">{burgers.length || '-'}</div>
               <div className="text-gray-600">Gourmet Burgers</div>
             </div>
             <div className="p-6 bg-gray-50 rounded-xl">
-              <div className="text-3xl font-bold text-gray-900 mb-2">$13-17</div>
+              <div className="text-3xl font-bold text-gray-900 mb-2">
+                {burgers.length > 0
+                  ? `$${Math.min(...burgers.map(b => b.price))}-${Math.max(...burgers.map(b => b.price))}`
+                  : '-'}
+              </div>
               <div className="text-gray-600">Price Range</div>
             </div>
             <div className="p-6 bg-gray-50 rounded-xl">
