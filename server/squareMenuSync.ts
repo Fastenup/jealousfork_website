@@ -1,6 +1,19 @@
 // Square Menu Synchronization Service
 // Handles real-time sync between Square catalog and local menu items
 
+export interface Modifier {
+  id: string;
+  name: string;
+  price: number;
+}
+
+export interface ModifierList {
+  id: string;
+  name: string;
+  selectionType: 'SINGLE' | 'MULTIPLE';
+  modifiers: Modifier[];
+}
+
 export interface SquareMenuItem {
   id: string;
   name: string;
@@ -13,6 +26,7 @@ export interface SquareMenuItem {
   imageUrl?: string;
   imageIds?: string[];
   hasSquareImage?: boolean;
+  modifierLists?: ModifierList[];
 }
 
 export interface LocalMenuItem {
@@ -40,11 +54,11 @@ export class SquareMenuSyncService {
       : 'https://connect.squareup.com';
   }
 
-  // Fetch all menu items from Square catalog with images and categories
+  // Fetch all menu items from Square catalog with images, categories, and modifiers
   async fetchSquareMenuItems(): Promise<SquareMenuItem[]> {
     try {
-      // Fetch items, images, and categories in parallel
-      const [itemsResponse, imagesResponse, categoriesResponse] = await Promise.all([
+      // Fetch items, images, categories, and modifier lists in parallel
+      const [itemsResponse, imagesResponse, categoriesResponse, modifierListsResponse] = await Promise.all([
         fetch(`${this.baseUrl}/v2/catalog/list?types=ITEM`, {
           method: 'GET',
           headers: {
@@ -62,6 +76,14 @@ export class SquareMenuSyncService {
           }
         }),
         fetch(`${this.baseUrl}/v2/catalog/list?types=CATEGORY`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${this.accessToken}`,
+            'Square-Version': '2024-06-04',
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch(`${this.baseUrl}/v2/catalog/list?types=MODIFIER_LIST`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${this.accessToken}`,
@@ -99,6 +121,28 @@ export class SquareMenuSyncService {
           }
         });
         console.log(`Found ${categoryMap.size} Square categories`);
+      }
+
+      // Build modifier list map from Square modifier lists
+      const modifierListMap = new Map<string, ModifierList>();
+      if (modifierListsResponse.ok) {
+        const modListData = await modifierListsResponse.json();
+        (modListData.objects || []).forEach((modList: any) => {
+          const modListInfo = modList.modifier_list_data;
+          if (modListInfo) {
+            modifierListMap.set(modList.id, {
+              id: modList.id,
+              name: modListInfo.name || 'Options',
+              selectionType: modListInfo.selection_type === 'SINGLE' ? 'SINGLE' : 'MULTIPLE',
+              modifiers: (modListInfo.modifiers || []).map((mod: any) => ({
+                id: mod.id,
+                name: mod.modifier_data?.name || 'Option',
+                price: (mod.modifier_data?.price_money?.amount || 0) / 100
+              }))
+            });
+          }
+        });
+        console.log(`Found ${modifierListMap.size} Square modifier lists`);
       }
 
       // Log first item's category fields for debugging
@@ -150,6 +194,12 @@ export class SquareMenuSyncService {
           categoryName = categoryMap.get(categoryId)!;
         }
 
+        // Get modifier lists for this item
+        const modifierListInfo = itemData?.modifier_list_info || [];
+        const itemModifierLists = modifierListInfo
+          .map((mlInfo: any) => modifierListMap.get(mlInfo.modifier_list_id))
+          .filter((ml: ModifierList | undefined): ml is ModifierList => ml !== undefined);
+
         return {
           id: item.id,
           name: itemData?.name || 'Unknown Item',
@@ -161,7 +211,8 @@ export class SquareMenuSyncService {
           inStock: true, // Default to in stock, check inventory separately
           imageUrl: realImageUrl || itemData?.image_url, // Use Square image first, fallback to any existing URL
           imageIds: imageIds,
-          hasSquareImage: !!realImageUrl
+          hasSquareImage: !!realImageUrl,
+          modifierLists: itemModifierLists.length > 0 ? itemModifierLists : undefined
         };
       });
     } catch (error) {

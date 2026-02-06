@@ -33,6 +33,7 @@ export default function CheckoutPage() {
     phone: '',
     deliveryNotes: '',
   });
+  const [orderNotes, setOrderNotes] = useState(''); // Order-level notes for both pickup and delivery
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -110,6 +111,7 @@ export default function CheckoutPage() {
         deliveryInfo: orderType === 'delivery' ? deliveryInfo : undefined,
         orderType,
         paymentToken,
+        orderNotes: orderNotes.trim() || undefined,
       };
 
       console.log('Submitting order with payment token:', paymentToken);
@@ -283,7 +285,7 @@ export default function CheckoutPage() {
                           placeholder="123 Main Street"
                         />
                       </div>
-                      
+
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="city">City</Label>
@@ -303,7 +305,7 @@ export default function CheckoutPage() {
                           />
                         </div>
                       </div>
-                      
+
                       <div>
                         <Label htmlFor="deliveryNotes">Delivery Notes (Optional)</Label>
                         <Textarea
@@ -317,6 +319,23 @@ export default function CheckoutPage() {
                     </CardContent>
                   </Card>
                 )}
+
+                {/* Order Notes (for both pickup and delivery) */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Order Notes (Optional)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Textarea
+                      value={orderNotes}
+                      onChange={(e) => setOrderNotes(e.target.value)}
+                      placeholder="Any special requests for your order..."
+                      rows={3}
+                      maxLength={500}
+                    />
+                    <p className="text-xs text-gray-400 mt-1">{orderNotes.length}/500</p>
+                  </CardContent>
+                </Card>
 
                 <Button onClick={handleContinueToPayment} className="w-full" size="lg">
                   Continue to Payment
@@ -340,19 +359,41 @@ export default function CheckoutPage() {
                 <CardTitle>Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {cartState.items.map((item) => (
-                  <div key={item.id} className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h4 className="font-medium">{item.name}</h4>
-                      <p className="text-sm text-gray-600">
-                        ${item.price.toFixed(2)} × {item.quantity}
-                      </p>
+                {cartState.items.map((item) => {
+                  const modifierTotal = (item.modifiers || []).reduce((sum, m) => sum + m.price, 0);
+                  const itemUnitPrice = item.price + modifierTotal;
+                  const cartLineKey = item.cartLineId || String(item.id);
+
+                  return (
+                    <div key={cartLineKey} className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h4 className="font-medium">{item.name}</h4>
+                        {/* Show modifiers */}
+                        {item.modifiers && item.modifiers.length > 0 && (
+                          <div className="text-xs text-gray-500">
+                            {item.modifiers.map(m => (
+                              <span key={m.id} className="block">
+                                + {m.name}{m.price > 0 ? ` ($${m.price.toFixed(2)})` : ''}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        {/* Show special instructions */}
+                        {item.specialInstructions && (
+                          <p className="text-xs text-gray-400 italic">
+                            Note: {item.specialInstructions}
+                          </p>
+                        )}
+                        <p className="text-sm text-gray-600">
+                          ${itemUnitPrice.toFixed(2)} × {item.quantity}
+                        </p>
+                      </div>
+                      <span className="font-medium">
+                        ${(itemUnitPrice * item.quantity).toFixed(2)}
+                      </span>
                     </div>
-                    <span className="font-medium">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
                 
                 <div className="border-t pt-4 space-y-2">
                   <div className="flex justify-between">

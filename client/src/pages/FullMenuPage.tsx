@@ -3,6 +3,19 @@ import { useQuery } from '@tanstack/react-query';
 import Navigation from '@/components/Navigation';
 import SEOHead from '@/components/SEOHead';
 import { useCart } from '@/contexts/CartContext';
+import { Modifier, generateCartLineId } from '@/services/squareService';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+
+interface ModifierList {
+  id: string;
+  name: string;
+  selectionType: 'SINGLE' | 'MULTIPLE';
+  modifiers: Modifier[];
+}
 
 interface MenuItem {
   id: string;
@@ -13,6 +26,7 @@ interface MenuItem {
   categoryId?: string;
   inStock: boolean;
   imageUrl?: string;
+  modifierLists?: ModifierList[];
 }
 
 interface CategoryInfo {
@@ -57,6 +71,11 @@ export default function FullMenuPage() {
   const [activeCategory, setActiveCategory] = useState<string>('');
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const navRef = useRef<HTMLDivElement>(null);
+
+  // Customization dialog state
+  const [customizeItem, setCustomizeItem] = useState<MenuItem | null>(null);
+  const [selectedModifiers, setSelectedModifiers] = useState<Modifier[]>([]);
+  const [specialInstructions, setSpecialInstructions] = useState('');
 
   // Fetch all menu items with real-time Square sync
   const { data: menuData, isLoading, error } = useQuery({
@@ -141,14 +160,57 @@ export default function FullMenuPage() {
   };
 
   const handleAddToCart = (item: MenuItem) => {
+    // If item has modifiers, open customization dialog
+    if (item.modifierLists && item.modifierLists.length > 0) {
+      setCustomizeItem(item);
+      setSelectedModifiers([]);
+      setSpecialInstructions('');
+    } else {
+      // Direct add (no modifiers)
+      addItem({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        cartLineId: String(item.id),
+      });
+    }
+  };
+
+  const handleConfirmCustomization = () => {
+    if (!customizeItem) return;
+    const cartLineId = generateCartLineId(customizeItem.id, selectedModifiers);
     addItem({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      quantity: 1,
-      squareId: item.id,
-      inStock: item.inStock
+      id: customizeItem.id,
+      name: customizeItem.name,
+      price: customizeItem.price,
+      cartLineId,
+      modifiers: selectedModifiers.length > 0 ? selectedModifiers : undefined,
+      specialInstructions: specialInstructions.trim() || undefined,
     });
+    setCustomizeItem(null);
+  };
+
+  const handleModifierToggle = (modList: ModifierList, mod: Modifier, checked: boolean) => {
+    if (modList.selectionType === 'SINGLE') {
+      // Replace any existing selection from this list
+      setSelectedModifiers(prev => [
+        ...prev.filter(m => !modList.modifiers.some(lm => lm.id === m.id)),
+        ...(checked ? [mod] : [])
+      ]);
+    } else {
+      // Toggle for MULTIPLE selection
+      setSelectedModifiers(prev =>
+        checked
+          ? [...prev, mod]
+          : prev.filter(m => m.id !== mod.id)
+      );
+    }
+  };
+
+  const getTotalWithModifiers = () => {
+    if (!customizeItem) return 0;
+    const modifierTotal = selectedModifiers.reduce((sum, m) => sum + m.price, 0);
+    return customizeItem.price + modifierTotal;
   };
 
   const getCategoryDisplayName = (category: string): string => {
@@ -367,6 +429,74 @@ export default function FullMenuPage() {
           scrollbar-width: none;
         }
       `}</style>
+
+      {/* Item Customization Dialog */}
+      <Dialog open={!!customizeItem} onOpenChange={(open) => !open && setCustomizeItem(null)}>
+        <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{customizeItem?.name}</DialogTitle>
+            <DialogDescription>
+              ${customizeItem?.price.toFixed(2)} - Customize your order
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            {/* Modifier Lists */}
+            {customizeItem?.modifierLists?.map((modList) => (
+              <div key={modList.id} className="space-y-3">
+                <h4 className="font-medium text-sm text-gray-900">
+                  {modList.name}
+                  {modList.selectionType === 'SINGLE' && (
+                    <span className="text-gray-500 font-normal ml-2">(Choose one)</span>
+                  )}
+                </h4>
+                <div className="space-y-2">
+                  {modList.modifiers.map((mod) => (
+                    <label
+                      key={mod.id}
+                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
+                    >
+                      <Checkbox
+                        checked={selectedModifiers.some(m => m.id === mod.id)}
+                        onCheckedChange={(checked) =>
+                          handleModifierToggle(modList, mod, !!checked)
+                        }
+                      />
+                      <span className="flex-1 text-sm">{mod.name}</span>
+                      {mod.price > 0 && (
+                        <span className="text-sm text-gray-500">+${mod.price.toFixed(2)}</span>
+                      )}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* Special Instructions */}
+            <div className="space-y-2">
+              <Label htmlFor="special-instructions" className="text-sm font-medium">
+                Special Instructions (optional)
+              </Label>
+              <Textarea
+                id="special-instructions"
+                value={specialInstructions}
+                onChange={(e) => setSpecialInstructions(e.target.value)}
+                placeholder="e.g., No onions, extra sauce..."
+                rows={2}
+                maxLength={200}
+                className="resize-none"
+              />
+              <p className="text-xs text-gray-400">{specialInstructions.length}/200</p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button onClick={handleConfirmCustomization} className="w-full">
+              Add to Cart - ${getTotalWithModifiers().toFixed(2)}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

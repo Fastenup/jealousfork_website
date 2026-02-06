@@ -22,28 +22,39 @@ type CartAction =
 const TAX_RATE = 0.075; // 7.5% Miami-Dade tax rate
 
 function calculateTotals(items: CartItem[], deliveryFee: number = 0) {
-  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = items.reduce((sum, item) => {
+    // Include modifier prices in item total
+    const modifierTotal = (item.modifiers || []).reduce((m, mod) => m + mod.price, 0);
+    return sum + ((item.price + modifierTotal) * item.quantity);
+  }, 0);
   const tax = subtotal * TAX_RATE;
   const total = subtotal + tax + deliveryFee;
   return { subtotal, tax, total };
 }
 
+// Get cart line ID for matching - uses cartLineId if available, otherwise falls back to id
+function getCartLineKey(item: CartItem | Omit<CartItem, 'quantity'>): string {
+  return item.cartLineId || String(item.id);
+}
+
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
+      // Match on cartLineId to support same item with different modifiers as separate entries
+      const payloadKey = getCartLineKey(action.payload);
+      const existingItem = state.items.find(item => getCartLineKey(item) === payloadKey);
       let newItems: CartItem[];
-      
+
       if (existingItem) {
         newItems = state.items.map(item =>
-          item.id === action.payload.id
+          getCartLineKey(item) === payloadKey
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
         newItems = [...state.items, { ...action.payload, quantity: 1 }];
       }
-      
+
       const totals = calculateTotals(newItems, state.deliveryFee);
       return {
         ...state,
@@ -53,7 +64,8 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
     
     case 'REMOVE_ITEM': {
-      const newItems = state.items.filter(item => item.id !== action.payload);
+      const payloadKey = String(action.payload);
+      const newItems = state.items.filter(item => getCartLineKey(item) !== payloadKey);
       const totals = calculateTotals(newItems, state.deliveryFee);
       return {
         ...state,
@@ -61,15 +73,16 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         ...totals,
       };
     }
-    
+
     case 'UPDATE_QUANTITY': {
       const { id, quantity } = action.payload;
       if (quantity <= 0) {
         return cartReducer(state, { type: 'REMOVE_ITEM', payload: id });
       }
-      
+
+      const payloadKey = String(id);
       const newItems = state.items.map(item =>
-        item.id === id ? { ...item, quantity } : item
+        getCartLineKey(item) === payloadKey ? { ...item, quantity } : item
       );
       const totals = calculateTotals(newItems, state.deliveryFee);
       return {
@@ -148,8 +161,8 @@ const getInitialState = (): CartState => {
 interface CartContextType {
   state: CartState;
   addItem: (item: Omit<CartItem, 'quantity'>) => void;
-  removeItem: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  removeItem: (id: string | number) => void;
+  updateQuantity: (id: string | number, quantity: number) => void;
   clearCart: () => void;
   toggleCart: () => void;
   setCartOpen: (open: boolean) => void;
@@ -180,11 +193,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'ADD_ITEM', payload: item });
   };
 
-  const removeItem = (id: number) => {
+  const removeItem = (id: string | number) => {
     dispatch({ type: 'REMOVE_ITEM', payload: id });
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: string | number, quantity: number) => {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
   };
 

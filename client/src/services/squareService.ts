@@ -1,5 +1,18 @@
 import { apiRequest } from '@/lib/queryClient';
 
+export interface Modifier {
+  id: string;
+  name: string;
+  price: number;  // In dollars
+}
+
+export interface ModifierList {
+  id: string;
+  name: string;
+  selectionType: 'SINGLE' | 'MULTIPLE';
+  modifiers: Modifier[];
+}
+
 export interface CartItem {
   id: string | number; // Allow both string and number IDs
   name: string;
@@ -7,6 +20,16 @@ export interface CartItem {
   quantity: number;
   category?: string; // Make category optional
   description?: string;
+  cartLineId?: string; // Unique key for cart identity (itemId + modifier combination)
+  modifiers?: Modifier[]; // Selected modifiers for this item
+  specialInstructions?: string; // Per-item notes like "no onions"
+}
+
+// Helper to generate unique cart line ID based on item + modifiers
+export function generateCartLineId(itemId: string | number, modifiers?: Modifier[]): string {
+  if (!modifiers || modifiers.length === 0) return String(itemId);
+  const sortedModIds = modifiers.map(m => m.id).sort().join('-');
+  return `${itemId}-${sortedModIds}`;
 }
 
 export interface DeliveryInfo {
@@ -33,6 +56,7 @@ export interface OrderRequest {
   deliveryInfo?: DeliveryInfo;
   orderType: 'pickup' | 'delivery';
   paymentToken: string;
+  orderNotes?: string; // Order-level notes for both pickup and delivery
 }
 
 export interface OrderResponse {

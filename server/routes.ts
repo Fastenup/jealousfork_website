@@ -21,6 +21,13 @@ const orderRequestSchema = z.object({
     quantity: z.number(),
     category: z.string().optional(), // Make category optional since cart items might not have it
     description: z.string().optional(),
+    cartLineId: z.string().optional(), // Unique identifier for cart line (item + modifiers)
+    modifiers: z.array(z.object({
+      id: z.string(),
+      name: z.string(),
+      price: z.number(),
+    })).optional(),
+    specialInstructions: z.string().optional(),
   })),
   subtotal: z.number(),
   tax: z.number(),
@@ -41,6 +48,7 @@ const orderRequestSchema = z.object({
   }).optional(),
   orderType: z.enum(['pickup', 'delivery']),
   paymentToken: z.string(),
+  orderNotes: z.string().optional(), // Order-level notes for both pickup and delivery
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -413,8 +421,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ? 'https://connect.squareupsandbox.com'
           : 'https://connect.squareup.com';
 
-        // Fetch items, categories, and images in parallel
-        const [itemsResponse, categoriesResponse, imagesResponse] = await Promise.all([
+        // Fetch items, categories, images, and modifier lists in parallel
+        const [itemsResponse, categoriesResponse, imagesResponse, modifierListsResponse] = await Promise.all([
           fetch(`${baseUrl}/v2/catalog/list?types=ITEM`, {
             method: 'GET',
             headers: {
@@ -432,6 +440,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }),
           fetch(`${baseUrl}/v2/catalog/list?types=IMAGE`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Square-Version': '2024-06-04',
+              'Content-Type': 'application/json'
+            }
+          }),
+          fetch(`${baseUrl}/v2/catalog/list?types=MODIFIER_LIST`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${accessToken}`,
@@ -462,6 +478,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
             (imgData.objects || []).forEach((img: any) => {
               if (img.image_data?.url) {
                 imageMap.set(img.id, img.image_data.url);
+              }
+            });
+          }
+
+          // Build modifier list map from Square modifier lists
+          const modifierListMap = new Map<string, { id: string; name: string; selectionType: 'SINGLE' | 'MULTIPLE'; modifiers: { id: string; name: string; price: number }[] }>();
+          if (modifierListsResponse.ok) {
+            const modListData = await modifierListsResponse.json();
+            (modListData.objects || []).forEach((modList: any) => {
+              const modListInfo = modList.modifier_list_data;
+              if (modListInfo) {
+                modifierListMap.set(modList.id, {
+                  id: modList.id,
+                  name: modListInfo.name || 'Options',
+                  selectionType: modListInfo.selection_type === 'SINGLE' ? 'SINGLE' : 'MULTIPLE',
+                  modifiers: (modListInfo.modifiers || []).map((mod: any) => ({
+                    id: mod.id,
+                    name: mod.modifier_data?.name || 'Option',
+                    price: (mod.modifier_data?.price_money?.amount || 0) / 100
+                  }))
+                });
               }
             });
           }
@@ -504,6 +541,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }
             }
 
+            // Get modifier lists for this item
+            const modifierListInfo = itemData?.modifier_list_info || [];
+            const itemModifierLists = modifierListInfo
+              .map((mlInfo: any) => modifierListMap.get(mlInfo.modifier_list_id))
+              .filter(Boolean);
+
             return {
               id: item.id,
               name: itemData?.name || 'Unknown Item',
@@ -512,7 +555,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               category: categoryName,
               categoryId: categoryId,
               inStock: true,
-              imageUrl: imageUrl
+              imageUrl: imageUrl,
+              modifierLists: itemModifierLists.length > 0 ? itemModifierLists : undefined
             };
           }) || [];
 
@@ -924,23 +968,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
           source: {
             name: 'Jealous Fork Online Ordering'
           },
-          line_items: orderData.items.map(item => ({
-            name: item.name,
-            quantity: item.quantity.toString(),
-            base_price_money: {
-              amount: Math.round(item.price * 100),
-              currency: 'USD'
-            },
-            note: item.description || '',
-            // Add modifiers for kitchen routing - helps categorize items
-            modifiers: item.category ? [{
-              name: `Kitchen: ${item.category}`,
+          line_items: orderData.items.map(item => {
+            // Build modifier list: customer-selected modifiers + kitchen routing label
+            const modifiers: any[] = [];
+
+            // Add actual customer-selected modifiers
+            if (item.modifiers && item.modifiers.length > 0) {
+              item.modifiers.forEach(mod => {
+                modifiers.push({
+                  name: mod.name,
+                  base_price_money: {
+                    amount: Math.round(mod.price * 100),
+                    currency: 'USD'
+                  }
+                });
+              });
+            }
+
+            // Keep kitchen routing label as ad-hoc modifier
+            if (item.category) {
+              modifiers.push({
+                name: `Kitchen: ${item.category}`,
+                base_price_money: { amount: 0, currency: 'USD' }
+              });
+            }
+
+            // Combine item note from description and special instructions
+            const noteParts: string[] = [];
+            if (item.description) noteParts.push(item.description);
+            if (item.specialInstructions) noteParts.push(`SPECIAL: ${item.specialInstructions}`);
+
+            return {
+              name: item.name,
+              quantity: item.quantity.toString(),
               base_price_money: {
-                amount: 0,
+                amount: Math.round(item.price * 100),
                 currency: 'USD'
-              }
-            }] : []
-          })),
+              },
+              note: noteParts.join(' | ') || '',
+              modifiers
+            };
+          }),
           service_charges: orderData.deliveryFee > 0 ? [{
             name: 'Delivery Fee',
             amount_money: {
@@ -962,7 +1030,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 phone_number: orderData.customerInfo.phone
               },
               schedule_type: 'ASAP',
-              note: 'Order ready for pickup'
+              note: orderData.orderNotes || 'Order ready for pickup'
             } : undefined,
             shipment_details: orderData.orderType === 'delivery' ? {
               recipient: {
@@ -976,7 +1044,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   postal_code: orderData.deliveryInfo?.zipCode || ''
                 }
               },
-              note: orderData.deliveryInfo?.deliveryNotes || 'Delivery order'
+              note: [orderData.deliveryInfo?.deliveryNotes, orderData.orderNotes].filter(Boolean).join(' | ') || 'Delivery order'
             } : undefined
           }]
         }
@@ -1043,6 +1111,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Send confirmation email to customer
       try {
+        // Build order items with modifiers and special instructions
+        const formatOrderItems = (items: typeof orderData.items) => {
+          return items.map(item => {
+            const modifierTotal = (item.modifiers || []).reduce((sum, m) => sum + m.price, 0);
+            const itemTotal = (item.price + modifierTotal) * item.quantity;
+            let itemLine = `• ${item.quantity}x ${item.name} - $${itemTotal.toFixed(2)}`;
+
+            // Add modifiers
+            if (item.modifiers && item.modifiers.length > 0) {
+              const modLines = item.modifiers.map(m =>
+                `    + ${m.name}${m.price > 0 ? ` ($${m.price.toFixed(2)})` : ''}`
+              ).join('\n');
+              itemLine += '\n' + modLines;
+            }
+
+            // Add special instructions
+            if (item.specialInstructions) {
+              itemLine += `\n    Note: ${item.specialInstructions}`;
+            }
+
+            return itemLine;
+          }).join('\n');
+        };
+
+        const orderNotesSection = orderData.orderNotes
+          ? `\nOrder Notes: ${orderData.orderNotes}\n`
+          : '';
+
         await fetch(`http://localhost:${process.env.PORT || 5000}/api/contact`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1051,7 +1147,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             lastName: orderData.customerInfo.name.split(' ').slice(1).join(' ') || '',
             email: orderData.customerInfo.email,
             phone: orderData.customerInfo.phone,
-            message: `Order Confirmation - ${orderId}\n\nThank you for your order!\n\nOrder Details:\n${orderData.items.map(item => `• ${item.quantity}x ${item.name} - $${item.price.toFixed(2)}`).join('\n')}\n\nSubtotal: $${orderData.subtotal.toFixed(2)}\nTax: $${orderData.tax.toFixed(2)}\n${orderData.deliveryFee > 0 ? `Delivery Fee: $${orderData.deliveryFee.toFixed(2)}\n` : ''}Total: $${orderData.total.toFixed(2)}\n\nOrder Type: ${orderData.orderType.toUpperCase()}\nEstimated Ready Time: ${estimatedReadyTime.toLocaleString()}\n\n${orderData.orderType === 'pickup' ? 'Pickup Location:\n14417 SW 42nd St\nMiami, FL 33175\n(305) 699-1430' : `Delivery Address:\n${orderData.deliveryInfo?.address}\n${orderData.deliveryInfo?.city}, ${orderData.deliveryInfo?.state} ${orderData.deliveryInfo?.zipCode}`}\n\nWe'll notify you when your order is ready!`
+            message: `Order Confirmation - ${orderId}\n\nThank you for your order!\n\nOrder Details:\n${formatOrderItems(orderData.items)}\n\nSubtotal: $${orderData.subtotal.toFixed(2)}\nTax: $${orderData.tax.toFixed(2)}\n${orderData.deliveryFee > 0 ? `Delivery Fee: $${orderData.deliveryFee.toFixed(2)}\n` : ''}Total: $${orderData.total.toFixed(2)}${orderNotesSection}\n\nOrder Type: ${orderData.orderType.toUpperCase()}\nEstimated Ready Time: ${estimatedReadyTime.toLocaleString()}\n\n${orderData.orderType === 'pickup' ? 'Pickup Location:\n14417 SW 42nd St\nMiami, FL 33175\n(305) 699-1430' : `Delivery Address:\n${orderData.deliveryInfo?.address}\n${orderData.deliveryInfo?.city}, ${orderData.deliveryInfo?.state} ${orderData.deliveryInfo?.zipCode}`}\n\nWe'll notify you when your order is ready!`
           })
         });
         console.log('Confirmation email sent to:', orderData.customerInfo.email);
