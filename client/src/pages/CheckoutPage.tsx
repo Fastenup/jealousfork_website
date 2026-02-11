@@ -170,7 +170,7 @@ export default function CheckoutPage() {
       <SEOHead
         title="Checkout - Jealous Fork"
         description="Complete your order for delivery or pickup from Jealous Fork"
-        canonical="https://jealousfork.com/checkout"
+        canonical="https://www.jealousfork.com/checkout"
       />
       
       <Navigation />

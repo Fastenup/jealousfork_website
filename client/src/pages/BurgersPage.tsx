@@ -39,7 +39,7 @@ function generateBurgerSchema(burgers: MenuItem[]) {
     "@type": "Restaurant",
     "name": "Jealous Burger",
     "alternateName": "Jealous Fork Burgers",
-    "image": "https://jealousfork.com/images/food/jesse-james-burger.jpg",
+    "image": "https://www.jealousfork.com/images/food/jesse-james-burger.jpg",
     "description": "Miami's best gourmet burgers. Classic patties with creative toppings, served Friday and Saturday nights. From The Classic to our signature Jesse James burger.",
     "address": {
       "@type": "PostalAddress",
@@ -54,12 +54,12 @@ function generateBurgerSchema(burgers: MenuItem[]) {
       "latitude": 25.7323,
       "longitude": -80.4168
     },
-    "url": "https://jealousfork.com/burgers",
+    "url": "https://www.jealousfork.com/burgers",
     "telephone": "(305) 699-1430",
     "servesCuisine": ["Burgers", "American", "Gourmet Burgers"],
     "priceRange": "$$",
     "acceptsReservations": "True",
-    "menu": "https://jealousfork.com/burgers",
+    "menu": "https://www.jealousfork.com/burgers",
     "openingHoursSpecification": [
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "15:00", "closes": "21:00" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "15:00", "closes": "21:00" }
@@ -141,7 +141,7 @@ export default function BurgersPage() {
       canonical.rel = 'canonical';
       document.head.appendChild(canonical);
     }
-    canonical.href = 'https://jealousfork.com/burgers';
+    canonical.href = 'https://www.jealousfork.com/burgers';
 
     // Scroll to top
     window.scrollTo(0, 0);

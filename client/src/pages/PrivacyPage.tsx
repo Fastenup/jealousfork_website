@@ -8,7 +8,7 @@ export default function PrivacyPage() {
       <SEOHead 
         title="Privacy Policy | Jealous Fork Miami"
         description="Privacy Policy for Jealous Fork restaurant. Learn how we protect your personal information and data when you visit our website or restaurant."
-        canonical="https://jealousfork.com/privacy"
+        canonical="https://www.jealousfork.com/privacy"
       />
       <Navigation />
       

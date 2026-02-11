@@ -8,7 +8,7 @@ export default function TermsPage() {
       <SEOHead 
         title="Terms of Service | Jealous Fork Miami"
         description="Terms of Service for Jealous Fork restaurant. Read our terms and conditions for dining, reservations, and website use."
-        canonical="https://jealousfork.com/terms"
+        canonical="https://www.jealousfork.com/terms"
       />
       <Navigation />
       

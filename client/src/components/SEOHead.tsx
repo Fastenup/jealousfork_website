@@ -88,7 +88,7 @@ const restaurantSchema = {
   "@context": "https://schema.org",
   "@type": "Restaurant",
   "name": "Jealous Fork",
-  "image": "https://jealousfork.com/images/restaurant/interior.jpg",
+  "image": "https://www.jealousfork.com/images/restaurant/interior.jpg",
   "description": "Miami's original artisan pancake restaurant serving Instagram-worthy pancakes and gourmet burgers. Founded by Joaquin Ortiz and Henrik Telle.",
   "address": {
     "@type": "PostalAddress",
@@ -103,12 +103,12 @@ const restaurantSchema = {
     "latitude": 25.7323,
     "longitude": -80.4168
   },
-  "url": "https://jealousfork.com",
+  "url": "https://www.jealousfork.com",
   "telephone": "(305) 699-1430",
   "servesCuisine": ["American", "Breakfast", "Brunch", "Pancakes", "Burgers"],
   "priceRange": "$$",
   "acceptsReservations": "True",
-  "menu": "https://jealousfork.com/full-menu",
+  "menu": "https://www.jealousfork.com/full-menu",
   "openingHoursSpecification": [
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "14:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "14:00" },

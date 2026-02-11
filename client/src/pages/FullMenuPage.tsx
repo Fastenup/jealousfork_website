@@ -226,7 +226,7 @@ export default function FullMenuPage() {
       <SEOHead
         title="Full Menu - Jealous Fork Miami | Pancakes, Burgers & More"
         description="Browse our complete menu featuring artisan pancakes, gourmet burgers (Fri-Sat), flatbreads, and more. Real-time pricing and availability from Square."
-        canonical="https://jealousfork.com/full-menu"
+        canonical="https://www.jealousfork.com/full-menu"
         keywords="Jealous Fork menu, Miami pancakes menu, gourmet burgers menu, artisan pancakes, breakfast Miami"
       />
 

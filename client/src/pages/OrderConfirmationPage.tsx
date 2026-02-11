@@ -93,7 +93,7 @@ export default function OrderConfirmationPage() {
       <SEOHead
         title={`Order Confirmation #${order.orderId} - Jealous Fork`}
         description="Your order has been confirmed. Thank you for choosing Jealous Fork!"
-        canonical={`https://jealousfork.com/order-confirmation/${order.orderId}`}
+        canonical={`https://www.jealousfork.com/order-confirmation/${order.orderId}`}
       />
       
       <Navigation />

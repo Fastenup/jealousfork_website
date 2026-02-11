@@ -4,7 +4,7 @@ export default function StructuredData() {
     "@type": "Restaurant",
     "name": "Jealous Fork",
     "description": "Miami's original artisan pancake restaurant serving Instagram-worthy pancakes and gourmet burgers since our food truck days.",
-    "url": "https://jealousfork.com",
+    "url": "https://www.jealousfork.com",
     "telephone": "+1-305-555-0123",
     "email": "info@jealousfork.com",
     "address": {
@@ -103,13 +103,13 @@ export default function StructuredData() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://jealousfork.com"
+        "item": "https://www.jealousfork.com"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Menu",
-        "item": "https://jealousfork.com/full-menu"
+        "item": "https://www.jealousfork.com/full-menu"
       }
     ]
   };

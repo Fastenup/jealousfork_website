@@ -24,7 +24,7 @@ export default function MenuPage() {
       <SEOHead 
         title={title}
         description={description}
-        canonical={`https://jealousfork.com/menu${slug ? `/${slug}` : ''}`}
+        canonical={`https://www.jealousfork.com/menu${slug ? `/${slug}` : ''}`}
         ogImage={menuItem?.image || "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"}
       />
       <Navigation />
