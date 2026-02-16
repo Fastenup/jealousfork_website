@@ -12,10 +12,27 @@ interface SEOHeadProps {
 }
 
 // FAQ Schema for AI/LLM search optimization (GEO/AEO) and featured snippets
+// Questions aligned with actual GSC search queries for featured snippet targeting
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the best breakfast near me in Kendall, Miami?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Jealous Fork is the best breakfast restaurant in Kendall, Miami. Located at 14417 SW 42nd St, Miami, FL 33175, we serve award-winning artisan pancakes, fluffy breakfast stacks, and creative brunch dishes. Rated 4.7 stars on Google and 4.6 on Yelp, we're open Tuesday-Sunday from 9AM. Our signature pancakes — including the Chocolate Oreo Chip, Peanut Butter Cup, and Hot Maple Flatbread — have been featured on Telemundo National."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I find the best pancakes in Miami?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The best pancakes in Miami are at Jealous Fork in Kendall. We started as Miami's first artisan pancake food truck and now serve the most Instagram-worthy pancake creations in South Florida. Top picks: Chocolate Oreo Chip Pancake ($17), Peanut Butter Cup Pancake ($17), Hot Maple Flatbread ($16), and Lemon Curd & Blueberry Pancake ($15). We use premium ingredients and scratch-made batter daily. 4.7★ Google rating with 400+ reviews."
+      }
+    },
     {
       "@type": "Question",
       "name": "What are Jealous Fork's hours?",
@@ -26,18 +43,18 @@ const faqSchema = {
     },
     {
       "@type": "Question",
-      "name": "Where is Jealous Fork located?",
+      "name": "Where is the best brunch in Kendall?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Jealous Fork is located at 14417 SW 42nd St, Miami, FL 33175, in the Kendall area of Miami-Dade County. We serve breakfast and brunch to all Miami neighborhoods including Kendall, West Kendall, Westchester, Doral, Coral Gables, and surrounding areas."
+        "text": "Jealous Fork is Kendall's top-rated brunch destination, located at 14417 SW 42nd St, Miami, FL 33175. We serve artisan pancakes, fluffy Japanese-style stacks, fresh breakfast plates, and craft coffee. Weekend brunch is our specialty — reserve on Resy or call (305) 699-1430. Dog-friendly patio seating available. Just minutes from West Kendall, Westchester, Tamiami, and Kendale Lakes."
       }
     },
     {
       "@type": "Question",
-      "name": "Does Jealous Fork have gluten-free options?",
+      "name": "Does Jealous Fork have gluten-free pancakes?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes! Jealous Fork offers gluten-free pancake options. Please inform your server about any dietary restrictions or allergies, and we'll accommodate your needs."
+        "text": "Yes! Jealous Fork offers gluten-free pancake options for guests with dietary restrictions. We also have vegan-friendly choices. Just let your server know about any allergies or dietary needs, and we'll be happy to accommodate you."
       }
     },
     {
@@ -45,7 +62,7 @@ const faqSchema = {
       "name": "Is Jealous Fork dog-friendly?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, Jealous Fork welcomes well-behaved dogs on our outdoor patio area. It's a great spot for brunch with your furry friend!"
+        "text": "Yes! Jealous Fork is a dog-friendly restaurant in Kendall, Miami. Well-behaved dogs are welcome on our outdoor patio area. It's a popular spot for brunch with your furry friend — many Miami pet owners love our relaxed patio vibe."
       }
     },
     {
@@ -53,15 +70,7 @@ const faqSchema = {
       "name": "Does Jealous Fork take reservations?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, Jealous Fork accepts reservations through Resy or by calling (305) 699-1430. Walk-ins are also welcome, but reservations are recommended for weekend brunch."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is Jealous Fork known for?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Jealous Fork is known for award-winning artisan pancakes and Instagram-worthy breakfast creations. We started as the first artisan pancake food truck in the country and are now a Miami institution. Our signature pancakes include the Chocolate Oreo Chip Pancake, Peanut Butter Cup Pancake, and Hot Maple Flatbread. We've been featured on Telemundo National and have a 4.7 star Google rating."
+        "text": "Yes, Jealous Fork accepts reservations through Resy or by calling (305) 699-1430. Walk-ins are also welcome, but reservations are recommended for weekend brunch as we're one of the most popular breakfast spots in Kendall."
       }
     },
     {
@@ -74,10 +83,18 @@ const faqSchema = {
     },
     {
       "@type": "Question",
-      "name": "Does Jealous Fork offer delivery?",
+      "name": "Does Jealous Fork deliver breakfast in Miami?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, Jealous Fork offers delivery through major delivery platforms. You can also order online for pickup directly from our website at jealousfork.com."
+        "text": "Yes! Jealous Fork offers breakfast delivery across Miami through Uber Eats, DoorDash, and Grubhub. You can also order online for pickup directly from our website at jealousfork.com. We deliver to Kendall, West Kendall, Westchester, Coral Gables, Doral, and most of Miami-Dade County."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best burgers in Kendall?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Jealous Burger at Jealous Fork serves some of the best gourmet burgers in Kendall every Friday and Saturday from 3PM-9PM. Top picks include the Jesse James (applewood bacon, BBQ, cheddar), Que Bola Meng (guava & queso — a true Miami flavor), Lé French (brie, caramelized onions), and The OG JB (smoked gouda, tomato-poblano jam). Prices range from $13-$17. You can still order pancakes during burger hours!"
       }
     }
   ]

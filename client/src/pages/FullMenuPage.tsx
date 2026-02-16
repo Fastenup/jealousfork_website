@@ -224,10 +224,10 @@ export default function FullMenuPage() {
   return (
     <>
       <SEOHead
-        title="Full Menu - Jealous Fork Miami | Pancakes, Burgers & More"
-        description="Browse our complete menu featuring artisan pancakes, gourmet burgers (Fri-Sat), flatbreads, and more. Real-time pricing and availability from Square."
+        title="Menu — Best Pancakes & Breakfast in Miami | Jealous Fork Kendall"
+        description="See our full menu: artisan pancakes from $15, gourmet burgers (Fri-Sat), flatbreads, craft beverages & more. ★4.7 Google. Real-time pricing. Order online for pickup or dine in at Jealous Fork Kendall!"
         canonical="https://www.jealousfork.com/full-menu"
-        keywords="Jealous Fork menu, Miami pancakes menu, gourmet burgers menu, artisan pancakes, breakfast Miami"
+        keywords="Jealous Fork menu, best pancakes Miami menu, breakfast menu Kendall, pancakes near me, gourmet burgers menu Miami, artisan pancakes, breakfast Miami, brunch menu Miami"
       />
 
       <div className="min-h-screen bg-gray-50">

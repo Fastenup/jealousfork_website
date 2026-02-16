@@ -1,4 +1,4 @@
-import { useParams } from "wouter";
+import { useParams, Link } from "wouter";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
@@ -18,12 +18,12 @@ export default function LocalPage() {
     distance: "nearby"
   };
 
-  // SEO-optimized title targeting "near me" and location-specific searches
-  const title = `Best Pancakes & Breakfast Near ${areaInfo.name} | Jealous Fork Miami FL`;
-  const description = `Looking for the best pancakes near ${areaInfo.name}? Jealous Fork serves award-winning artisan pancakes, fluffy breakfast stacks & gourmet burgers. 4.7★ Rating. Open Tue-Sun 9AM. Order online!`;
+  // SEO-optimized title targeting "[breakfast/brunch] [neighborhood]" searches
+  const title = `Best Breakfast & Brunch Near ${areaInfo.name} | Pancakes & Burgers | Jealous Fork Miami`;
+  const description = `Looking for breakfast near ${areaInfo.name}? Jealous Fork serves the best pancakes & brunch in Miami — just ${areaInfo.distance || "minutes"} away. ★4.7 Google ★4.6 Yelp. Artisan pancakes, gourmet burgers. Open Tue-Sun 9AM. Reserve on Resy!`;
 
-  // Location-specific keywords for AI/LLM optimization
-  const keywords = `pancakes near ${areaInfo.name.toLowerCase()}, breakfast ${areaInfo.name.toLowerCase()}, brunch ${areaInfo.name.toLowerCase()}, best pancakes ${areaInfo.name.toLowerCase()} FL, breakfast near me ${areaInfo.name.toLowerCase()}, pancakes near me, brunch near me, Miami pancakes, artisan pancakes Miami`;
+  // Location-specific keywords targeting actual GSC search queries
+  const keywords = `breakfast ${areaInfo.name.toLowerCase()}, brunch ${areaInfo.name.toLowerCase()}, best breakfast ${areaInfo.name.toLowerCase()}, best brunch ${areaInfo.name.toLowerCase()}, pancakes near ${areaInfo.name.toLowerCase()}, breakfast near me, pancakes near me, brunch near me, best pancakes ${areaInfo.name.toLowerCase()}, restaurants ${areaInfo.name.toLowerCase()}, breakfast places ${areaInfo.name.toLowerCase()}`;
 
   return (
     <>
@@ -179,6 +179,53 @@ export default function LocalPage() {
         </section>
 
         <MenuPreview />
+
+        {/* Internal Links Section - Cross-linking for SEO */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="font-playfair text-3xl font-bold mb-8 text-center text-gray-900">
+              Explore Our Menus
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-6 mb-12">
+              <Link href="/full-menu">
+                <a className="block p-6 bg-gray-50 rounded-xl text-center hover:bg-gray-100 transition-colors">
+                  <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-2">Full Breakfast Menu</h3>
+                  <p className="text-gray-600">Award-winning artisan pancakes, starters, sandwiches & craft beverages</p>
+                </a>
+              </Link>
+              <Link href="/burgers">
+                <a className="block p-6 bg-gray-50 rounded-xl text-center hover:bg-gray-100 transition-colors">
+                  <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-2">Gourmet Burgers</h3>
+                  <p className="text-gray-600">Jealous Burger — creative gourmet burgers every Friday & Saturday 3-9PM</p>
+                </a>
+              </Link>
+              <Link href="/">
+                <a className="block p-6 bg-gray-50 rounded-xl text-center hover:bg-gray-100 transition-colors">
+                  <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-2">About Jealous Fork</h3>
+                  <p className="text-gray-600">Our story, from Miami's first artisan pancake food truck to your favorite restaurant</p>
+                </a>
+              </Link>
+            </div>
+
+            <h3 className="font-playfair text-2xl font-bold mb-6 text-center text-gray-900">
+              We Also Serve These Miami Neighborhoods
+            </h3>
+            <div className="flex flex-wrap justify-center gap-3">
+              {localAreas
+                .filter(a => a.slug !== area)
+                .slice(0, 12)
+                .map(nearbyArea => (
+                  <Link key={nearbyArea.slug} href={`/near/${nearbyArea.slug}`}>
+                    <a className="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700 hover:bg-warm-amber hover:text-white transition-colors">
+                      {nearbyArea.name}
+                    </a>
+                  </Link>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+
         <Contact />
       </main>
 

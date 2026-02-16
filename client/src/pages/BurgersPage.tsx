@@ -123,7 +123,7 @@ export default function BurgersPage() {
       metaDesc.name = 'description';
       document.head.appendChild(metaDesc);
     }
-    metaDesc.content = "Miami's best gourmet burgers. Unique creations including The Classic, Jesse James & Miami-inspired Que Bola Meng. 4.7 star Rating. Fri-Sat 3PM-9PM. Order online at Jealous Burger!";
+    metaDesc.content = "Best gourmet burgers in Kendall & Miami. Jealous Burger serves creative burgers like the Jesse James, Que Bola Meng & Lé French. ★4.7 Google. Fri-Sat 3PM-9PM. Pancakes still available! Order online.";
 
     // Set keywords - optimized for local search and AI
     let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
@@ -132,7 +132,7 @@ export default function BurgersPage() {
       metaKeywords.name = 'keywords';
       document.head.appendChild(metaKeywords);
     }
-    metaKeywords.content = "best burgers Miami, gourmet burgers Miami FL, burgers near me, best burgers Kendall, burgers near Kendall, classic burgers Miami, Friday night burgers Miami, burger restaurant Miami, Jealous Burger, Miami burger joint, burgers 33175";
+    metaKeywords.content = "best burgers Miami, best burgers Kendall, gourmet burgers Miami FL, burgers near me, burgers Kendall FL, burgers near Kendall, burger restaurant Miami, Friday night burgers Miami, Jealous Burger, best burgers in kendall miami, burgers 33175, hamburguesas kendall";
 
     // Set canonical URL
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
@@ -443,11 +443,11 @@ export default function BurgersPage() {
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-xl shadow">
               <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                What are the best burgers in Miami?
+                What are the best burgers in Kendall, Miami?
               </h3>
               <p className="text-gray-600">
-                Jealous Burger serves some of Miami's best gourmet burgers. Our most popular include the Jesse James
-                with applewood bacon and BBQ sauce, and the Que Bola Meng featuring guava and queso - a true Miami flavor.
+                Jealous Burger at Jealous Fork serves some of the best gourmet burgers in Kendall and all of Miami. Our most popular include the Jesse James
+                with applewood bacon and BBQ sauce, the Que Bola Meng featuring guava and queso — a true Miami flavor, and Lé French with brie cheese and caramelized onions. Located at 14417 SW 42nd St, Miami, FL 33175.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow">
@@ -455,8 +455,8 @@ export default function BurgersPage() {
                 When is Jealous Burger open?
               </h3>
               <p className="text-gray-600">
-                Jealous Burger serves gourmet burgers Friday and Saturday from 3:00 PM to 9:00 PM at our Miami location
-                (14417 SW 42nd St). During burger hours, we serve BOTH our full burger menu AND our award-winning pancakes -
+                Jealous Burger serves gourmet burgers Friday and Saturday from 3:00 PM to 9:00 PM at our Kendall location
+                (14417 SW 42nd St). During burger hours, we serve BOTH our full burger menu AND our award-winning pancakes —
                 so you can have the best of both worlds!
               </p>
             </div>
@@ -466,7 +466,7 @@ export default function BurgersPage() {
               </h3>
               <p className="text-gray-600">
                 Yes! Our VEGburger features a black bean-chipotle patty with aged white cheddar, tomato, onion, and
-                spring greens for $16.
+                spring greens for $16. It's one of the best veggie burgers in Miami.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow">
@@ -475,9 +475,45 @@ export default function BurgersPage() {
               </h3>
               <p className="text-gray-600">
                 No, we serve classic gourmet patties, not smash burgers. Our burgers are thick, juicy, and cooked to
-                perfection with premium toppings.
+                perfection with premium toppings and chef-driven flavor combinations.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Internal Links - Cross-linking for SEO */}
+      <section className="py-12 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-playfair text-2xl font-bold mb-6 text-gray-900">
+            More From Jealous Fork
+          </h2>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href="/full-menu">
+              <a className="px-6 py-3 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition-colors font-medium">
+                Full Breakfast Menu
+              </a>
+            </Link>
+            <Link href="/near/kendall">
+              <a className="px-6 py-3 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition-colors font-medium">
+                Breakfast in Kendall
+              </a>
+            </Link>
+            <Link href="/near/west-kendall">
+              <a className="px-6 py-3 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition-colors font-medium">
+                Near West Kendall
+              </a>
+            </Link>
+            <Link href="/near/doral">
+              <a className="px-6 py-3 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition-colors font-medium">
+                Near Doral
+              </a>
+            </Link>
+            <Link href="/near/coral-gables">
+              <a className="px-6 py-3 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition-colors font-medium">
+                Near Coral Gables
+              </a>
+            </Link>
           </div>
         </div>
       </section>

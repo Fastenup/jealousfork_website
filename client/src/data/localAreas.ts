@@ -21,38 +21,38 @@ export const localAreas: LocalArea[] = [
   {
     name: "Edgewater",
     slug: "edgewater",
-    description: "Located right in the heart of Edgewater, we're Miami's original artisan pancake restaurant serving our local neighborhood with Instagram-worthy pancakes and gourmet burgers daily.",
-    distance: "1 min"
+    description: "Bringing Miami's best artisan pancakes and brunch to Edgewater residents. Our award-winning breakfast creations are well worth the drive from this vibrant waterfront neighborhood.",
+    distance: "20 min"
   },
   {
     name: "Midtown Miami",
     slug: "midtown-miami", 
-    description: "Just minutes from the vibrant Midtown district, our artisan pancakes and craft burgers are perfect for Midtown professionals, shoppers, and Design District visitors.",
-    distance: "5 min"
+    description: "A must-visit brunch destination for Midtown Miami residents and Design District shoppers. Our artisan pancakes and gourmet burgers are worth the short drive from Midtown.",
+    distance: "18 min"
   },
   {
     name: "Wynwood",
     slug: "wynwood",
     description: "The perfect brunch destination after exploring Wynwood's world-famous street art. Our Instagram-worthy pancakes complement the district's creative energy and artistic spirit.",
-    distance: "8 min"
+    distance: "20 min"
   },
   {
     name: "Design District",
     slug: "design-district",
     description: "Where luxury meets comfort food. Our artistic pancake presentations and gourmet burgers complement the Design District's sophisticated shopping and gallery atmosphere.",
-    distance: "6 min"
+    distance: "18 min"
   },
   {
     name: "Upper East Side",
     slug: "upper-east-side",
-    description: "Serving Miami's trendy Upper East Side with our signature breakfast and lunch offerings. A neighborhood favorite for young professionals and families.",
-    distance: "8 min"
+    description: "Serving Miami's trendy Upper East Side with our signature breakfast and brunch offerings. Our artisan pancakes and gourmet burgers are a favorite among UES foodies.",
+    distance: "22 min"
   },
   {
     name: "Downtown Miami",
     slug: "downtown-miami",
     description: "Bringing artisan quality to Miami's business district. Our famous pancakes and burgers fuel downtown professionals, residents, and tourists exploring the urban core.",
-    distance: "12 min"
+    distance: "15 min"
   },
   {
     name: "Brickell",
@@ -155,5 +155,53 @@ export const localAreas: LocalArea[] = [
     slug: "the-crossings",
     description: "Bringing Miami's original artisan pancake restaurant experience to The Crossings. Our exceptional breakfast and brunch offerings are worth the drive for discerning families.",
     distance: "42 min"
+  },
+  {
+    name: "Dadeland",
+    slug: "dadeland",
+    description: "Just minutes from Dadeland Mall, Jealous Fork is the perfect breakfast and brunch stop for Dadeland shoppers and residents. Award-winning artisan pancakes and gourmet burgers — a perfect complement to a day of shopping.",
+    distance: "15 min"
+  },
+  {
+    name: "Hialeah",
+    slug: "hialeah",
+    description: "Bringing Miami's best artisan pancakes and brunch to Hialeah residents. Our creative breakfast creations and gourmet burgers are worth the drive from Hialeah — a family-friendly destination for all ages.",
+    distance: "30 min"
+  },
+  {
+    name: "Flagami",
+    slug: "flagami",
+    description: "Serving the Flagami community with award-winning artisan pancakes and gourmet burgers. Just a short drive from Flagami to the best breakfast experience in Miami.",
+    distance: "15 min"
+  },
+  {
+    name: "Miami Lakes",
+    slug: "miami-lakes",
+    description: "Miami Lakes' favorite breakfast destination is just a drive away. Jealous Fork serves artisan pancakes, fluffy breakfast stacks, and gourmet burgers that make the trip from Miami Lakes well worthwhile.",
+    distance: "35 min"
+  },
+  {
+    name: "Town and Country",
+    slug: "town-and-country",
+    description: "Conveniently located near Town and Country, Jealous Fork is your go-to breakfast and brunch spot. Our artisan pancakes and gourmet burgers are just minutes away from the Town and Country area.",
+    distance: "10 min"
+  },
+  {
+    name: "South Miami",
+    slug: "south-miami",
+    description: "South Miami's premier breakfast and brunch destination is just a quick drive away. Jealous Fork serves award-winning artisan pancakes and creative brunch dishes loved by South Miami families and UM students.",
+    distance: "20 min"
+  },
+  {
+    name: "Pinecrest",
+    slug: "pinecrest",
+    description: "Pinecrest families love Jealous Fork's artisan pancakes and brunch. Just a short drive from Pinecrest, our award-winning breakfast creations and dog-friendly patio make us the perfect weekend destination.",
+    distance: "20 min"
+  },
+  {
+    name: "Cutler Bay",
+    slug: "cutler-bay",
+    description: "Bringing Miami's original artisan pancake experience to Cutler Bay. Our award-winning pancakes, creative breakfast dishes, and Friday-Saturday gourmet burgers are worth the drive from Cutler Bay.",
+    distance: "30 min"
   }
 ];

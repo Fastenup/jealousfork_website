@@ -1,5 +1,5 @@
 # Jealous Fork Miami - Robots.txt
-# https://jealousfork.com
+# https://www.jealousfork.com
 
 User-agent: *
 Allow: /
@@ -78,10 +78,10 @@ User-agent: Applebot-Extended
 Allow: /
 
 # LLMs.txt for AI-readable content
-# See: https://jealousfork.com/llms.txt
+# See: https://www.jealousfork.com/llms.txt
 
 # Sitemap location
-Sitemap: https://jealousfork.com/sitemap.xml
+Sitemap: https://www.jealousfork.com/sitemap.xml
 
 # Host
-Host: https://jealousfork.com
+Host: https://www.jealousfork.com

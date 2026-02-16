@@ -3,32 +3,38 @@ export default function StructuredData() {
     "@context": "https://schema.org",
     "@type": "Restaurant",
     "name": "Jealous Fork",
-    "description": "Miami's original artisan pancake restaurant serving Instagram-worthy pancakes and gourmet burgers since our food truck days.",
+    "description": "Award-winning artisan pancakes & gourmet burgers in Kendall, Miami. Miami's original artisan pancake restaurant — Instagram-worthy breakfast, fluffy pancake stacks, and creative brunch dishes. 4.7★ Google, 4.6★ Yelp.",
     "url": "https://www.jealousfork.com",
-    "telephone": "+1-305-555-0123",
-    "email": "info@jealousfork.com",
+    "telephone": "+1-305-699-1430",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "2000 N Bayshore Dr",
+      "streetAddress": "14417 SW 42nd St",
       "addressLocality": "Miami",
       "addressRegion": "FL",
-      "postalCode": "33137",
+      "postalCode": "33175",
       "addressCountry": "US"
     },
     "geo": {
       "@type": "GeoCoordinates",
-      "latitude": 25.7965,
-      "longitude": -80.1935
+      "latitude": 25.7323,
+      "longitude": -80.4168
     },
-    "openingHours": [
-      "Tu-Su 09:00-15:00"
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "14:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "14:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "14:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "21:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "21:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "09:00", "closes": "15:00" }
     ],
-    "servesCuisine": ["American", "Breakfast", "Brunch"],
+    "servesCuisine": ["American", "Breakfast", "Brunch", "Pancakes", "Burgers"],
     "priceRange": "$$",
+    "acceptsReservations": "True",
+    "menu": "https://www.jealousfork.com/full-menu",
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.7",
-      "reviewCount": "1247",
+      "reviewCount": "400",
       "bestRating": "5",
       "worstRating": "1"
     },
@@ -39,54 +45,65 @@ export default function StructuredData() {
       "hasMenuSection": [
         {
           "@type": "MenuSection",
-          "name": "Jealous Fork - Day Menu",
-          "description": "Available Tuesday-Sunday 9AM-3PM",
+          "name": "Signature Pancakes",
+          "description": "Award-winning artisan pancakes - Available Tue-Sun 9AM-3PM",
           "hasMenuItem": [
             {
               "@type": "MenuItem",
-              "name": "Signature Stack",
-              "description": "Three fluffy pancakes with maple syrup and butter",
-              "offers": {
-                "@type": "Offer",
-                "price": "14.99",
-                "priceCurrency": "USD"
-              }
+              "name": "Hot Maple Flatbread",
+              "description": "Cup and char pepperoni, double cream mozzarella, and red chili-black pepper maple",
+              "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Chocolate Oreo Chip Pancake",
+              "description": "Crushed Oreos, chocolate chips, Oreo whipped cream, chocolate ganache",
+              "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Peanut Butter Cup Pancake",
+              "description": "Reese's cups, nutter butter whipped cream, peanut butter maple syrup",
+              "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Lemon Curd and Blueberry Pancake",
+              "description": "Fresh blueberries and tangy lemon curd",
+              "offers": { "@type": "Offer", "price": "15", "priceCurrency": "USD" }
             }
           ]
         },
         {
-          "@type": "MenuSection", 
-          "name": "Jealous Burger - Evening Menu",
-          "description": "Available Friday-Saturday 5PM-9PM",
+          "@type": "MenuSection",
+          "name": "Gourmet Burgers (Jealous Burger)",
+          "description": "Available Friday-Saturday 3PM-9PM",
           "hasMenuItem": [
             {
               "@type": "MenuItem",
-              "name": "Jealous Burger",
-              "description": "Signature beef burger with special sauce",
-              "offers": {
-                "@type": "Offer",
-                "price": "16.99",
-                "priceCurrency": "USD"
-              }
+              "name": "The Classic",
+              "description": "Cheddar Cheese, That Secret Sauce, Tomato, Onion, Spring Greens",
+              "offers": { "@type": "Offer", "price": "13", "priceCurrency": "USD" }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Jesse James",
+              "description": "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese",
+              "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Que Bola Meng",
+              "description": "Guava & Queso, Caramelized Onions, Papitas",
+              "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" }
             }
           ]
         }
       ]
     },
-    "review": [
-      {
-        "@type": "Review",
-        "author": {
-          "@type": "Person",
-          "name": "Sarah M."
-        },
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5"
-        },
-        "reviewBody": "Absolutely incredible! The pancakes are truly Instagram-worthy and taste even better than they look."
-      }
+    "founder": [
+      { "@type": "Person", "name": "Joaquin Ortiz" },
+      { "@type": "Person", "name": "Henrik Telle" }
     ],
     "sameAs": [
       "https://www.instagram.com/jealousfork",
@@ -110,6 +127,12 @@ export default function StructuredData() {
         "position": 2,
         "name": "Menu",
         "item": "https://www.jealousfork.com/full-menu"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Burgers",
+        "item": "https://www.jealousfork.com/burgers"
       }
     ]
   };

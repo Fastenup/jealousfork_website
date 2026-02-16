@@ -12,11 +12,11 @@ export default function Home() {
   return (
     <>
       <SEOHead
-        title="Jealous Fork - Award-Winning Artisan Pancakes & Burgers | Miami FL"
-        description="Award-winning artisan pancakes & gourmet burgers in Kendall, Miami FL. 4.7 star Google Rating. Open Tue-Sun 9AM. Featured on Telemundo. Order online or dine in!"
+        title="Best Pancakes & Breakfast in Kendall, Miami | Jealous Fork — Brunch & Burgers"
+        description="Jealous Fork — Miami's #1 artisan pancake restaurant in Kendall. Best pancakes near you, fluffy breakfast stacks & gourmet burgers. ★4.7 Google ★4.6 Yelp. Open Tue-Sun 9AM. Order online or reserve on Resy!"
         canonical="https://www.jealousfork.com/"
         ogImage="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
-        keywords="best pancakes Miami, artisan pancakes Florida, pancakes near me, breakfast Miami, brunch Miami, gourmet burgers Miami, Jealous Fork, Miami restaurant, Kendall breakfast, fluffy pancakes Miami"
+        keywords="best pancakes in miami, pancakes near me, breakfast near me, brunch near me, breakfast kendall, brunch kendall, best breakfast kendall, best pancakes miami, artisan pancakes Miami, fluffy pancakes miami, breakfast miami, brunch miami, gourmet burgers Miami, Jealous Fork, pancake restaurant miami"
         includeFAQ={true}
       />
       <Navigation />

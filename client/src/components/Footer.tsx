@@ -79,28 +79,19 @@ export default function Footer() {
               <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
               <ul className="space-y-2">
                 <li>
-                  <button 
-                    onClick={() => scrollToSection('home')}
-                    className="text-gray-400 hover:text-gray-200 transition-colors"
-                  >
-                    Home
-                  </button>
+                  <Link href="/">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Home</a>
+                  </Link>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => scrollToSection('about')}
-                    className="text-gray-400 hover:text-gray-200 transition-colors"
-                  >
-                    About
-                  </button>
+                  <Link href="/full-menu">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Breakfast Menu</a>
+                  </Link>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => scrollToSection('menu')}
-                    className="text-gray-400 hover:text-gray-200 transition-colors"
-                  >
-                    Menu
-                  </button>
+                  <Link href="/burgers">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Gourmet Burgers</a>
+                  </Link>
                 </li>
                 <li>
                   <button 
@@ -111,8 +102,8 @@ export default function Footer() {
                   </button>
                 </li>
                 <li>
-                  <Link href="/gallery">
-                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Gallery</a>
+                  <Link href="/near/kendall">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Breakfast in Kendall</a>
                   </Link>
                 </li>
               </ul>
@@ -123,8 +114,18 @@ export default function Footer() {
               <h3 className="font-semibold text-lg mb-4">We Serve</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/near/south-beach">
-                    <a className="text-gray-400 hover:text-gray-200 transition-colors">South Beach</a>
+                  <Link href="/near/kendall">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Kendall</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/near/west-kendall">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">West Kendall</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/near/westchester">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Westchester</a>
                   </Link>
                 </li>
                 <li>
@@ -133,13 +134,18 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/near/coconut-grove">
-                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Coconut Grove</a>
+                  <Link href="/near/doral">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Doral</a>
                   </Link>
                 </li>
                 <li>
                   <Link href="/near/brickell">
                     <a className="text-gray-400 hover:text-gray-200 transition-colors">Brickell</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/near/dadeland">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Dadeland</a>
                   </Link>
                 </li>
                 <li>
