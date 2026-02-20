@@ -3,6 +3,8 @@ export interface LocalArea {
   slug: string;
   description: string;
   distance?: string;
+  seoTitle?: string;  // Custom SEO title override for high-value pages
+  seoDescription?: string;  // Custom meta description override
 }
 
 export const localAreas: LocalArea[] = [
@@ -10,7 +12,9 @@ export const localAreas: LocalArea[] = [
     name: "Kendall",
     slug: "kendall",
     description: "Located in the heart of Kendall at 14417 SW 42nd St, Jealous Fork is your neighborhood's favorite breakfast and brunch destination. We serve award-winning artisan pancakes, fluffy Japanese-style stacks, and gourmet burgers that have made us famous across Miami. Whether you're searching for the best pancakes near you or a perfect brunch spot in Kendall, we're right here in your community.",
-    distance: "5 min"
+    distance: "5 min",
+    seoTitle: "Best Pancakes in Kendall, Miami | Jealous Fork — Artisan Pancakes & Brunch",
+    seoDescription: "Best artisan pancakes in Kendall, Miami — Jealous Fork is your neighborhood's 4.7★ Google-rated pancake spot. 5 min away at 14417 SW 42nd St. Fluffy stacks & gourmet brunch!"
   },
   {
     name: "West Kendall",
@@ -34,7 +38,9 @@ export const localAreas: LocalArea[] = [
     name: "Wynwood",
     slug: "wynwood",
     description: "The perfect brunch destination after exploring Wynwood's world-famous street art. Our Instagram-worthy pancakes complement the district's creative energy and artistic spirit.",
-    distance: "20 min"
+    distance: "20 min",
+    seoTitle: "Best Pancakes Near Wynwood, Miami | Jealous Fork — Instagram-Worthy Brunch",
+    seoDescription: "Best artisan pancakes near Wynwood, Miami — Jealous Fork is rated 4.7★ on Google. 20 min from Wynwood Walls. Instagram-worthy fluffy stacks & creative brunch!"
   },
   {
     name: "Design District",
@@ -52,19 +58,25 @@ export const localAreas: LocalArea[] = [
     name: "Downtown Miami",
     slug: "downtown-miami",
     description: "Bringing artisan quality to Miami's business district. Our famous pancakes and burgers fuel downtown professionals, residents, and tourists exploring the urban core.",
-    distance: "15 min"
+    distance: "15 min",
+    seoTitle: "Best Pancakes Near Downtown Miami | Jealous Fork — Artisan Brunch",
+    seoDescription: "Best artisan pancakes near Downtown Miami — Jealous Fork is rated 4.7★ on Google. Just 15 min away. Award-winning fluffy stacks & gourmet brunch for professionals!"
   },
   {
     name: "Brickell",
     slug: "brickell",
     description: "Miami's financial district's favorite breakfast destination. Our artisan pancakes and gourmet burgers are perfect for business meetings, weekend brunches, and Brickell residents.",
-    distance: "18 min"
+    distance: "18 min",
+    seoTitle: "Best Pancakes Near Brickell, Miami | Jealous Fork — Artisan Brunch",
+    seoDescription: "Best artisan pancakes near Brickell, Miami — Jealous Fork is rated 4.7★ on Google. Just 18 min from Brickell City Centre. Award-winning fluffy stacks & weekend brunch!"
   },
   {
     name: "South Beach",
     slug: "south-beach",
     description: "Looking for the best breakfast in South Beach? Jealous Fork is just 25 minutes from Ocean Drive and worth every minute. Fuel your South Beach adventures with our award-winning artisan pancakes — perfect before hitting the beach or after a night on Lincoln Road. 4.7★ Google | 4.6★ Yelp | Featured on Telemundo. Book on Resy or order delivery to your South Beach hotel!",
-    distance: "25 min"
+    distance: "25 min",
+    seoTitle: "Best Pancakes in South Beach, Miami | Jealous Fork — Artisan Brunch",
+    seoDescription: "Craving artisan pancakes in South Beach? Jealous Fork brings Miami's best fluffy stacks to SoBe — 4.7★ Google rated. Just 25 min from Ocean Drive. Award-winning brunch worth the drive!"
   },
   {
     name: "Aventura",
@@ -76,13 +88,17 @@ export const localAreas: LocalArea[] = [
     name: "Coral Gables",
     slug: "coral-gables",
     description: "Serving the City Beautiful with our artisan breakfast creations. Popular with University of Miami students, faculty, and Coral Gables families seeking quality brunch.",
-    distance: "25 min"
+    distance: "25 min",
+    seoTitle: "Best Pancakes Near Coral Gables | Jealous Fork — Miami Artisan Brunch",
+    seoDescription: "Best artisan pancakes near Coral Gables, Miami — Jealous Fork is rated 4.7★ on Google. 25 min from UM campus. Award-winning fluffy stacks & creative brunch!"
   },
   {
     name: "Coconut Grove",
     slug: "coconut-grove",
     description: "Bringing our bohemian breakfast vibes to match the Grove's laid-back atmosphere. Perfect for families and visitors exploring this historic waterfront neighborhood.",
-    distance: "28 min"
+    distance: "28 min",
+    seoTitle: "Best Pancakes Near Coconut Grove | Jealous Fork — Artisan Miami Brunch",
+    seoDescription: "Best artisan pancakes near Coconut Grove, Miami — Jealous Fork is rated 4.7★ on Google. 28 min from CocoWalk. Award-winning fluffy stacks & bohemian brunch vibes!"
   },
   {
     name: "Little Havana",
@@ -142,7 +158,9 @@ export const localAreas: LocalArea[] = [
     name: "Doral",
     slug: "doral",
     description: "Doral's favorite brunch spot is just 38 minutes away! Jealous Fork brings Miami's most Instagram-worthy pancakes to the City of Doral. Featured on Telemundo National, our artisan creations like the Chocolate Oreo Chip Pancake and Hot Maple Flatbread have earned us 4.7★ on Google. Perfect for Doral families, Doral business professionals, and anyone craving the best breakfast near Doral Golf Resort, CityPlace Doral, or Downtown Doral.",
-    distance: "38 min"
+    distance: "38 min",
+    seoTitle: "Best Pancakes Near Doral, FL | Jealous Fork — Artisan Pancakes & Brunch",
+    seoDescription: "Best artisan pancakes near Doral, FL — Jealous Fork is Miami's 4.7★ Google-rated pancake destination. Just 38 min from CityPlace Doral. Award-winning fluffy stacks & brunch!"
   },
   {
     name: "The Hammocks",
@@ -160,7 +178,9 @@ export const localAreas: LocalArea[] = [
     name: "Dadeland",
     slug: "dadeland",
     description: "Just minutes from Dadeland Mall, Jealous Fork is the perfect breakfast and brunch stop for Dadeland shoppers and residents. Award-winning artisan pancakes and gourmet burgers — a perfect complement to a day of shopping.",
-    distance: "15 min"
+    distance: "15 min",
+    seoTitle: "Best Pancakes Near Dadeland Mall | Jealous Fork — Miami Artisan Brunch",
+    seoDescription: "Best artisan pancakes near Dadeland Mall, Miami — Jealous Fork is rated 4.7★ on Google. Just 15 min away. Perfect brunch before or after shopping!"
   },
   {
     name: "Hialeah",
