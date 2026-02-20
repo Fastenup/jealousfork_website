@@ -31,8 +31,10 @@ export const localAreas: LocalArea[] = [
   {
     name: "Midtown Miami",
     slug: "midtown-miami", 
-    description: "A must-visit brunch destination for Midtown Miami residents and Design District shoppers. Our artisan pancakes and gourmet burgers are worth the short drive from Midtown.",
-    distance: "18 min"
+    description: "Craving the best brunch near Midtown Miami? Jealous Fork is just 18 minutes from the Design District — serving award-winning artisan pancakes that have earned us 4.7★ on Google and features on Telemundo. Perfect for a leisurely brunch after shopping at Miami's luxury boutiques. Our fluffy Japanese-style stacks and savory egg benedict options are favorites among Midtown's foodies. Book on Resy!",
+    distance: "18 min",
+    seoTitle: "Best Brunch Near Midtown Miami | Jealous Fork — Award-Winning Pancakes",
+    seoDescription: "Best brunch near Midtown Miami & Design District — Jealous Fork serves 4.7★ artisan pancakes just 18 min away. Featured on Telemundo. Perfect post-shopping brunch spot!"
   },
   {
     name: "Wynwood",
@@ -109,8 +111,10 @@ export const localAreas: LocalArea[] = [
     {
     name: "Kendale Lakes",
     slug: "kendale-lakes",
-    description: "Bringing Miami's original artisan pancake experience to Kendale Lakes families and residents. Our Instagram-worthy breakfast creations are worth the drive from this vibrant community.",
-    distance: "30 min"
+    description: "Kendale Lakes families rave about Jealous Fork — Miami's original artisan pancake destination. Just 30 minutes from your neighborhood, our Instagram-worthy breakfast creations (4.7★ Google, 4.6★ Yelp) are worth every minute. From our famous Chocolate Oreo Chip Pancake to savory brunch options, we're the #1 choice for Kendale Lakes residents craving exceptional breakfast. Kid-friendly with a dog-friendly patio!",
+    distance: "30 min",
+    seoTitle: "Best Pancakes Near Kendale Lakes | Jealous Fork — Miami's Top Breakfast",
+    seoDescription: "Best pancakes near Kendale Lakes, FL — Jealous Fork is Miami's 4.7★ artisan pancake restaurant. Award-winning breakfast just 30 min away. Kid & dog-friendly!"
   },
   {
     name: "Tamiami",
