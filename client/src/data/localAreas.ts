@@ -63,7 +63,7 @@ export const localAreas: LocalArea[] = [
   {
     name: "South Beach",
     slug: "south-beach",
-    description: "The perfect pre-beach or post-beach meal! Our hearty pancakes and burgers fuel your South Beach adventures and beachside relaxation.",
+    description: "Looking for the best breakfast in South Beach? Jealous Fork is just 25 minutes from Ocean Drive and worth every minute. Fuel your South Beach adventures with our award-winning artisan pancakes — perfect before hitting the beach or after a night on Lincoln Road. 4.7★ Google | 4.6★ Yelp | Featured on Telemundo. Book on Resy or order delivery to your South Beach hotel!",
     distance: "25 min"
   },
   {
@@ -141,7 +141,7 @@ export const localAreas: LocalArea[] = [
   {
     name: "Doral",
     slug: "doral",
-    description: "Bringing our award-winning breakfast experience to Doral's vibrant community. Our artisan pancakes and gourmet burgers are perfect for families and business professionals alike.",
+    description: "Doral's favorite brunch spot is just 38 minutes away! Jealous Fork brings Miami's most Instagram-worthy pancakes to the City of Doral. Featured on Telemundo National, our artisan creations like the Chocolate Oreo Chip Pancake and Hot Maple Flatbread have earned us 4.7★ on Google. Perfect for Doral families, Doral business professionals, and anyone craving the best breakfast near Doral Golf Resort, CityPlace Doral, or Downtown Doral.",
     distance: "38 min"
   },
   {
