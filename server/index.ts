@@ -4,6 +4,7 @@ import { setupVite, serveStatic, log } from "./vite";
 import { initializeScheduledSync } from "./squareScheduler";
 import { initializeHoursSync } from "./hoursScheduler";
 import path from "path";
+import fs from "fs";
 import dotenv from "dotenv";
 
 // Load environment variables from .env.local and .env files
@@ -52,6 +53,22 @@ app.use((req, res, next) => {
 
     res.status(status).json({ message });
     throw err;
+  });
+
+  // Ensure sitemap/robots are always directly accessible
+  app.get(['/sitemap.xml', '/robots.txt'], async (req, res, next) => {
+    try {
+      const file = req.path.replace('/', '');
+      const candidates = [
+        path.resolve(process.cwd(), 'public', file),
+        path.resolve(process.cwd(), 'dist', 'public', file),
+      ];
+      const hit = candidates.find(p => fs.existsSync(p));
+      if (!hit) return res.status(404).send('Not found');
+      res.sendFile(hit);
+    } catch (error) {
+      next(error);
+    }
   });
 
   // Add static file serving for both development and production
