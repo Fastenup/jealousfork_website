@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <>
       <SEOHead
-        title="Jealous Fork Menu: Best Pancakes, Breakfast & Brunch in Miami"
-        description="Jealous Fork menu in Kendall, Miami: artisan pancakes, brunch favorites, and gourmet burgers. ★4.7 Google ★4.6 Yelp. Open Tue-Sun 9AM. Order pickup online."
+        title="Best Pancakes Near Me in Kendall Miami | Jealous Fork"
+        description="Best pancakes near me in Kendall, Miami at Jealous Fork. ★4.7 Google rated breakfast and brunch spot. Open Tue-Sun 9AM. View menu and order pickup online."
         canonical="https://www.jealousfork.com/"
         ogImage="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
         keywords="best pancakes in miami, pancakes near me, breakfast near me, brunch near me, breakfast kendall, brunch kendall, best breakfast kendall, best pancakes miami, artisan pancakes Miami, fluffy pancakes miami, breakfast miami, brunch miami, gourmet burgers Miami, Jealous Fork, pancake restaurant miami"
