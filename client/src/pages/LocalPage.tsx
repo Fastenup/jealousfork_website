@@ -19,8 +19,8 @@ export default function LocalPage() {
   };
 
   // SEO-optimized title targeting "pancakes [neighborhood]" searches - use custom title if available
-  const title = areaInfo.seoTitle || `Best Pancakes Near ${areaInfo.name} | Jealous Fork — Artisan Pancakes & Brunch`;
-  const description = areaInfo.seoDescription || `Best artisan pancakes near ${areaInfo.name}, Miami — Jealous Fork is rated 4.7★ on Google. Just ${areaInfo.distance || "minutes"} away. Award-winning fluffy stacks, creative brunch, gourmet burgers. Open Tue-Sun!`;
+  const title = areaInfo.seoTitle || `Best Breakfast & Brunch Near ${areaInfo.name} | Jealous Fork`;
+  const description = areaInfo.seoDescription || `Looking for breakfast near me in ${areaInfo.name}? Jealous Fork serves artisan pancakes, brunch, and burgers in Miami. Rated 4.7★ on Google. Open Tue-Sun.`;
 
   // Location-specific keywords targeting actual GSC search queries
   const keywords = `breakfast ${areaInfo.name.toLowerCase()}, brunch ${areaInfo.name.toLowerCase()}, best breakfast ${areaInfo.name.toLowerCase()}, best brunch ${areaInfo.name.toLowerCase()}, pancakes near ${areaInfo.name.toLowerCase()}, breakfast near me, pancakes near me, brunch near me, best pancakes ${areaInfo.name.toLowerCase()}, restaurants ${areaInfo.name.toLowerCase()}, breakfast places ${areaInfo.name.toLowerCase()}`;
