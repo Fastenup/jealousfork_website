@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import path from "path";
+import { existsSync } from "fs";
 import { storage } from "./storage";
 import { createSquareServiceFixed } from "./squareServiceFixed";
 import { z } from "zod";
@@ -1262,14 +1263,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Serve sitemap.xml
+  // Serve sitemap.xml / robots.txt from whichever build path exists
   app.get('/sitemap.xml', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'public', 'sitemap.xml'));
+    const candidates = [
+      path.join(process.cwd(), 'public', 'sitemap.xml'),
+      path.join(process.cwd(), 'dist', 'public', 'sitemap.xml'),
+    ];
+    const file = candidates.find((p) => existsSync(p));
+    if (!file) return res.status(404).json({ message: 'sitemap.xml not found' });
+    res.sendFile(file);
   });
 
-  // Serve robots.txt
   app.get('/robots.txt', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'public', 'robots.txt'));
+    const candidates = [
+      path.join(process.cwd(), 'public', 'robots.txt'),
+      path.join(process.cwd(), 'dist', 'public', 'robots.txt'),
+    ];
+    const file = candidates.find((p) => existsSync(p));
+    if (!file) return res.status(404).json({ message: 'robots.txt not found' });
+    res.sendFile(file);
   });
 
   // Menu items endpoint (comprehensive menu data for admin)
