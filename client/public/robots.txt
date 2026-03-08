@@ -1,0 +1,87 @@
+# Jealous Fork Miami - Robots.txt
+# https://jealousfork.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Priority pages for crawling
+Allow: /full-menu
+Allow: /burgers
+Allow: /near/
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /llms.txt
+
+# Bing Bot - Welcome!
+User-agent: bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: msnbot
+Allow: /
+Crawl-delay: 1
+
+# Google Bot
+User-agent: Googlebot
+Allow: /
+
+# Social media and review platforms
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# AI/LLM Crawlers - Welcome all AI search and answer engines
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# LLMs.txt for AI-readable content
+# See: https://jealousfork.com/llms.txt
+
+# Sitemap location
+Sitemap: https://jealousfork.com/sitemap.xml
+
+# Host
+Host: https://jealousfork.com
