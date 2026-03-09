@@ -25,9 +25,14 @@ ENV NODE_ENV=production
 
 # Copy built output
 COPY --from=builder /app/dist ./dist
+# Copy root public folder (sitemap, robots, etc.)
 COPY --from=builder /app/public ./public
+# Also copy Vite-built public assets to merge both
+COPY --from=builder /app/dist/public ./public
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
+
+# Build timestamp for cache busting: 2026-03-09
 
 EXPOSE 5000
 ENV PORT=5000
