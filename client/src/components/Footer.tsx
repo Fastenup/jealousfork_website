@@ -102,6 +102,11 @@ export default function Footer() {
                   </button>
                 </li>
                 <li>
+                  <Link href="/breakfast-near-me">
+                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Breakfast Near Me</a>
+                  </Link>
+                </li>
+                <li>
                   <Link href="/near/kendall">
                     <a className="text-gray-400 hover:text-gray-200 transition-colors">Breakfast in Kendall</a>
                   </Link>

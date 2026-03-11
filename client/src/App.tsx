@@ -15,11 +15,13 @@ import CheckoutPage from "@/pages/CheckoutPage";
 import OrderConfirmationPage from "@/pages/OrderConfirmationPage";
 import ProfessionalAdminPage from "@/pages/ProfessionalAdminPage";
 import BurgersPage from "@/pages/BurgersPage";
+import BreakfastNearMePage from "@/pages/BreakfastNearMePage";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/breakfast-near-me" component={BreakfastNearMePage} />
       <Route path="/burgers" component={BurgersPage} />
       <Route path="/menu/:slug?" component={FullMenuPage} />
       <Route path="/full-menu" component={FullMenuPage} />
