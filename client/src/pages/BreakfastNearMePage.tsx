@@ -66,9 +66,9 @@ const reviews = [
 ];
 
 export default function BreakfastNearMePage() {
-  const title = "Best Breakfast Near Me in Kendall & Miami | Jealous Fork";
+  const title = "Breakfast Near Me Kendall/Miami — 4.7★ Pancakes | Jealous Fork";
   const description =
-    "Looking for the best breakfast near me? Jealous Fork in Kendall, Miami serves award-winning artisan pancakes, brunch, and classic breakfast. Rated 4.7★ on Google. Open Tue-Sun from 9AM.";
+    "Searching breakfast near me? Jealous Fork: Kendall's #1 rated breakfast (4.7★). Artisan pancakes, eggs benedict, brunch. Open Tue-Sun 9AM. View menu + reserve.";
   const keywords =
     "breakfast near me, best breakfast near me, breakfast near me Kendall, breakfast near me Miami, breakfast places near me, pancakes near me, brunch near me, best breakfast Miami, breakfast restaurant Kendall";
 
