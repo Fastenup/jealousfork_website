@@ -11,6 +11,24 @@ import dotenv from "dotenv";
 dotenv.config({ path: ['.env.local', '.env'] });
 
 const app = express();
+
+// Canonical host enforcement for SEO (avoid duplicate host indexing)
+app.use((req, res, next) => {
+  const host = (req.headers.host || '').toLowerCase();
+  const proto = (req.headers['x-forwarded-proto'] as string) || req.protocol;
+
+  if (host === 'jealousfork.com') {
+    const redirectUrl = `https://www.jealousfork.com${req.originalUrl || '/'}`;
+    return res.redirect(301, redirectUrl);
+  }
+
+  if (proto && proto !== 'https' && host.includes('jealousfork.com')) {
+    return res.redirect(301, `https://${host}${req.originalUrl || '/'}`);
+  }
+
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

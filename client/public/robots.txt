@@ -81,7 +81,7 @@ Allow: /
 # See: https://jealousfork.com/llms.txt
 
 # Sitemap location
-Sitemap: https://jealousfork.com/sitemap.xml
+Sitemap: https://www.jealousfork.com/sitemap.xml
 
 # Host
-Host: https://jealousfork.com
+Host: https://www.jealousfork.com
