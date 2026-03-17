@@ -79,9 +79,13 @@ app.use((req, res, next) => {
       const file = req.path.replace('/', '');
       const candidates = [
         path.resolve(process.cwd(), 'public', file),
+        path.resolve(process.cwd(), 'client', 'public', file),
         path.resolve(process.cwd(), 'dist', 'public', file),
+        path.resolve(process.cwd(), 'dist', 'client', 'public', file),
         path.resolve(import.meta.dirname, '..', 'public', file),
+        path.resolve(import.meta.dirname, '..', 'client', 'public', file),
         path.resolve(import.meta.dirname, '..', 'dist', 'public', file),
+        path.resolve(import.meta.dirname, '..', 'dist', 'client', 'public', file),
       ];
       const hit = candidates.find(p => fs.existsSync(p));
       if (!hit) return res.status(404).send('Not found');
