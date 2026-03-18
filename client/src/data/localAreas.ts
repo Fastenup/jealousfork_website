@@ -19,8 +19,10 @@ export const localAreas: LocalArea[] = [
   {
     name: "West Kendall",
     slug: "west-kendall",
-    description: "West Kendall's premier breakfast and brunch destination is just minutes away. Our award-winning artisan pancakes and gourmet burgers bring families together. From fluffy pancakes to Instagram-worthy breakfast creations, Jealous Fork delivers an exceptional dining experience worth the short drive from West Kendall.",
-    distance: "15 min"
+    description: "West Kendall families choose Jealous Fork for award-winning artisan pancakes, creative brunch plates, and a relaxed, kid-friendly vibe. Located about 15 minutes away near Town & Country, we're a go-to weekend breakfast spot for neighborhoods around Kendall Drive and the Turnpike. From fluffy Japanese-style stacks to savory brunch favorites, every dish is made fresh and built for shareable moments.",
+    distance: "15 min",
+    seoTitle: "Best Pancakes Near West Kendall, Miami | Jealous Fork — 4.7★ Brunch",
+    seoDescription: "Looking for the best breakfast near West Kendall? Jealous Fork is a 4.7★ artisan pancake spot just 15 minutes away. Family-friendly brunch, creative stacks, and easy parking."
   },
   {
     name: "Edgewater",
@@ -137,8 +139,10 @@ export const localAreas: LocalArea[] = [
   {
     name: "Westchester",
     slug: "westchester",
-    description: "Serving the established Westchester community with our signature artisan pancakes and gourmet burgers. A family-friendly destination for this well-established Miami neighborhood.",
-    distance: "22 min"
+    description: "Westchester locals come to Jealous Fork for artisan pancakes, standout brunch specials, and a comfortable dining experience that works for families and groups. We're about 22 minutes away and a popular breakfast destination for residents near SW 8th St and Tropical Park. Whether you're craving sweet stacks or hearty brunch plates, you'll find quality worth the short drive.",
+    distance: "22 min",
+    seoTitle: "Best Brunch Near Westchester, Miami | Jealous Fork — Artisan Pancakes",
+    seoDescription: "Top brunch near Westchester, Miami. Jealous Fork serves artisan pancakes and breakfast favorites just 22 minutes away—perfect for families and weekend brunch plans."
   },
   {
     name: "Sunset",
