@@ -56,16 +56,26 @@ const orderRequestSchema = z.object({
 export async function registerRoutes(app: Express): Promise<Server> {
   let squareService: any;
 
-  // Durable idempotency storage (DB-backed) to survive restarts/redeploys
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS order_idempotency_keys (
-      request_key TEXT PRIMARY KEY,
-      status TEXT NOT NULL,
-      response_payload JSONB,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `);
+  // Durable idempotency storage (DB-backed) with safe fallback
+  let useDbIdempotency = true;
+  const inFlightOrderRequests = new Set<string>();
+  const completedOrderResponses = new Map<string, any>();
+  const ORDER_RESPONSE_CACHE_MAX = 5000;
+
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS order_idempotency_keys (
+        request_key TEXT PRIMARY KEY,
+        status TEXT NOT NULL,
+        response_payload JSONB,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+  } catch (idempotencyInitError) {
+    useDbIdempotency = false;
+    console.error('DB idempotency init failed; falling back to in-memory protection:', idempotencyInitError);
+  }
 
   try {
     squareService = createSquareServiceFixed();
@@ -974,44 +984,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
       clientRequestId = orderData.clientRequestId?.trim();
 
       if (clientRequestId) {
-        // Try to claim this idempotency key for processing (durable across restarts)
-        const claim = await pool.query(
-          `INSERT INTO order_idempotency_keys (request_key, status)
-           VALUES ($1, 'processing')
-           ON CONFLICT DO NOTHING
-           RETURNING request_key`,
-          [clientRequestId]
-        );
-
-        if (claim.rowCount === 0) {
-          const existing = await pool.query(
-            `SELECT status, response_payload
-             FROM order_idempotency_keys
-             WHERE request_key = $1`,
-            [clientRequestId]
-          );
-
-          const row = existing.rows[0];
-          if (row?.status === 'completed' && row.response_payload) {
-            return res.json(row.response_payload);
-          }
-
-          if (row?.status === 'processing') {
-            return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
-          }
-
-          // Allow retries after failed attempts by atomically re-claiming
-          const reclaimed = await pool.query(
-            `UPDATE order_idempotency_keys
-             SET status = 'processing', updated_at = NOW()
-             WHERE request_key = $1 AND status = 'failed'
+        if (useDbIdempotency) {
+          // Try to claim this idempotency key for processing (durable across restarts)
+          const claim = await pool.query(
+            `INSERT INTO order_idempotency_keys (request_key, status)
+             VALUES ($1, 'processing')
+             ON CONFLICT DO NOTHING
              RETURNING request_key`,
             [clientRequestId]
           );
 
-          if (reclaimed.rowCount === 0) {
+          if (claim.rowCount === 0) {
+            const existing = await pool.query(
+              `SELECT status, response_payload
+               FROM order_idempotency_keys
+               WHERE request_key = $1`,
+              [clientRequestId]
+            );
+
+            const row = existing.rows[0];
+            if (row?.status === 'completed' && row.response_payload) {
+              return res.json(row.response_payload);
+            }
+
+            if (row?.status === 'processing') {
+              return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
+            }
+
+            // Allow retries after failed attempts by atomically re-claiming
+            const reclaimed = await pool.query(
+              `UPDATE order_idempotency_keys
+               SET status = 'processing', updated_at = NOW()
+               WHERE request_key = $1 AND status = 'failed'
+               RETURNING request_key`,
+              [clientRequestId]
+            );
+
+            if (reclaimed.rowCount === 0) {
+              return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
+            }
+          }
+        } else {
+          if (completedOrderResponses.has(clientRequestId)) {
+            return res.json(completedOrderResponses.get(clientRequestId));
+          }
+          if (inFlightOrderRequests.has(clientRequestId)) {
             return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
           }
+          inFlightOrderRequests.add(clientRequestId);
         }
       }
       
@@ -1233,12 +1253,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       if (clientRequestId) {
-        await pool.query(
-          `UPDATE order_idempotency_keys
-           SET status = 'completed', response_payload = $2::jsonb, updated_at = NOW()
-           WHERE request_key = $1`,
-          [clientRequestId, JSON.stringify(responsePayload)]
-        );
+        if (useDbIdempotency) {
+          await pool.query(
+            `UPDATE order_idempotency_keys
+             SET status = 'completed', response_payload = $2::jsonb, updated_at = NOW()
+             WHERE request_key = $1`,
+            [clientRequestId, JSON.stringify(responsePayload)]
+          );
+        } else {
+          completedOrderResponses.set(clientRequestId, responsePayload);
+          if (completedOrderResponses.size > ORDER_RESPONSE_CACHE_MAX) {
+            const firstKey = completedOrderResponses.keys().next().value;
+            if (firstKey) completedOrderResponses.delete(firstKey);
+          }
+        }
       }
 
       requestCompleted = true;
@@ -1257,16 +1285,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } finally {
       if (clientRequestId && !requestCompleted) {
-        try {
-          await pool.query(
-            `UPDATE order_idempotency_keys
-             SET status = 'failed', updated_at = NOW()
-             WHERE request_key = $1 AND status = 'processing'`,
-            [clientRequestId]
-          );
-        } catch (finalizeError) {
-          console.error('Failed to finalize idempotency key status:', finalizeError);
+        if (useDbIdempotency) {
+          try {
+            await pool.query(
+              `UPDATE order_idempotency_keys
+               SET status = 'failed', updated_at = NOW()
+               WHERE request_key = $1 AND status = 'processing'`,
+              [clientRequestId]
+            );
+          } catch (finalizeError) {
+            console.error('Failed to finalize idempotency key status:', finalizeError);
+          }
+        } else {
+          inFlightOrderRequests.delete(clientRequestId);
         }
+      } else if (clientRequestId && requestCompleted && !useDbIdempotency) {
+        inFlightOrderRequests.delete(clientRequestId);
       }
     }
   });
