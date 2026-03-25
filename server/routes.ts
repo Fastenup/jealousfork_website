@@ -10,7 +10,7 @@ import { ipTracker } from "./ipTracker";
 import { insertContactSubmissionSchema, restaurantLocations, squareMenuItems } from "../shared/schema";
 import { BrevoEmailService } from "./brevoService";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
-import { db } from "./db";
+import { db, pool } from "./db";
 import { eq } from "drizzle-orm";
 
 // Order request validation schema
@@ -56,10 +56,16 @@ const orderRequestSchema = z.object({
 export async function registerRoutes(app: Express): Promise<Server> {
   let squareService: any;
 
-  // Order idempotency / duplicate-submit protection (in-memory)
-  const inFlightOrderRequests = new Set<string>();
-  const completedOrderResponses = new Map<string, any>();
-  const ORDER_RESPONSE_CACHE_MAX = 5000;
+  // Durable idempotency storage (DB-backed) to survive restarts/redeploys
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS order_idempotency_keys (
+      request_key TEXT PRIMARY KEY,
+      status TEXT NOT NULL,
+      response_payload JSONB,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
 
   try {
     squareService = createSquareServiceFixed();
@@ -954,6 +960,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create order endpoint
   app.post('/api/orders', async (req, res) => {
     let clientRequestId: string | undefined;
+    let requestCompleted = false;
 
     try {
       if (!squareService) {
@@ -966,17 +973,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       clientRequestId = orderData.clientRequestId?.trim();
 
-      // Fast-path for exact duplicate retries (network retries/double-clicks)
-      if (clientRequestId && completedOrderResponses.has(clientRequestId)) {
-        return res.json(completedOrderResponses.get(clientRequestId));
-      }
-
-      if (clientRequestId && inFlightOrderRequests.has(clientRequestId)) {
-        return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
-      }
-
       if (clientRequestId) {
-        inFlightOrderRequests.add(clientRequestId);
+        // Try to claim this idempotency key for processing (durable across restarts)
+        const claim = await pool.query(
+          `INSERT INTO order_idempotency_keys (request_key, status)
+           VALUES ($1, 'processing')
+           ON CONFLICT DO NOTHING
+           RETURNING request_key`,
+          [clientRequestId]
+        );
+
+        if (claim.rowCount === 0) {
+          const existing = await pool.query(
+            `SELECT status, response_payload
+             FROM order_idempotency_keys
+             WHERE request_key = $1`,
+            [clientRequestId]
+          );
+
+          const row = existing.rows[0];
+          if (row?.status === 'completed' && row.response_payload) {
+            return res.json(row.response_payload);
+          }
+
+          if (row?.status === 'processing') {
+            return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
+          }
+
+          // Allow retries after failed attempts by atomically re-claiming
+          const reclaimed = await pool.query(
+            `UPDATE order_idempotency_keys
+             SET status = 'processing', updated_at = NOW()
+             WHERE request_key = $1 AND status = 'failed'
+             RETURNING request_key`,
+            [clientRequestId]
+          );
+
+          if (reclaimed.rowCount === 0) {
+            return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
+          }
+        }
       }
       
       // Generate unique order ID
@@ -1197,13 +1233,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       if (clientRequestId) {
-        completedOrderResponses.set(clientRequestId, responsePayload);
-        if (completedOrderResponses.size > ORDER_RESPONSE_CACHE_MAX) {
-          const firstKey = completedOrderResponses.keys().next().value;
-          if (firstKey) completedOrderResponses.delete(firstKey);
-        }
+        await pool.query(
+          `UPDATE order_idempotency_keys
+           SET status = 'completed', response_payload = $2::jsonb, updated_at = NOW()
+           WHERE request_key = $1`,
+          [clientRequestId, JSON.stringify(responsePayload)]
+        );
       }
 
+      requestCompleted = true;
       res.json(responsePayload);
     } catch (error: any) {
       console.error('Order creation error:', error);
@@ -1218,8 +1256,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         error: 'Failed to process order. Please try again.' 
       });
     } finally {
-      if (clientRequestId) {
-        inFlightOrderRequests.delete(clientRequestId);
+      if (clientRequestId && !requestCompleted) {
+        try {
+          await pool.query(
+            `UPDATE order_idempotency_keys
+             SET status = 'failed', updated_at = NOW()
+             WHERE request_key = $1 AND status = 'processing'`,
+            [clientRequestId]
+          );
+        } catch (finalizeError) {
+          console.error('Failed to finalize idempotency key status:', finalizeError);
+        }
       }
     }
   });
