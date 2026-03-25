@@ -32,6 +32,7 @@ export default function SquarePaymentBasic({
   const onPaymentSuccessRef = useRef(onPaymentSuccess);
   const onPaymentErrorRef = useRef(onPaymentError);
   const isInitializedRef = useRef(false);
+  const paymentStartedRef = useRef(false);
 
   // Keep refs updated with latest callbacks
   useEffect(() => {
@@ -141,11 +142,16 @@ export default function SquarePaymentBasic({
   }, [squareLoaded, applicationId, locationId]); // Removed onPaymentError from deps
 
   const handlePayment = async () => {
+    if (paymentStartedRef.current || isProcessing) {
+      return;
+    }
+
     if (!window.Square || !(window as any).squareCard) {
       onPaymentErrorRef.current('Payment system not ready');
       return;
     }
 
+    paymentStartedRef.current = true;
     setIsProcessing(true);
 
     try {
@@ -189,6 +195,7 @@ export default function SquarePaymentBasic({
       onPaymentErrorRef.current('Payment processing failed');
     } finally {
       setIsProcessing(false);
+      paymentStartedRef.current = false;
     }
   };
 

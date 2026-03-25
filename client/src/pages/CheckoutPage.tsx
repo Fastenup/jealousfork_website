@@ -37,6 +37,7 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [clientRequestId, setClientRequestId] = useState('');
   const hasRedirected = useRef(false);
 
   // Square credentials - loaded from environment variables
@@ -93,6 +94,10 @@ export default function CheckoutPage() {
 
   const handleContinueToPayment = () => {
     if (validateForm()) {
+      const requestId = typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      setClientRequestId(requestId);
       setShowPayment(true);
     }
   };
@@ -111,6 +116,7 @@ export default function CheckoutPage() {
         deliveryInfo: orderType === 'delivery' ? deliveryInfo : undefined,
         orderType,
         paymentToken,
+        clientRequestId,
         orderNotes: orderNotes.trim() || undefined,
       };
 

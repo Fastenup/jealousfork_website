@@ -56,6 +56,7 @@ export interface OrderRequest {
   deliveryInfo?: DeliveryInfo;
   orderType: 'pickup' | 'delivery';
   paymentToken: string;
+  clientRequestId?: string; // Stable idempotency key generated on checkout attempt
   orderNotes?: string; // Order-level notes for both pickup and delivery
 }
 

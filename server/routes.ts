@@ -49,11 +49,17 @@ const orderRequestSchema = z.object({
   }).optional(),
   orderType: z.enum(['pickup', 'delivery']),
   paymentToken: z.string(),
+  clientRequestId: z.string().min(8).max(128).optional(),
   orderNotes: z.string().optional(), // Order-level notes for both pickup and delivery
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
   let squareService: any;
+
+  // Order idempotency / duplicate-submit protection (in-memory)
+  const inFlightOrderRequests = new Set<string>();
+  const completedOrderResponses = new Map<string, any>();
+  const ORDER_RESPONSE_CACHE_MAX = 5000;
 
   try {
     squareService = createSquareServiceFixed();
@@ -947,6 +953,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Create order endpoint
   app.post('/api/orders', async (req, res) => {
+    let clientRequestId: string | undefined;
+
     try {
       if (!squareService) {
         return res.status(503).json({ 
@@ -955,14 +963,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const orderData = orderRequestSchema.parse(req.body);
+
+      clientRequestId = orderData.clientRequestId?.trim();
+
+      // Fast-path for exact duplicate retries (network retries/double-clicks)
+      if (clientRequestId && completedOrderResponses.has(clientRequestId)) {
+        return res.json(completedOrderResponses.get(clientRequestId));
+      }
+
+      if (clientRequestId && inFlightOrderRequests.has(clientRequestId)) {
+        return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
+      }
+
+      if (clientRequestId) {
+        inFlightOrderRequests.add(clientRequestId);
+      }
       
       // Generate unique order ID
       const orderId = `JF-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const idempotencyBase = clientRequestId || orderId;
       
       // Step 1: Create order in Square with detailed line items and fulfillment
       console.log('Creating Square order with line items for:', orderId);
       const squareOrder = await squareService.createOrder({
-        idempotencyKey: `${orderId}-order`,
+        idempotencyKey: `${idempotencyBase}-order`,
         order: {
           locationId: process.env.SQUARE_LOCATION_ID,
           reference_id: orderId,
@@ -1067,7 +1091,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           amount: Math.round(orderData.total * 100), // Convert to cents
           currency: 'USD',
         },
-        idempotencyKey: `${orderId}-payment`,
+        idempotencyKey: `${idempotencyBase}-payment`,
         referenceId: orderId,
         orderId: squareOrder.order.id,
         note: `${orderData.orderType.toUpperCase()} Order - ${orderData.customerInfo.name} - ${orderData.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}`
@@ -1156,7 +1180,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error('Failed to send confirmation email:', emailError);
       }
 
-      res.json({
+      const responsePayload = {
         orderId: order.orderId,
         paymentId: order.paymentId,
         status: order.status,
@@ -1170,7 +1194,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
           phone: order.customerPhone
         },
         squareOrderId: squareOrder.order.id
-      });
+      };
+
+      if (clientRequestId) {
+        completedOrderResponses.set(clientRequestId, responsePayload);
+        if (completedOrderResponses.size > ORDER_RESPONSE_CACHE_MAX) {
+          const firstKey = completedOrderResponses.keys().next().value;
+          if (firstKey) completedOrderResponses.delete(firstKey);
+        }
+      }
+
+      res.json(responsePayload);
     } catch (error: any) {
       console.error('Order creation error:', error);
       
@@ -1183,6 +1217,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         error: 'Failed to process order. Please try again.' 
       });
+    } finally {
+      if (clientRequestId) {
+        inFlightOrderRequests.delete(clientRequestId);
+      }
     }
   });
 
