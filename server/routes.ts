@@ -1011,18 +1011,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
               return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
             }
 
-            // Allow retries after failed attempts by atomically re-claiming
-            const reclaimed = await pool.query(
-              `UPDATE order_idempotency_keys
-               SET status = 'processing', updated_at = NOW()
-               WHERE request_key = $1 AND status = 'failed'
-               RETURNING request_key`,
-              [clientRequestId]
-            );
-
-            if (reclaimed.rowCount === 0) {
-              return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
+            if (row?.status === 'failed') {
+              return res.status(409).json({
+                error: 'Previous payment attempt failed. Please retry payment from checkout.'
+              });
             }
+
+            return res.status(409).json({ error: 'Order is already being processed. Please wait a moment.' });
           }
         } else {
           if (completedOrderResponses.has(clientRequestId)) {
@@ -1140,14 +1135,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('Square order created successfully:', squareOrder.order.id);
 
       // Step 2: Process payment with reference to the created order
+      const squareOrderTotalCents = squareOrder?.order?.total_money?.amount;
+      const paymentAmountCents = Number.isFinite(squareOrderTotalCents)
+        ? squareOrderTotalCents
+        : Math.round(orderData.total * 100);
+
+      if (Number.isFinite(squareOrderTotalCents) && squareOrderTotalCents !== Math.round(orderData.total * 100)) {
+        console.warn('Order total mismatch detected; charging Square order total instead of client total', {
+          orderId,
+          squareOrderId: squareOrder.order.id,
+          clientTotalCents: Math.round(orderData.total * 100),
+          squareTotalCents: squareOrderTotalCents,
+          clientRequestId
+        });
+      }
+
       console.log('Processing payment for Square order:', squareOrder.order.id, 'with token:', orderData.paymentToken.substring(0, 20) + '...');
       const payment = await squareService.createPayment({
         sourceId: orderData.paymentToken,
         amountMoney: {
-          amount: Math.round(orderData.total * 100), // Convert to cents
+          amount: paymentAmountCents,
           currency: 'USD',
         },
-        idempotencyKey: `${idempotencyBase}-payment`,
+        idempotencyKey: `${orderId}-payment`,
         referenceId: orderId,
         orderId: squareOrder.order.id,
         note: `${orderData.orderType.toUpperCase()} Order - ${orderData.customerInfo.name} - ${orderData.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}`

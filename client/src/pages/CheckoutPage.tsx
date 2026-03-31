@@ -144,6 +144,11 @@ export default function CheckoutPage() {
   };
 
   const handlePaymentError = useCallback((error: string) => {
+    const newRequestId = typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    setClientRequestId(newRequestId);
+
     toast({
       title: 'Payment Error',
       description: error,
