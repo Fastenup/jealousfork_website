@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <>
       <SEOHead
-        title="Breakfast & Brunch Near Me in Kendall | Jealous Fork"
-        description="Searching breakfast near me or brunch near me? Jealous Fork Kendall serves 4.7★ pancakes, brunch favorites, and burgers. View menu, check hours, and reserve in 2 clicks."
+        title="Best Breakfast Near Me in Kendall | Jealous Fork Miami"
+        description="Looking for breakfast near me, brunch near me, or pancakes near me? Jealous Fork Kendall is rated 4.7★ with 400+ reviews. See menu, hours, photos, and reserve fast."
         canonical="https://www.jealousfork.com/"
         ogImage="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
         keywords="best pancakes in miami, pancakes near me, breakfast near me, brunch near me, breakfast kendall, brunch kendall, best breakfast kendall, best pancakes miami, artisan pancakes Miami, fluffy pancakes miami, breakfast miami, brunch miami, gourmet burgers Miami, Jealous Fork, pancake restaurant miami"
@@ -25,6 +25,19 @@ export default function Home() {
       <MenuPreview />
       <Testimonials />
       <FAQ />
+
+      <section className="py-10 bg-white">
+        <div className="max-w-5xl mx-auto px-4 text-center">
+          <p className="text-sm uppercase tracking-wide text-gray-500 mb-3">Popular local pages</p>
+          <div className="flex flex-wrap justify-center gap-3 text-sm">
+            <a className="underline hover:text-warm-amber" href="/breakfast-near-me">Breakfast Near Me</a>
+            <a className="underline hover:text-warm-amber" href="/near/kendall">Best Brunch Kendall</a>
+            <a className="underline hover:text-warm-amber" href="/near/west-kendall">Breakfast in West Kendall</a>
+            <a className="underline hover:text-warm-amber" href="/full-menu">Pancake Menu</a>
+          </div>
+        </div>
+      </section>
+
       <Contact />
       <Footer />
       

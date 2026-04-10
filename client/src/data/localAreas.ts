@@ -115,8 +115,8 @@ export const localAreas: LocalArea[] = [
     slug: "kendale-lakes",
     description: "Kendale Lakes families rave about Jealous Fork — Miami's original artisan pancake destination. Just 30 minutes from your neighborhood, our Instagram-worthy breakfast creations (4.7★ Google, 4.6★ Yelp) are worth every minute. From our famous Chocolate Oreo Chip Pancake to savory brunch options, we're the #1 choice for Kendale Lakes residents craving exceptional breakfast. Kid-friendly with a dog-friendly patio!",
     distance: "30 min",
-    seoTitle: "Best Pancakes Near Kendale Lakes | Jealous Fork — Miami's Top Breakfast",
-    seoDescription: "Best pancakes near Kendale Lakes, FL — Jealous Fork is Miami's 4.7★ artisan pancake restaurant. Award-winning breakfast just 30 min away. Kid & dog-friendly!"
+    seoTitle: "Jealous Fork Menu Near Kendale Lakes | Best Pancakes & Brunch",
+    seoDescription: "See the Jealous Fork menu near Kendale Lakes, FL. Miami's 4.7★ artisan pancake spot with award-winning breakfast and brunch, just 30 minutes away."
   },
   {
     name: "Tamiami",
@@ -167,8 +167,8 @@ export const localAreas: LocalArea[] = [
     slug: "doral",
     description: "Doral's favorite brunch spot is just 38 minutes away! Jealous Fork brings Miami's most Instagram-worthy pancakes to the City of Doral. Featured on Telemundo National, our artisan creations like the Chocolate Oreo Chip Pancake and Hot Maple Flatbread have earned us 4.7★ on Google. Perfect for Doral families, Doral business professionals, and anyone craving the best breakfast near Doral Golf Resort, CityPlace Doral, or Downtown Doral.",
     distance: "38 min",
-    seoTitle: "Best Pancakes Near Doral, FL | Jealous Fork — Artisan Pancakes & Brunch",
-    seoDescription: "Best artisan pancakes near Doral, FL — Jealous Fork is Miami's 4.7★ Google-rated pancake destination. Just 38 min from CityPlace Doral. Award-winning fluffy stacks & brunch!"
+    seoTitle: "Jealous Fork Menu Near Doral, FL | Artisan Pancakes & Brunch",
+    seoDescription: "Looking for the Jealous Fork menu near Doral, FL? Miami's 4.7★ pancake destination is 38 minutes from CityPlace Doral with award-winning brunch and fluffy stacks."
   },
   {
     name: "The Hammocks",
