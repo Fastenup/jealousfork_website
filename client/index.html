@@ -5,24 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 
     <!-- Default Meta Tags (fallback if JS fails) -->
-    <title>Breakfast Near Me in Kendall Miami | Jealous Fork Menu</title>
-    <meta name="description" content="Looking for breakfast near me in Kendall Miami? Explore Jealous Fork menu favorites, best pancakes in Miami, brunch photos, and easy pickup or delivery." />
-    <meta name="keywords" content="pancakes Miami, artisan pancakes, gourmet burgers Miami, best burgers Miami, burger restaurant Miami FL, classic burgers near me, Miami restaurant, Instagram food, breakfast Miami, brunch Miami, online ordering, food delivery Miami, Jealous Burger" />
+    <title>Best Brunch in Kendall Miami | Jealous Fork Breakfast</title>
+    <meta
+      name="description"
+      content="Looking for best brunch Kendall or breakfast Kendall? Explore Jealous Fork menu favorites, pancakes near me picks, photos, and order pickup or delivery fast."
+    />
+    <meta
+      name="keywords"
+      content="best brunch kendall, breakfast kendall, pancakes near me, breakfast places near me, pancakes miami, brunch near me, jealous fork photos, gourmet burgers Miami"
+    />
 
     <!-- Open Graph Tags -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.jealousfork.com/" />
-    <meta property="og:title" content="Breakfast Near Me in Kendall Miami | Jealous Fork" />
-    <meta property="og:description" content="Browse Jealous Fork menu favorites, best pancakes in Miami, and brunch near me picks. Reserve a table or order pickup and delivery fast." />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630" />
+    <meta property="og:title" content="Best Brunch in Kendall Miami | Jealous Fork" />
+    <meta
+      property="og:description"
+      content="Discover Jealous Fork in Kendall Miami for brunch favorites, pancakes, and breakfast near you. Reserve a table or order pickup and delivery in minutes."
+    />
+    <meta
+      property="og:image"
+      content="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
+    />
     <meta property="og:site_name" content="Jealous Fork" />
 
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://www.jealousfork.com/" />
-    <meta name="twitter:title" content="Breakfast Near Me in Kendall Miami | Jealous Fork Menu" />
-    <meta name="twitter:description" content="Looking for breakfast near me in Kendall? Browse Jealous Fork's menu, reviews, and order pickup or delivery fast." />
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630" />
+    <meta name="twitter:title" content="Best Brunch in Kendall Miami | Jealous Fork" />
+    <meta
+      name="twitter:description"
+      content="Looking for breakfast Kendall or pancakes near me? Browse Jealous Fork menu, photos, and order pickup or delivery fast."
+    />
+    <meta
+      name="twitter:image"
+      content="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
+    />
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://www.jealousfork.com/" />
@@ -45,17 +63,14 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7TF4YG23M"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() { dataLayer.push(arguments); }
       gtag('js', new Date());
       gtag('config', 'G-R7TF4YG23M', {
-        // Enhanced measurement for better tracking
         page_path: window.location.pathname,
-        // Preserve UTM parameters for social media tracking
         allow_google_signals: true,
         allow_ad_personalization_signals: false
       });
 
-      // Track UTM parameters from social media
       (function() {
         const params = new URLSearchParams(window.location.search);
         const utmSource = params.get('utm_source');
@@ -63,66 +78,30 @@
         const utmCampaign = params.get('utm_campaign');
 
         if (utmSource) {
-          // Store UTM data for session tracking
           sessionStorage.setItem('utm_source', utmSource);
           sessionStorage.setItem('utm_medium', utmMedium || '');
           sessionStorage.setItem('utm_campaign', utmCampaign || '');
 
-          // Send custom event to GA4
           gtag('event', 'social_referral', {
-            'source': utmSource,
-            'medium': utmMedium,
-            'campaign': utmCampaign
+            source: utmSource,
+            medium: utmMedium,
+            campaign: utmCampaign
           });
         }
       })();
     </script>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
     <!-- Preload Hero Image -->
-    <link rel="preload" href="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080" as="image">
+    <link rel="preload" href="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080" as="image" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
     <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
   </body>
 </html>
->
-</html>
->
-);
-
-          // Send custom event to GA4
-          gtag('event', 'social_referral', {
-            'source': utmSource,
-            'medium': utmMedium,
-            'campaign': utmCampaign
-          });
-        }
-      })();
-    </script>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Preload Hero Image -->
-    <link rel="preload" href="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080" as="image">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
-    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
-  </body>
-</html>
->
-</html>
->
