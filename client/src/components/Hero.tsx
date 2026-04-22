@@ -65,13 +65,16 @@ export default function Hero() {
           Miami's Original<br />
           <span className="text-gray-300">Artisan Pancakes</span>
         </h1>
-        <p className="text-xl md:text-2xl mb-8 font-light">
-          From food truck to restaurant - Florida's best pancakes & gourmet burgers
+        <p className="text-xl md:text-2xl mb-4 font-light max-w-3xl mx-auto">
+          Miami's original artisan pancake spot with fast pickup, delivery, and weekend brunch favorites.
+        </p>
+        <p className="text-sm md:text-base mb-8 text-white/85 max-w-2xl mx-auto">
+          Order fan-favorite pancakes and burgers in minutes. Pickup is usually ready in 15–20 minutes, with delivery available across Miami-Dade.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full px-4 sm:px-0">
           <Link href="/full-menu">
-            <a className="bg-gray-900 text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-gray-800 hover:shadow-lg transition-all w-full sm:w-auto min-w-[180px] text-center flex items-center justify-center border-2 border-gray-900">
-              Order Online
+            <a className="bg-gray-900 text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-gray-800 hover:shadow-lg transition-all w-full sm:w-auto min-w-[220px] text-center flex items-center justify-center border-2 border-gray-900">
+              Order Pickup & Delivery
             </a>
           </Link>
           <a
@@ -79,10 +82,15 @@ export default function Hero() {
             href="https://resy.com/cities/miami-fl/venues/jealous-fork"
             target="_blank"
             rel="noopener noreferrer"
-            className="border-2 border-white text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 hover:shadow-lg transition-all w-full sm:w-auto min-w-[180px] text-center flex items-center justify-center"
+            className="border-2 border-white text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 hover:shadow-lg transition-all w-full sm:w-auto min-w-[220px] text-center flex items-center justify-center"
           >
             Reserve Table
           </a>
+        </div>
+        <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm text-white/90">
+          <span className="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">Pickup in 15–20 min</span>
+          <span className="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">Delivery available</span>
+          <span className="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">4.7★ Google • 400+ reviews</span>
         </div>
       </div>
     </section>

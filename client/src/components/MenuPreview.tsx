@@ -61,10 +61,13 @@ export default function MenuPreview({ showAll = false }: MenuPreviewProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-            Our Signature <span className="text-gray-600">Creations</span>
+            Order the <span className="text-gray-600">Best Sellers</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
-            From Instagram-worthy pancakes to gourmet burgers, every dish is crafted with passion and artisan attention to detail.
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-3">
+            Start with the dishes guests order most for pickup, delivery, and weekend brunch.
+          </p>
+          <p className="text-sm md:text-base text-gray-500 max-w-3xl mx-auto">
+            From Oreo pancakes to the Jesse James Burger, these are the items that convert first-time visitors into regulars.
           </p>
           <div className="flex flex-col items-center gap-4">
             {/* Admin features moved to /admin - no longer shown on main page */}

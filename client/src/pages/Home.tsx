@@ -21,8 +21,8 @@ export default function Home() {
       />
       <Navigation />
       <Hero />
-      <About />
       <MenuPreview />
+      <About />
       <Testimonials />
       <FAQ />
 
