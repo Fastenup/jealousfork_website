@@ -221,6 +221,24 @@ export default function FullMenuPage() {
     return categoryConfig[category]?.description;
   };
 
+  const quickOrderSections = [
+    { category: 'award-winning pancakes', label: 'Sweet Pancakes' },
+    { category: 'sandwiches, buns, & bread', label: 'Brunch Favorites' },
+    { category: 'burgers', label: 'Weekend Burgers' },
+    { category: 'hot & cold n/a bev', label: 'Coffee & Drinks' },
+  ].filter(({ category }) => activeCategories.includes(category));
+
+  const topPickOrder = [
+    'Chocolate Oreo Chip Pancake',
+    'Peanut Butter Cup Pancake',
+    'Hot Maple Flatbread',
+    'Jesse James Burger',
+  ];
+
+  const topPicks = topPickOrder
+    .map((name) => menuItems.find((item) => item.name === name))
+    .filter((item): item is MenuItem => Boolean(item));
+
   return (
     <>
       <SEOHead
@@ -242,6 +260,70 @@ export default function FullMenuPage() {
             <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
               Fresh ingredients, real-time availability
             </p>
+          </div>
+        </section>
+
+        <section className="bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium mb-6">
+              <span className="rounded-full bg-emerald-50 text-emerald-700 px-4 py-2">Pickup in 15–20 min</span>
+              <span className="rounded-full bg-sky-50 text-sky-700 px-4 py-2">Delivery available</span>
+              <span className="rounded-full bg-amber-50 text-amber-700 px-4 py-2">Secure checkout</span>
+              <span className="rounded-full bg-rose-50 text-rose-700 px-4 py-2">Most-ordered menu items first</span>
+            </div>
+
+            {quickOrderSections.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 text-center mb-4">
+                  Start with a quick order path
+                </h2>
+                <div className="flex flex-wrap justify-center gap-3">
+                  {quickOrderSections.map((section) => (
+                    <button
+                      key={section.category}
+                      onClick={() => scrollToCategory(section.category)}
+                      className="rounded-full bg-gray-100 hover:bg-gray-900 hover:text-white px-5 py-3 text-sm sm:text-base font-medium transition-colors"
+                    >
+                      {section.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {topPicks.length > 0 && (
+              <div>
+                <div className="text-center mb-5">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Most Ordered Right Now</h2>
+                  <p className="text-gray-600 mt-2">The fastest way to decide: start with the items guests order most.</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                  {topPicks.map((item, index) => (
+                    <div key={item.id} className="rounded-2xl border border-gray-200 bg-gray-50 p-4 flex flex-col">
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <span className="rounded-full bg-gray-900 text-white text-xs font-semibold px-3 py-1">
+                          {index === 3 ? 'Weekend favorite' : index === 2 ? 'Savory best seller' : 'Most ordered'}
+                        </span>
+                        <span className="text-lg font-bold text-gray-900">${item.price.toFixed(2)}</span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">{item.name}</h3>
+                      <p className="text-sm text-gray-600 mb-4 flex-1">{item.description || 'Customer favorite'}</p>
+                      <button
+                        onClick={() => handleAddToCart(item)}
+                        disabled={!item.inStock}
+                        className={`w-full rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
+                          item.inStock
+                            ? 'bg-gray-900 text-white hover:bg-gray-800'
+                            : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                        }`}
+                      >
+                        {item.inStock ? 'Add Best Seller' : 'Sold Out'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
