@@ -52,22 +52,30 @@ export default function LocalPage() {
               Best Pancakes in<br />
               <span className="text-warm-amber">{areaInfo.name}</span>
             </h1>
-            <p className="text-xl md:text-2xl mb-8 font-light">
+            <p className="text-xl md:text-2xl mb-4 font-light">
               Miami's original artisan pancake restaurant now serving {areaInfo.name}
             </p>
+            <p className="text-sm md:text-base mb-8 text-white/85 max-w-2xl mx-auto">
+              Order online for fast pickup and delivery, or visit us in person for a full brunch experience just {areaInfo.distance || "minutes"} away.
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a 
-                href="#menu" 
+              <Link
+                href="/full-menu"
                 className="bg-warm-amber text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-warm-amber/90 transition-all transform hover:scale-105"
               >
-                View Menu
-              </a>
+                Order Pickup & Delivery
+              </Link>
               <a 
                 href="#contact" 
                 className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all"
               >
                 Get Directions
               </a>
+            </div>
+            <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm text-white/90">
+              <span className="rounded-full bg-white/10 px-4 py-2">Pickup in 15–20 min</span>
+              <span className="rounded-full bg-white/10 px-4 py-2">Delivery available</span>
+              <span className="rounded-full bg-white/10 px-4 py-2">4.7★ Google rating</span>
             </div>
           </div>
         </section>
@@ -184,13 +192,13 @@ export default function LocalPage() {
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-playfair text-3xl font-bold mb-8 text-center text-gray-900">
-              Explore Our Menus
+              Order From Jealous Fork
             </h2>
             <div className="grid sm:grid-cols-3 gap-6 mb-12">
               <Link href="/full-menu">
                 <a className="block p-6 bg-gray-50 rounded-xl text-center hover:bg-gray-100 transition-colors">
-                  <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-2">Full Breakfast Menu</h3>
-                  <p className="text-gray-600">Award-winning artisan pancakes, starters, sandwiches & craft beverages</p>
+                  <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-2">Order Breakfast & Brunch</h3>
+                  <p className="text-gray-600">Award-winning artisan pancakes, starters, sandwiches, and craft beverages for pickup or delivery</p>
                 </a>
               </Link>
               <Link href="/burgers">

@@ -169,25 +169,33 @@ export default function BreakfastNearMePage() {
                 Kendall &amp; Miami, FL
               </span>
             </h1>
-            <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-90">
+            <p className="text-lg md:text-xl mb-4 max-w-2xl mx-auto opacity-90">
               Award-winning artisan pancakes, classic breakfast plates, and the best brunch in
               Kendall. Rated 4.7★ on Google with 400+ reviews.
             </p>
+            <p className="text-sm md:text-base mb-8 max-w-2xl mx-auto text-white/85">
+              Order online for fast pickup, get delivery across Miami-Dade, or reserve a table for weekend brunch.
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/full-menu"
+                className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-3 rounded-lg transition-colors text-lg"
+              >
+                Order Pickup & Delivery
+              </Link>
               <a
                 href="https://resy.com/cities/mia/venues/jealous-fork"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-3 rounded-lg transition-colors text-lg"
+                className="border-2 border-white hover:bg-white hover:text-black text-white font-bold px-8 py-3 rounded-lg transition-colors text-lg"
               >
                 Reserve a Table
               </a>
-              <Link
-                href="/full-menu"
-                className="border-2 border-white hover:bg-white hover:text-black text-white font-bold px-8 py-3 rounded-lg transition-colors text-lg"
-              >
-                View Full Menu
-              </Link>
+            </div>
+            <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm text-white/90">
+              <span className="rounded-full bg-white/10 px-4 py-2">Pickup in 15–20 min</span>
+              <span className="rounded-full bg-white/10 px-4 py-2">Delivery available</span>
+              <span className="rounded-full bg-white/10 px-4 py-2">Secure checkout</span>
             </div>
           </div>
         </section>
@@ -199,7 +207,10 @@ export default function BreakfastNearMePage() {
               <span className="font-bold">📍 Location:</span> 14417 SW 42nd St, Miami, FL 33175
             </div>
             <div>
-              <span className="font-bold">🕘 Hours:</span> Tue–Sun from 9 AM
+              <span className="font-bold">🕘</span> Pickup in 15–20 min
+            </div>
+            <div>
+              <span className="font-bold">🚗</span> Delivery available
             </div>
             <div>
               <span className="font-bold">⭐ Rating:</span> 4.7★ (400+ reviews)
@@ -422,14 +433,20 @@ export default function BreakfastNearMePage() {
               Ready for Miami's Best Breakfast?
             </h2>
             <p className="text-gray-300 mb-8 text-lg">
-              Reserve your table on Resy or just walk in. We can't wait to serve you.
+              Start your order now for fast pickup or delivery, or reserve a table for a full brunch experience.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/full-menu"
+                className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-3 rounded-lg transition-colors text-lg"
+              >
+                Order Pickup & Delivery
+              </Link>
               <a
                 href="https://resy.com/cities/mia/venues/jealous-fork"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-3 rounded-lg transition-colors text-lg"
+                className="border-2 border-white hover:bg-white hover:text-black font-bold px-8 py-3 rounded-lg transition-colors text-lg"
               >
                 Reserve on Resy
               </a>
