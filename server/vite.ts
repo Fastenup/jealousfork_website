@@ -5,21 +5,45 @@ import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
 import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
+import { getRouteSeoMeta, isNoindexRoute } from "../shared/routeSeo";
 
 const viteLogger = createLogger();
 const SITE_ORIGIN = "https://www.jealousfork.com";
+const FALLBACK_OG_IMAGE = `${SITE_ORIGIN}/images/food/oreo-chocolate-chip.jpg`;
 
 function canonicalPathFromUrl(url: string): string {
   const pathOnly = url.split("?")[0].split("#")[0] || "/";
   return pathOnly === "/" ? "/" : pathOnly.replace(/\/+$/, "");
 }
 
-function injectCanonical(html: string, url: string): string {
-  const canonical = `${SITE_ORIGIN}${canonicalPathFromUrl(url)}`;
-  return html.replace(
-    /<link\s+rel=["']canonical["']\s+href=["'][^"']*["']\s*\/?>(?![\s\S]*<link\s+rel=["']canonical["'])/i,
-    `<link rel="canonical" href="${canonical}" />`,
-  );
+function injectOrReplaceTag(html: string, pattern: RegExp, replacement: string): string {
+  if (pattern.test(html)) {
+    return html.replace(pattern, replacement);
+  }
+  return html.replace("</head>", `  ${replacement}\n</head>`);
+}
+
+function injectSeo(html: string, url: string): string {
+  const canonicalPath = canonicalPathFromUrl(url);
+  const meta = getRouteSeoMeta(canonicalPath);
+
+  let nextHtml = html;
+
+  nextHtml = injectOrReplaceTag(nextHtml, /<title>[\s\S]*?<\/title>/i, `<title>${meta.title}</title>`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+name=["']description["'][^>]*>/i, `<meta name="description" content="${meta.description}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+name=["']keywords["'][^>]*>/i, `<meta name="keywords" content="${meta.keywords || ""}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+name=["']robots["'][^>]*>/i, `<meta name="robots" content="${meta.robots || "index, follow"}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+property=["']og:url["'][^>]*>/i, `<meta property="og:url" content="${meta.canonical}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+property=["']og:title["'][^>]*>/i, `<meta property="og:title" content="${meta.title}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+property=["']og:description["'][^>]*>/i, `<meta property="og:description" content="${meta.description}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+property=["']og:image["'][^>]*>/i, `<meta property="og:image" content="${meta.ogImage || FALLBACK_OG_IMAGE}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+name=["']twitter:url["'][^>]*>/i, `<meta name="twitter:url" content="${meta.canonical}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+name=["']twitter:title["'][^>]*>/i, `<meta name="twitter:title" content="${meta.title}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+name=["']twitter:description["'][^>]*>/i, `<meta name="twitter:description" content="${meta.description}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+name=["']twitter:image["'][^>]*>/i, `<meta name="twitter:image" content="${meta.ogImage || FALLBACK_OG_IMAGE}" />`);
+  nextHtml = injectOrReplaceTag(nextHtml, /<link\s+rel=["']canonical["']\s+href=["'][^"']*["']\s*\/?>/i, `<link rel="canonical" href="${meta.canonical}" />`);
+
+  return nextHtml;
 }
 
 export function log(message: string, source = "express") {
@@ -72,9 +96,12 @@ export async function setupVite(app: Express, server: Server) {
         `src="/src/main.tsx"`,
         `src="/src/main.tsx?v=${nanoid()}"`,
       );
-      template = injectCanonical(template, url);
+      template = injectSeo(template, url);
 
       const page = await vite.transformIndexHtml(url, template);
+      if (isNoindexRoute(url)) {
+        res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
+      }
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
@@ -101,10 +128,13 @@ export function serveStatic(app: Express) {
     try {
       const indexPath = path.resolve(distPath, "index.html");
       const html = await fs.promises.readFile(indexPath, "utf-8");
+      if (isNoindexRoute(req.originalUrl)) {
+        res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
+      }
       res
         .status(200)
         .set({ "Content-Type": "text/html" })
-        .send(injectCanonical(html, req.originalUrl));
+        .send(injectSeo(html, req.originalUrl));
     } catch (error) {
       next(error);
     }
