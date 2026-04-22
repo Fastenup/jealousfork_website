@@ -84,9 +84,6 @@ export default function Hero() {
             Reserve Table
           </a>
         </div>
-        <p className="mt-5 text-sm md:text-base text-white/90">
-          Popular pages: <Link href="/breakfast-near-me"><a className="underline underline-offset-4 hover:text-white">Breakfast Near Me</a></Link> · <Link href="/burgers"><a className="underline underline-offset-4 hover:text-white">Jealous Burger Menu</a></Link>
-        </p>
       </div>
     </section>
   );
