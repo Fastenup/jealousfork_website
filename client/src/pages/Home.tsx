@@ -15,7 +15,7 @@ export default function Home() {
         title="Breakfast Near Me & Pancakes Near Me in Kendall | Jealous Fork"
         description="Looking for breakfast near me, pancakes near me, or brunch near me in Kendall? Jealous Fork serves 400+ reviewed favorites with fast pickup and easy reservations."
         canonical="https://www.jealousfork.com/"
-        ogImage="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
+        ogImage="https://www.jealousfork.com/images/og/jealous-fork-og.jpg"
         keywords="best pancakes in miami, pancakes near me, breakfast near me, brunch near me, breakfast kendall, brunch kendall, best breakfast kendall, best pancakes miami, artisan pancakes Miami, fluffy pancakes miami, breakfast miami, brunch miami, gourmet burgers Miami, Jealous Fork, pancake restaurant miami"
         includeFAQ={true}
       />

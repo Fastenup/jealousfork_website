@@ -179,7 +179,7 @@ export default function SEOHead({
   title,
   description,
   canonical,
-  ogImage = "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630",
+  ogImage = "https://www.jealousfork.com/images/og/jealous-fork-og.jpg",
   keywords = "pancakes Miami, artisan pancakes, gourmet burgers, Miami restaurant, Instagram food, pancake restaurant, food truck, Miami dining",
   includeFAQ = false,
   areaName

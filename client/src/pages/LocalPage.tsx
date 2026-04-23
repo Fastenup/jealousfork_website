@@ -31,7 +31,7 @@ export default function LocalPage() {
         title={title}
         description={description}
         canonical={`https://www.jealousfork.com/near/${areaInfo.slug}`}
-        ogImage="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
+        ogImage="https://www.jealousfork.com/images/og/jealous-fork-og.jpg"
         keywords={keywords}
         includeFAQ={true}
         areaName={areaInfo.name}

@@ -78,7 +78,7 @@ export default function BreakfastNearMePage() {
         title={title}
         description={description}
         canonical="https://www.jealousfork.com/breakfast-near-me"
-        ogImage="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"
+        ogImage="https://www.jealousfork.com/images/og/jealous-fork-og.jpg"
         keywords={keywords}
         includeFAQ={true}
       />
@@ -94,7 +94,7 @@ export default function BreakfastNearMePage() {
             description:
               "Miami's best breakfast restaurant in Kendall. Award-winning artisan pancakes, classic breakfast plates, and brunch served daily.",
             image:
-              "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630",
+              "https://www.jealousfork.com/images/og/jealous-fork-og.jpg",
             address: {
               "@type": "PostalAddress",
               streetAddress: "14417 SW 42nd St",

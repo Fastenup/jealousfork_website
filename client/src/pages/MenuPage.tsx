@@ -25,7 +25,7 @@ export default function MenuPage() {
         title={title}
         description={description}
         canonical={`https://www.jealousfork.com/menu${slug ? `/${slug}` : ''}`}
-        ogImage={menuItem?.image || "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630"}
+        ogImage={menuItem?.image || "https://www.jealousfork.com/images/og/jealous-fork-og.jpg"}
       />
       <Navigation />
       <main className="pt-16">

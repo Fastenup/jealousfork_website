@@ -10,9 +10,9 @@ export interface RouteSeoMeta {
 }
 
 const SITE_ORIGIN = "https://www.jealousfork.com";
-const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/images/food/oreo-chocolate-chip.jpg`;
-const BURGER_OG_IMAGE = `${SITE_ORIGIN}/images/food/jesse-james-burger.jpg`;
-const BREAKFAST_OG_IMAGE = `${SITE_ORIGIN}/images/food/peanut-butter-maple.jpg`;
+const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/images/og/jealous-fork-og.jpg`;
+const BURGER_OG_IMAGE = DEFAULT_OG_IMAGE;
+const BREAKFAST_OG_IMAGE = DEFAULT_OG_IMAGE;
 
 function normalizePath(url: string): string {
   const pathOnly = url.split("?")[0].split("#")[0] || "/";
