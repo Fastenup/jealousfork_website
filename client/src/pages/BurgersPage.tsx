@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { formatModifierListName, formatModifierName } from "@/lib/formatMenuText";
 
 interface ModifierList {
   id: string;
@@ -535,7 +536,7 @@ export default function BurgersPage() {
             {customizeItem?.modifierLists?.map((modList) => (
               <div key={modList.id} className="space-y-3">
                 <h4 className="font-medium text-sm text-gray-900">
-                  {modList.name}
+                  {formatModifierListName(modList.name)}
                   {modList.selectionType === 'SINGLE' && (
                     <span className="text-gray-500 font-normal ml-2">(Choose one)</span>
                   )}
@@ -552,7 +553,7 @@ export default function BurgersPage() {
                           handleModifierToggle(modList, mod, !!checked)
                         }
                       />
-                      <span className="flex-1 text-sm">{mod.name}</span>
+                      <span className="flex-1 text-sm">{formatModifierName(mod.name)}</span>
                       {mod.price > 0 && (
                         <span className="text-sm text-gray-500">+${mod.price.toFixed(2)}</span>
                       )}

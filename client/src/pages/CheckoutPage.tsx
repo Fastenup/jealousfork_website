@@ -13,6 +13,7 @@ import { squareService, OrderRequest } from '@/services/squareService';
 import { ArrowLeft, MapPin, Clock, Phone, ShieldCheck, CreditCard, CheckCircle2 } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import SEOHead from '@/components/SEOHead';
+import { formatModifierName } from '@/lib/formatMenuText';
 
 export default function CheckoutPage() {
   const { state: cartState, clearCart, setDeliveryFee } = useCart();
@@ -448,7 +449,7 @@ export default function CheckoutPage() {
                           <div className="text-xs text-gray-500">
                             {item.modifiers.map(m => (
                               <span key={m.id} className="block">
-                                + {m.name}{m.price > 0 ? ` ($${m.price.toFixed(2)})` : ''}
+                                + {formatModifierName(m.name)}{m.price > 0 ? ` ($${m.price.toFixed(2)})` : ''}
                               </span>
                             ))}
                           </div>
