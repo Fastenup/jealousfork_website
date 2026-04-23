@@ -9,6 +9,7 @@ interface SEOHeadProps {
   keywords?: string;
   includeFAQ?: boolean;
   areaName?: string;
+  noIndex?: boolean;
 }
 
 // FAQ Schema for AI/LLM search optimization (GEO/AEO) and featured snippets
@@ -182,7 +183,8 @@ export default function SEOHead({
   ogImage = "https://www.jealousfork.com/images/og/jealous-fork-og.jpg",
   keywords = "pancakes Miami, artisan pancakes, gourmet burgers, Miami restaurant, Instagram food, pancake restaurant, food truck, Miami dining",
   includeFAQ = false,
-  areaName
+  areaName,
+  noIndex = false
 }: SEOHeadProps) {
   // Fetch dynamic operating hours
   const { data: hours } = useOperatingHours();
@@ -245,6 +247,12 @@ export default function SEOHead({
     // Basic meta tags
     setMetaTag('description', description);
     setMetaTag('keywords', keywords);
+    setMetaTag(
+      'robots',
+      noIndex
+        ? 'noindex, nofollow, noarchive'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+    );
     
     // Open Graph tags
     setMetaProperty('og:type', 'website');
@@ -269,7 +277,7 @@ export default function SEOHead({
     }
     canonicalLink.href = canonical;
     
-  }, [title, description, canonical, ogImage, keywords, includeFAQ, areaName, hours]);
+  }, [title, description, canonical, ogImage, keywords, includeFAQ, areaName, noIndex, hours]);
 
   return null;
 }

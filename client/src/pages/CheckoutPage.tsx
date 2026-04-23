@@ -181,10 +181,11 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <SEOHead
+      <SEOHead 
         title="Checkout - Jealous Fork"
         description="Complete your order for delivery or pickup from Jealous Fork"
         canonical="https://www.jealousfork.com/checkout"
+        noIndex
       />
       
       <Navigation />
