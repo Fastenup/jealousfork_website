@@ -33,61 +33,31 @@ interface MenuItem {
 // Default fallback image for burgers
 const fallbackImage = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop&crop=center';
 
-// Generate dynamic burger schema from menu data
+// Generate page-specific burger menu schema from menu data.
+// The site-wide Restaurant schema is managed by SEOHead; keep this as Menu/MenuItem only
+// to avoid competing Restaurant entities on the same page.
 function generateBurgerSchema(burgers: MenuItem[]) {
   return {
     "@context": "https://schema.org",
-    "@type": "Restaurant",
-    "name": "Jealous Burger",
-    "alternateName": "Jealous Fork Burgers",
-    "image": "https://www.jealousfork.com/images/food/jesse-james-burger.jpg",
-    "description": "Miami's best gourmet burgers. Classic patties with creative toppings, served Friday and Saturday nights. From The Classic to our signature Jesse James burger.",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "14417 SW 42nd St",
-      "addressLocality": "Miami",
-      "addressRegion": "FL",
-      "postalCode": "33175",
-      "addressCountry": "US"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 25.7323,
-      "longitude": -80.4168
-    },
+    "@type": "Menu",
+    "name": "Jealous Fork Gourmet Burger Menu",
     "url": "https://www.jealousfork.com/burgers",
-    "telephone": "(305) 699-1430",
-    "servesCuisine": ["Burgers", "American", "Gourmet Burgers"],
-    "priceRange": "$$",
-    "acceptsReservations": "True",
-    "menu": "https://www.jealousfork.com/burgers",
-    "openingHoursSpecification": [
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "15:00", "closes": "21:00" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "15:00", "closes": "21:00" }
-    ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.7",
-      "reviewCount": "400",
-      "bestRating": "5"
-    },
-    "hasMenu": {
-      "@type": "Menu",
-      "name": "Gourmet Burger Menu",
-      "hasMenuSection": {
-        "@type": "MenuSection",
-        "name": "Gourmet Burgers",
-        "hasMenuItem": burgers.map(burger => ({
-          "@type": "MenuItem",
-          "name": burger.name,
-          "description": burger.description,
-          "offers": {
-            "@type": "Offer",
-            "price": burger.price.toString(),
-            "priceCurrency": "USD"
-          }
-        }))
-      }
+    "inLanguage": "en-US",
+    "hasMenuSection": {
+      "@type": "MenuSection",
+      "name": "Gourmet Burgers",
+      "hasMenuItem": burgers.map(burger => ({
+        "@type": "MenuItem",
+        "name": burger.name,
+        "description": burger.description,
+        "image": burger.image || "https://www.jealousfork.com/images/food/jesse-james-burger.jpg",
+        "offers": {
+          "@type": "Offer",
+          "price": burger.price.toString(),
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        }
+      }))
     }
   };
 }

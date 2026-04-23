@@ -29,28 +29,6 @@ export default function Testimonials() {
     }
   ];
 
-  // Generate Review schema for SEO
-  const reviewSchema = {
-    "@context": "https://schema.org",
-    "@type": "Restaurant",
-    "name": "Jealous Fork",
-    "review": testimonials.map(testimonial => ({
-      "@type": "Review",
-      "author": {
-        "@type": "Person",
-        "name": testimonial.name
-      },
-      "datePublished": testimonial.datePublished,
-      "reviewBody": testimonial.text,
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": testimonial.rating,
-        "bestRating": "5",
-        "worstRating": "1"
-      }
-    }))
-  };
-
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,11 +120,6 @@ export default function Testimonials() {
         </div>
       </div>
 
-      {/* Review Schema for SEO */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
-      />
     </section>
   );
 }

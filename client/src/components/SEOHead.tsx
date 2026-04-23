@@ -181,7 +181,7 @@ export default function SEOHead({
   canonical,
   ogImage = "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630",
   keywords = "pancakes Miami, artisan pancakes, gourmet burgers, Miami restaurant, Instagram food, pancake restaurant, food truck, Miami dining",
-  includeFAQ = true,
+  includeFAQ = false,
   areaName
 }: SEOHeadProps) {
   // Fetch dynamic operating hours
@@ -204,16 +204,18 @@ export default function SEOHead({
     }
     restaurantScript.textContent = JSON.stringify(dynamicRestaurantSchema);
 
-    // Add FAQ schema for AI answer engines and featured snippets
+    // Add FAQ schema only for routes that render matching FAQ content.
+    const existingFaqScript = document.querySelector('script[data-schema="faq"]') as HTMLScriptElement | null;
     if (includeFAQ) {
-      let faqScript = document.querySelector('script[data-schema="faq"]') as HTMLScriptElement;
-      if (!faqScript) {
-        faqScript = document.createElement('script');
-        faqScript.type = 'application/ld+json';
-        faqScript.setAttribute('data-schema', 'faq');
+      const faqScript = existingFaqScript || document.createElement('script');
+      faqScript.type = 'application/ld+json';
+      faqScript.setAttribute('data-schema', 'faq');
+      if (!existingFaqScript) {
         document.head.appendChild(faqScript);
       }
       faqScript.textContent = JSON.stringify(faqSchema);
+    } else if (existingFaqScript) {
+      existingFaqScript.remove();
     }
 
     // Set document title
