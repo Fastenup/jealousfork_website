@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import SquarePaymentBasic from '@/components/SquarePaymentBasic';
 import { squareService, OrderRequest } from '@/services/squareService';
-import { ArrowLeft, MapPin, Clock, Phone } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Phone, ShieldCheck, CreditCard, CheckCircle2 } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import SEOHead from '@/components/SEOHead';
 
@@ -43,6 +43,8 @@ export default function CheckoutPage() {
   // Square credentials - loaded from environment variables
   const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || '';
   const SQUARE_LOCATION_ID = import.meta.env.VITE_SQUARE_LOCATION_ID || '';
+  const fulfillmentEstimate = orderType === 'pickup' ? 'Pickup ready in 15–20 minutes' : 'Delivery usually arrives in 45–60 minutes';
+  const currentStep = showPayment ? 2 : 1;
   
 
 
@@ -197,6 +199,49 @@ export default function CheckoutPage() {
             Back to Menu
           </Button>
           <h1 className="text-3xl font-bold">Checkout</h1>
+          <p className="text-gray-600 mt-2">{fulfillmentEstimate}. Secure checkout with order confirmation by email.</p>
+          <div className="mt-5 grid grid-cols-3 gap-2 text-sm">
+            {[
+              { step: 1, label: 'Info' },
+              { step: 2, label: 'Payment' },
+              { step: 3, label: 'Confirmation' },
+            ].map((item) => (
+              <div
+                key={item.step}
+                className={`rounded-full px-3 py-2 text-center font-medium ${
+                  item.step <= currentStep
+                    ? 'bg-gray-900 text-white'
+                    : 'bg-white text-gray-500 border border-gray-200'
+                }`}
+              >
+                {item.step}. {item.label}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-3 gap-3 mb-6">
+          <div className="bg-white border rounded-xl p-4 flex items-start gap-3">
+            <Clock className="h-5 w-5 text-green-600 mt-0.5" />
+            <div>
+              <p className="font-semibold text-gray-900">Fast fulfillment</p>
+              <p className="text-sm text-gray-600">{fulfillmentEstimate}</p>
+            </div>
+          </div>
+          <div className="bg-white border rounded-xl p-4 flex items-start gap-3">
+            <ShieldCheck className="h-5 w-5 text-green-600 mt-0.5" />
+            <div>
+              <p className="font-semibold text-gray-900">Secure payment</p>
+              <p className="text-sm text-gray-600">Card details are protected by Square.</p>
+            </div>
+          </div>
+          <div className="bg-white border rounded-xl p-4 flex items-start gap-3">
+            <Phone className="h-5 w-5 text-green-600 mt-0.5" />
+            <div>
+              <p className="font-semibold text-gray-900">Need help?</p>
+              <p className="text-sm text-gray-600">Call (305) 699-1430.</p>
+            </div>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -353,13 +398,32 @@ export default function CheckoutPage() {
                 </Button>
               </>
             ) : (
-              <SquarePaymentBasic
-                amount={cartState.total}
-                onPaymentSuccess={handlePaymentSuccess}
-                onPaymentError={handlePaymentError}
-                applicationId={SQUARE_APPLICATION_ID}
-                locationId={SQUARE_LOCATION_ID}
-              />
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <CreditCard className="h-5 w-5" />
+                    Payment Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="rounded-xl bg-green-50 border border-green-100 p-4 text-sm text-green-900">
+                    <div className="flex items-start gap-2">
+                      <ShieldCheck className="h-5 w-5 mt-0.5" />
+                      <div>
+                        <p className="font-semibold">Secure Square checkout</p>
+                        <p>Your payment is encrypted. We’ll confirm your order and send details to the contact info you provided.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <SquarePaymentBasic
+                    amount={cartState.total}
+                    onPaymentSuccess={handlePaymentSuccess}
+                    onPaymentError={handlePaymentError}
+                    applicationId={SQUARE_APPLICATION_ID}
+                    locationId={SQUARE_LOCATION_ID}
+                  />
+                </CardContent>
+              </Card>
             )}
           </div>
 
@@ -407,6 +471,10 @@ export default function CheckoutPage() {
                 })}
                 
                 <div className="border-t pt-4 space-y-2">
+                  <div className="rounded-xl bg-gray-50 p-3 text-sm text-gray-700 flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
+                    <span>{fulfillmentEstimate}. You’ll receive order confirmation after payment.</span>
+                  </div>
                   <div className="flex justify-between">
                     <span>Subtotal:</span>
                     <span>${cartState.subtotal.toFixed(2)}</span>
