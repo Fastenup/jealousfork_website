@@ -10,10 +10,18 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import SquarePaymentBasic from '@/components/SquarePaymentBasic';
 import { squareService, OrderRequest } from '@/services/squareService';
-import { ArrowLeft, MapPin, Clock, Phone, ShieldCheck, CreditCard, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Phone, ShieldCheck, CreditCard, CheckCircle2, AlertTriangle } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import SEOHead from '@/components/SEOHead';
 import { formatModifierName } from '@/lib/formatMenuText';
+
+type OnlineOrderingStatus = {
+  acceptingOrders: boolean;
+  reason?: string;
+  source?: string;
+  checkedAt?: string;
+  pausedUntil?: string;
+};
 
 export default function CheckoutPage() {
   const { state: cartState, clearCart, setDeliveryFee } = useCart();
@@ -39,7 +47,15 @@ export default function CheckoutPage() {
   const [showPayment, setShowPayment] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [clientRequestId, setClientRequestId] = useState('');
+  const [onlineOrderingStatus, setOnlineOrderingStatus] = useState<OnlineOrderingStatus | null>(null);
+  const [isCheckingOrderingStatus, setIsCheckingOrderingStatus] = useState(true);
   const hasRedirected = useRef(false);
+
+  const createClientRequestId = useCallback(() => (
+    typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+  ), []);
 
   // Square credentials - loaded from environment variables
   const SQUARE_APPLICATION_ID = import.meta.env.VITE_SQUARE_APPLICATION_ID || '';
@@ -71,6 +87,47 @@ export default function CheckoutPage() {
     return () => clearTimeout(timer);
   }, [cartState.items.length, setLocation]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkOnlineOrdering = async () => {
+      setIsCheckingOrderingStatus(true);
+      try {
+        const response = await fetch('/api/online-ordering-status', { cache: 'no-store' });
+        const status = await response.json();
+        if (!cancelled) {
+          setOnlineOrderingStatus(status);
+          if (!status.acceptingOrders) {
+            setShowPayment(false);
+          }
+        }
+      } catch (error) {
+        console.error('Unable to check online ordering status:', error);
+        if (!cancelled) {
+          setOnlineOrderingStatus({
+            acceptingOrders: false,
+            reason: 'Online ordering is temporarily unavailable. Please call the restaurant to confirm availability.',
+            source: 'error',
+            checkedAt: new Date().toISOString(),
+          });
+          setShowPayment(false);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsCheckingOrderingStatus(false);
+        }
+      }
+    };
+
+    checkOnlineOrdering();
+    const interval = window.setInterval(checkOnlineOrdering, 60000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, []);
+
   const validateForm = () => {
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
       toast({
@@ -96,11 +153,25 @@ export default function CheckoutPage() {
   };
 
   const handleContinueToPayment = () => {
+    if (isCheckingOrderingStatus) {
+      toast({
+        title: 'Checking ordering status',
+        description: 'Please wait while we confirm online ordering is available.',
+      });
+      return;
+    }
+
+    if (onlineOrderingStatus && !onlineOrderingStatus.acceptingOrders) {
+      toast({
+        title: 'Online Ordering Paused',
+        description: onlineOrderingStatus.reason || 'Online ordering is temporarily paused. Please call the restaurant.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     if (validateForm()) {
-      const requestId = typeof crypto !== 'undefined' && crypto.randomUUID
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-      setClientRequestId(requestId);
+      setClientRequestId(createClientRequestId());
       setShowPayment(true);
     }
   };
@@ -136,6 +207,9 @@ export default function CheckoutPage() {
     } catch (error) {
       console.error('Order submission failed:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      // Square payment tokens are single-use. Generate a fresh order idempotency key so
+      // a second click with a newly tokenized card is not blocked by the failed attempt.
+      setClientRequestId(createClientRequestId());
       toast({
         title: 'Order Failed',
         description: `There was an issue processing your order: ${errorMessage}`,
@@ -147,17 +221,14 @@ export default function CheckoutPage() {
   };
 
   const handlePaymentError = useCallback((error: string) => {
-    const newRequestId = typeof crypto !== 'undefined' && crypto.randomUUID
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-    setClientRequestId(newRequestId);
+    setClientRequestId(createClientRequestId());
 
     toast({
       title: 'Payment Error',
       description: error,
       variant: 'destructive',
     });
-  }, [toast]);
+  }, [createClientRequestId, toast]);
 
   if (isLoading) {
     return (
@@ -221,6 +292,25 @@ export default function CheckoutPage() {
             ))}
           </div>
         </div>
+
+        {onlineOrderingStatus && !onlineOrderingStatus.acceptingOrders && (
+          <Card className="mb-6 border-red-200 bg-red-50">
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-red-900">Online ordering is currently paused</p>
+                  <p className="text-sm text-red-800 mt-1">
+                    {onlineOrderingStatus.reason || 'We are not accepting website orders right now. Please call the restaurant for current availability.'}
+                  </p>
+                  {onlineOrderingStatus.pausedUntil && (
+                    <p className="text-xs text-red-700 mt-2">Paused until {new Date(onlineOrderingStatus.pausedUntil).toLocaleString()}</p>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid sm:grid-cols-3 gap-3 mb-6">
           <div className="bg-white border rounded-xl p-4 flex items-start gap-3">
@@ -395,8 +485,13 @@ export default function CheckoutPage() {
                   </CardContent>
                 </Card>
 
-                <Button onClick={handleContinueToPayment} className="w-full" size="lg">
-                  Continue to Payment
+                <Button
+                  onClick={handleContinueToPayment}
+                  className="w-full"
+                  size="lg"
+                  disabled={isCheckingOrderingStatus || !!(onlineOrderingStatus && !onlineOrderingStatus.acceptingOrders)}
+                >
+                  {isCheckingOrderingStatus ? 'Checking Ordering Status...' : onlineOrderingStatus && !onlineOrderingStatus.acceptingOrders ? 'Online Ordering Paused' : 'Continue to Payment'}
                 </Button>
               </>
             ) : (
@@ -423,6 +518,8 @@ export default function CheckoutPage() {
                     onPaymentError={handlePaymentError}
                     applicationId={SQUARE_APPLICATION_ID}
                     locationId={SQUARE_LOCATION_ID}
+                    customerInfo={customerInfo}
+                    deliveryInfo={orderType === 'delivery' ? deliveryInfo : undefined}
                   />
                 </CardContent>
               </Card>

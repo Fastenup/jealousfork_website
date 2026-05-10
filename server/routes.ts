@@ -12,6 +12,7 @@ import { BrevoEmailService } from "./brevoService";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { db, pool } from "./db";
 import { eq } from "drizzle-orm";
+import { assertOnlineOrderingOpen, getOnlineOrderingStatus } from "./onlineOrderingStatus";
 
 // Order request validation schema
 const orderRequestSchema = z.object({
@@ -247,6 +248,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({
         error: 'Failed to check Square status',
         message: error.message
+      });
+    }
+  });
+
+  // Public order availability endpoint. Checkout reads this, and /api/orders enforces it server-side.
+  app.get('/api/online-ordering-status', async (req, res) => {
+    try {
+      const forceRefresh = req.query.refresh === '1' || req.query.refresh === 'true';
+      const status = await getOnlineOrderingStatus({ forceRefresh });
+      res.set('Cache-Control', 'no-store');
+      res.json(status);
+    } catch (error: any) {
+      console.error('Online ordering status endpoint failed:', error);
+      res.status(500).json({
+        acceptingOrders: false,
+        source: 'error',
+        checkedAt: new Date().toISOString(),
+        reason: 'Unable to confirm online ordering status.'
       });
     }
   });
@@ -976,6 +995,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!squareService) {
         return res.status(503).json({ 
           error: 'Payment processing not available. Square API keys not configured.' 
+        });
+      }
+
+      try {
+        await assertOnlineOrderingOpen();
+      } catch (orderingError: any) {
+        const status = orderingError.onlineOrderingStatus;
+        return res.status(orderingError.statusCode || 503).json({
+          error: status?.reason || orderingError.message || 'Online ordering is temporarily paused.',
+          onlineOrdering: status || null,
         });
       }
 
