@@ -163,8 +163,8 @@ export default function CheckoutPage() {
 
     if (onlineOrderingStatus && !onlineOrderingStatus.acceptingOrders) {
       toast({
-        title: 'Online Ordering Paused',
-        description: onlineOrderingStatus.reason || 'Online ordering is temporarily paused. Please call the restaurant.',
+        title: 'Online Ordering Closed Today',
+        description: onlineOrderingStatus.reason || 'Online ordering is closed today. Please call the restaurant if you need help.',
         variant: 'destructive',
       });
       return;
@@ -299,9 +299,9 @@ export default function CheckoutPage() {
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-red-900">Online ordering is currently paused</p>
+                  <p className="font-semibold text-red-900">Online ordering is closed today</p>
                   <p className="text-sm text-red-800 mt-1">
-                    {onlineOrderingStatus.reason || 'We are not accepting website orders right now. Please call the restaurant for current availability.'}
+                    {onlineOrderingStatus.reason || 'Online ordering is closed today. Please call the restaurant if you need help.'}
                   </p>
                   {onlineOrderingStatus.pausedUntil && (
                     <p className="text-xs text-red-700 mt-2">Paused until {new Date(onlineOrderingStatus.pausedUntil).toLocaleString()}</p>
@@ -491,7 +491,7 @@ export default function CheckoutPage() {
                   size="lg"
                   disabled={isCheckingOrderingStatus || !!(onlineOrderingStatus && !onlineOrderingStatus.acceptingOrders)}
                 >
-                  {isCheckingOrderingStatus ? 'Checking Ordering Status...' : onlineOrderingStatus && !onlineOrderingStatus.acceptingOrders ? 'Online Ordering Paused' : 'Continue to Payment'}
+                  {isCheckingOrderingStatus ? 'Checking Ordering Status...' : onlineOrderingStatus && !onlineOrderingStatus.acceptingOrders ? 'Online Ordering Closed Today' : 'Continue to Payment'}
                 </Button>
               </>
             ) : (

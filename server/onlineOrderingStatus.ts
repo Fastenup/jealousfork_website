@@ -9,6 +9,8 @@ export interface OnlineOrderingStatus {
 }
 
 const CACHE_KEY = 'online_ordering_status';
+const MOTHERS_DAY_2026_CLOSURE_MESSAGE = 'Online ordering is closed today for Mother’s Day so our team can focus on serving all guests in the restaurant. Please call us if you need help.';
+const DEFAULT_CLOSURE_MESSAGE = 'Online ordering is temporarily paused. Please call the restaurant for help.';
 const DISABLED_TEXT_PATTERNS = [
   /online\s+ordering\s+(is\s+)?(temporarily\s+)?(unavailable|disabled|paused|closed)/i,
   /(temporarily\s+)?not\s+accepting\s+(online\s+)?orders/i,
@@ -38,6 +40,25 @@ function disabledStatus(source: OnlineOrderingStatus['source'], reason: string, 
     checkedAt: new Date().toISOString(),
     ...(pausedUntil ? { pausedUntil } : {}),
   };
+}
+
+function currentMiamiDate(): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+}
+
+function customerClosureReason(): string {
+  if (process.env.ONLINE_ORDERING_DISABLED_REASON) {
+    return process.env.ONLINE_ORDERING_DISABLED_REASON;
+  }
+
+  return currentMiamiDate() === '2026-05-10'
+    ? MOTHERS_DAY_2026_CLOSURE_MESSAGE
+    : DEFAULT_CLOSURE_MESSAGE;
 }
 
 function squareBaseUrl(accessToken?: string): string {
@@ -96,7 +117,7 @@ async function getSquareOnlineSiteUrls(): Promise<string[]> {
 
     const unpublished = domains.find((site: any) => site.isPublished === false);
     if (unpublished) {
-      throw disabledStatus('square_online_site', `Square Online site ${unpublished.domain} is unpublished`);
+      throw disabledStatus('square_online_site', customerClosureReason());
     }
 
     const fromSites = domains.map((site: any) => `https://${site.domain}`);
@@ -121,7 +142,7 @@ async function checkSquareOnlinePage(): Promise<OnlineOrderingStatus | null> {
       const normalized = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ');
       const matched = DISABLED_TEXT_PATTERNS.find((pattern) => pattern.test(normalized));
       if (matched) {
-        return disabledStatus('square_online_page', `Square Online page indicates ordering is paused: ${url}`);
+        return disabledStatus('square_online_page', customerClosureReason());
       }
     } catch (error) {
       console.warn('Square Online status page check failed:', url, error);
@@ -152,11 +173,11 @@ export async function getOnlineOrderingStatus(options: { forceRefresh?: boolean 
   let status: OnlineOrderingStatus;
 
   if (isTruthy(process.env.ONLINE_ORDERING_DISABLED) || isTruthy(process.env.SQUARE_ONLINE_ORDERING_DISABLED)) {
-    status = disabledStatus('manual_override', process.env.ONLINE_ORDERING_DISABLED_REASON || 'Online ordering is temporarily paused. Please call the restaurant for help.');
+    status = disabledStatus('manual_override', customerClosureReason());
   } else if (process.env.ONLINE_ORDERING_PAUSED_UNTIL) {
     const pausedUntil = new Date(process.env.ONLINE_ORDERING_PAUSED_UNTIL);
     if (!Number.isNaN(pausedUntil.valueOf()) && pausedUntil > new Date()) {
-      status = disabledStatus('pause_until', process.env.ONLINE_ORDERING_DISABLED_REASON || 'Online ordering is temporarily paused.', pausedUntil.toISOString());
+      status = disabledStatus('pause_until', customerClosureReason(), pausedUntil.toISOString());
     } else {
       status = enabledStatus('default');
     }
