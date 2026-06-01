@@ -167,8 +167,8 @@ export const localAreas: LocalArea[] = [
     slug: "doral",
     description: "Doral's favorite brunch spot is just 38 minutes away! Jealous Fork brings Miami's most Instagram-worthy pancakes to the City of Doral. Featured on Telemundo National, our artisan creations like the Chocolate Oreo Chip Pancake and Hot Maple Flatbread have earned us 4.7★ on Google. Perfect for Doral families, Doral business professionals, and anyone craving the best breakfast near Doral Golf Resort, CityPlace Doral, or Downtown Doral.",
     distance: "38 min",
-    seoTitle: "Jealous Fork Menu Near Doral, FL | Artisan Pancakes & Brunch",
-    seoDescription: "Looking for the Jealous Fork menu near Doral, FL? Miami's 4.7★ pancake destination is 38 minutes from CityPlace Doral with award-winning brunch and fluffy stacks."
+    seoTitle: "Brunch Near Doral, FL | Jealous Fork Pancakes & Breakfast",
+    seoDescription: "Searching brunch near Doral or breakfast near me? Jealous Fork is a 4.7★ Miami pancake destination near CityPlace Doral with pickup, delivery, and reservations."
   },
   {
     name: "The Hammocks",
@@ -218,7 +218,9 @@ export const localAreas: LocalArea[] = [
     name: "South Miami",
     slug: "south-miami",
     description: "South Miami's premier breakfast and brunch destination is just a quick drive away. Jealous Fork serves award-winning artisan pancakes and creative brunch dishes loved by South Miami families and UM students.",
-    distance: "20 min"
+    distance: "20 min",
+    seoTitle: "Brunch Near South Miami | Jealous Fork Breakfast & Pancakes",
+    seoDescription: "Looking for brunch near South Miami or breakfast near me? Jealous Fork serves 4.7★ artisan pancakes, brunch favorites, pickup, delivery, and weekend reservations."
   },
   {
     name: "Pinecrest",

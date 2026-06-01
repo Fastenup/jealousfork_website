@@ -14,7 +14,9 @@ import CheckoutPage from "@/pages/CheckoutPage";
 import OrderConfirmationPage from "@/pages/OrderConfirmationPage";
 import ProfessionalAdminPage from "@/pages/ProfessionalAdminPage";
 import BurgersPage from "@/pages/BurgersPage";
+import AffordableBurgersMiamiPage from "@/pages/AffordableBurgersMiamiPage";
 import BreakfastNearMePage from "@/pages/BreakfastNearMePage";
+import GalleryPage from "@/pages/GalleryPage";
 
 function Router() {
   return (
@@ -22,10 +24,11 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/breakfast-near-me" component={BreakfastNearMePage} />
       <Route path="/burgers" component={BurgersPage} />
+      <Route path="/best-affordable-burgers-miami" component={AffordableBurgersMiamiPage} />
       <Route path="/menu/:slug?" component={FullMenuPage} />
       <Route path="/full-menu" component={FullMenuPage} />
       <Route path="/near/:area" component={LocalPage} />
-      <Route path="/gallery" component={Home} />
+      <Route path="/gallery" component={GalleryPage} />
       <Route path="/about" component={Home} />
       <Route path="/privacy" component={PrivacyPage} />
       <Route path="/terms" component={TermsPage} />

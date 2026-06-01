@@ -5,7 +5,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://www.jealousfork.com/</loc>
-    <lastmod>2026-03-15</lastmod>
+    <lastmod>2026-05-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -33,13 +33,29 @@
   <!-- Breakfast Near Me Landing Page -->
   <url>
     <loc>https://www.jealousfork.com/breakfast-near-me</loc>
-    <lastmod>2026-03-15</lastmod>
+    <lastmod>2026-05-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
     <image:image>
       <image:loc>https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=1200&amp;h=630&amp;fit=crop</image:loc>
       <image:title>Best Breakfast Near Me in Kendall Miami - Jealous Fork</image:title>
     </image:image>
+  </url>
+
+  <!-- Affordable Burgers Miami Comparison -->
+  <url>
+    <loc>https://www.jealousfork.com/best-affordable-burgers-miami</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- Jealous Fork Photos Gallery -->
+  <url>
+    <loc>https://www.jealousfork.com/gallery</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- Privacy Policy -->
@@ -117,7 +133,7 @@
 
   <url>
     <loc>https://www.jealousfork.com/near/doral</loc>
-    <lastmod>2026-03-15</lastmod>
+    <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -278,7 +294,7 @@
 
   <url>
     <loc>https://www.jealousfork.com/near/south-miami</loc>
-    <lastmod>2026-03-15</lastmod>
+    <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

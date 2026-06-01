@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <>
       <SEOHead
-        title="Best Brunch Kendall (4.7★) | Pancakes Near Me | Jealous Fork"
-        description="Looking for best brunch Kendall, pancakes near me, or breakfast near me? Jealous Fork has 400+ reviews, fast pickup, and easy reservations—book now."
+        title="Pancakes Near Me & Best Breakfast Kendall | Jealous Fork"
+        description="Searching pancakes near me, breakfast near me, or brunch in Kendall? Jealous Fork serves 4.7★ artisan pancakes with pickup, delivery, and reservations."
         canonical="https://www.jealousfork.com/"
         ogImage="https://www.jealousfork.com/images/og/jealous-fork-og.jpg"
         keywords="best pancakes in miami, pancakes near me, breakfast near me, brunch near me, breakfast kendall, brunch kendall, best breakfast kendall, best pancakes miami, artisan pancakes Miami, fluffy pancakes miami, breakfast miami, brunch miami, gourmet burgers Miami, Jealous Fork, pancake restaurant miami"
@@ -29,9 +29,17 @@ export default function Home() {
       <section className="py-10 bg-white">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <p className="text-sm uppercase tracking-wide text-gray-500 mb-3">Popular local pages</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Breakfast near me, brunch near me, and Kendall weekend cravings</h2>
+          <p className="text-gray-600 max-w-3xl mx-auto mb-6">
+            Jealous Fork is built for the searches Miami locals actually make: quick breakfast near me, weekend brunch near me,
+            and the best brunch in Kendall when pancakes, burgers, and cafecito need to be worth the drive. Order pickup,
+            reserve a table, or jump to the closest neighborhood page below.
+          </p>
           <div className="flex flex-wrap justify-center gap-3 text-sm">
             <a className="underline hover:text-warm-amber" href="/breakfast-near-me">Breakfast Near Me</a>
             <a className="underline hover:text-warm-amber" href="/near/kendall">Best Brunch Kendall</a>
+            <a className="underline hover:text-warm-amber" href="/near/doral">Brunch Near Doral</a>
+            <a className="underline hover:text-warm-amber" href="/near/south-miami">Brunch Near South Miami</a>
             <a className="underline hover:text-warm-amber" href="/near/west-kendall">Breakfast in West Kendall</a>
             <a className="underline hover:text-warm-amber" href="/full-menu">Pancake Menu</a>
           </div>
