@@ -66,7 +66,7 @@ const reviews = [
 ];
 
 export default function BreakfastNearMePage() {
-  const title = "Pancakes Near Me & Best Breakfast Kendall | Jealous Fork"
+  const title = "Pancakes Near Me & Breakfast Near Me Kendall | Jealous Fork"
   const description =
     "Searching pancakes near me, best pancakes Miami, or breakfast Kendall? Jealous Fork serves 4.7★ brunch favorites with pickup, delivery, and reservations.";
   const keywords =
@@ -164,14 +164,14 @@ export default function BreakfastNearMePage() {
 
           <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
             <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
-              Best Breakfast Near Me
+              Pancakes Near Me &amp; Best Breakfast Near Me
               <span className="block text-2xl md:text-3xl font-normal mt-2 text-yellow-300">
                 Kendall &amp; Miami, FL
               </span>
             </h1>
             <p className="text-lg md:text-xl mb-4 max-w-2xl mx-auto opacity-90">
               Award-winning artisan pancakes, classic breakfast plates, and the best brunch in
-              Kendall. Rated 4.7★ on Google with 400+ reviews.
+              Kendall when you search breakfast near me or pancakes near me. Rated 4.7★ on Google with 400+ reviews.
             </p>
             <p className="text-sm md:text-base mb-8 max-w-2xl mx-auto text-white/85">
               Order online for fast pickup, get delivery across Miami-Dade, or reserve a table for weekend brunch.

@@ -57,9 +57,9 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
 
   const routeMap: Record<string, RouteSeoMeta> = {
     "/": {
-      title: "Breakfast Near Me & Pancakes Near Me in Kendall | Jealous Fork",
+      title: "Breakfast Near Me in Kendall + Pancakes Near Me | Jealous Fork",
       description:
-        "Looking for breakfast near me, pancakes near me, or brunch near me in Kendall? Jealous Fork serves 400+ reviewed favorites with fast pickup and easy reservations.",
+        "Searching breakfast near me, pancakes near me, or brunch near me in Kendall? Jealous Fork serves 4.7★ brunch favorites with fast pickup and reservations.",
       canonical: makeCanonical(pathname),
       keywords:
         "best pancakes in miami, pancakes near me, breakfast near me, brunch near me, breakfast kendall, brunch kendall, best breakfast kendall, best pancakes miami, artisan pancakes Miami, breakfast miami, brunch miami, gourmet burgers Miami, Jealous Fork",
@@ -87,9 +87,9 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
       ogImage: DEFAULT_OG_IMAGE,
     },
     "/breakfast-near-me": {
-      title: "Pancakes Near Me in Kendall | Best Brunch Kendall",
+      title: "Pancakes Near Me & Breakfast Near Me Kendall | Jealous Fork",
       description:
-        "Searching pancakes near me or best brunch Kendall? Jealous Fork serves 4.7★ pancakes, eggs benedict, and brunch favorites. Check hours, photos, and order now.",
+        "Searching pancakes near me, breakfast near me, or best brunch Kendall? Jealous Fork serves 4.7★ pancakes, eggs benedict, and brunch favorites.",
       canonical: makeCanonical(pathname),
       keywords:
         "breakfast near me, pancakes near me, best brunch Kendall, breakfast Kendall, breakfast Miami, brunch near me, Jealous Fork",
