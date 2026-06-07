@@ -21,8 +21,8 @@ export const localAreas: LocalArea[] = [
     slug: "west-kendall",
     description: "West Kendall families choose Jealous Fork for award-winning artisan pancakes, creative brunch plates, and a relaxed, kid-friendly vibe. Located about 15 minutes away near Town & Country, we're a go-to weekend breakfast spot for neighborhoods around Kendall Drive and the Turnpike. From fluffy Japanese-style stacks to savory brunch favorites, every dish is made fresh and built for shareable moments.",
     distance: "15 min",
-    seoTitle: "Best Pancakes Near West Kendall, Miami | Jealous Fork — 4.7★ Brunch",
-    seoDescription: "Looking for the best breakfast near West Kendall? Jealous Fork is a 4.7★ artisan pancake spot just 15 minutes away. Family-friendly brunch, creative stacks, and easy parking."
+    seoTitle: "Breakfast Near West Kendall + Pancakes Near Me | Jealous Fork",
+    seoDescription: "Searching breakfast near me in West Kendall? Jealous Fork serves 4.7★ artisan pancakes, brunch plates, pickup, and reservations just 15 minutes away."
   },
   {
     name: "Edgewater",
@@ -79,8 +79,8 @@ export const localAreas: LocalArea[] = [
     slug: "south-beach",
     description: "Looking for the best breakfast in South Beach? Jealous Fork is just 25 minutes from Ocean Drive and worth every minute. Fuel your South Beach adventures with our award-winning artisan pancakes — perfect before hitting the beach or after a night on Lincoln Road. 4.7★ Google | 4.6★ Yelp | Featured on Telemundo. Book on Resy or order delivery to your South Beach hotel!",
     distance: "25 min",
-    seoTitle: "Best Pancakes in South Beach, Miami | Jealous Fork — Artisan Brunch",
-    seoDescription: "Craving artisan pancakes in South Beach? Jealous Fork brings Miami's best fluffy stacks to SoBe — 4.7★ Google rated. Just 25 min from Ocean Drive. Award-winning brunch worth the drive!"
+    seoTitle: "Breakfast Near South Beach + Pancakes Near Me | Jealous Fork",
+    seoDescription: "Searching breakfast near me in South Beach? Jealous Fork is a 4.7★ Miami pancake and brunch destination with pickup, delivery, and reservations."
   },
   {
     name: "Aventura",
@@ -160,15 +160,17 @@ export const localAreas: LocalArea[] = [
     name: "Sweetwater",
     slug: "sweetwater",
     description: "Serving the growing Sweetwater community with Miami's original artisan pancake experience. Our breakfast and brunch offerings bring families together over exceptional food.",
-    distance: "35 min"
+    distance: "35 min",
+    seoTitle: "Breakfast Near Sweetwater + Pancakes Near Me | Jealous Fork",
+    seoDescription: "Searching breakfast near me in Sweetwater? Jealous Fork serves 4.7★ artisan pancakes, brunch favorites, pickup, delivery, and reservations from Kendall."
   },
   {
     name: "Doral",
     slug: "doral",
     description: "Doral's favorite brunch spot is just 38 minutes away! Jealous Fork brings Miami's most Instagram-worthy pancakes to the City of Doral. Featured on Telemundo National, our artisan creations like the Chocolate Oreo Chip Pancake and Hot Maple Flatbread have earned us 4.7★ on Google. Perfect for Doral families, Doral business professionals, and anyone craving the best breakfast near Doral Golf Resort, CityPlace Doral, or Downtown Doral.",
     distance: "38 min",
-    seoTitle: "Brunch Near Doral, FL | Jealous Fork Pancakes & Breakfast",
-    seoDescription: "Searching brunch near Doral or breakfast near me? Jealous Fork is a 4.7★ Miami pancake destination near CityPlace Doral with pickup, delivery, and reservations."
+    seoTitle: "Breakfast Near Doral + Pancakes Near Me | Jealous Fork",
+    seoDescription: "Searching breakfast near me in Doral? Jealous Fork serves 4.7★ artisan pancakes, brunch favorites, pickup, delivery, and reservations near CityPlace Doral."
   },
   {
     name: "The Hammocks",
