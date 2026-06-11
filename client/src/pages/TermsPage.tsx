@@ -38,7 +38,7 @@ export default function TermsPage() {
               
               <h3 className="text-xl font-semibold mb-4 text-gray-800">Operating Hours</h3>
               <ul className="list-disc pl-6 mb-6 text-gray-700">
-                <li><strong>Jealous Fork (Day Menu):</strong> Tuesday - Sunday, 9:00 AM - 3:00 PM</li>
+                <li><strong>Jealous Fork (Day Menu):</strong> Tuesday - Thursday, 9:00 AM - 2:00 PM; Sunday, 9:00 AM - 3:00 PM</li>
                 <li><strong>Jealous Burger (Evening Menu):</strong> Friday - Saturday, 5:00 PM - 9:00 PM</li>
                 <li><strong>Closed:</strong> Mondays</li>
               </ul>

@@ -46,7 +46,7 @@ export default function StructuredData() {
         {
           "@type": "MenuSection",
           "name": "Signature Pancakes",
-          "description": "Award-winning artisan pancakes - Available Tue-Sun 9AM-3PM",
+          "description": "Award-winning artisan pancakes - Available Tue-Thu 9AM-2PM and Sun 9AM-3PM",
           "hasMenuItem": [
             {
               "@type": "MenuItem",

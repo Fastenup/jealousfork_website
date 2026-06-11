@@ -478,8 +478,9 @@ export default function FullMenuPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 text-center">
               <div className="p-4">
                 <h4 className="text-base sm:text-lg font-semibold text-green-400 mb-2">Jealous Fork</h4>
-                <p className="text-gray-300 text-sm sm:text-base">Tuesday - Sunday</p>
-                <p className="text-gray-300 text-sm sm:text-base">9:00 AM - 3:00 PM</p>
+                <p className="text-gray-300 text-sm sm:text-base">Tuesday - Thursday & Sunday</p>
+                <p className="text-gray-300 text-sm sm:text-base">Tue-Thu 9:00 AM - 2:00 PM</p>
+                <p className="text-gray-300 text-sm sm:text-base">Sun 9:00 AM - 3:00 PM</p>
                 <p className="text-xs sm:text-sm text-gray-400 mt-2">Artisan Pancakes & Breakfast</p>
               </div>
               <div className="p-4">

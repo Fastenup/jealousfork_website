@@ -155,7 +155,7 @@ export default function LocalPage() {
                   What are Jealous Fork's hours for {areaInfo.name} residents?
                 </h3>
                 <p className="text-gray-600">
-                  We're open Tuesday through Sunday from 9AM to 3PM for breakfast and brunch. On Friday and Saturday, we extend our hours to 9PM and also serve Jealous Burger (gourmet burgers from 3PM-9PM). You can enjoy both pancakes AND burgers during evening hours. We're closed on Mondays.
+                  We're open Tuesday through Thursday from 9AM to 2PM and Sunday from 9AM to 3PM for breakfast and brunch. On Friday and Saturday, we extend our hours to 9PM and also serve Jealous Burger (gourmet burgers from 3PM-9PM). You can enjoy both pancakes AND burgers during evening hours. We're closed on Mondays.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-sm">

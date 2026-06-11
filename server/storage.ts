@@ -204,8 +204,8 @@ class MemoryStorage implements IStorage {
       id: 1,
       name: "Jealous Fork",
       description: "Artisan pancakes and breakfast specialties",
-      operatingHours: "9:00 AM - 3:00 PM",
-      operatingDays: "Tuesday - Sunday",
+      operatingHours: "Tue-Thu 9:00 AM - 2:00 PM; Sun 9:00 AM - 3:00 PM",
+      operatingDays: "Tuesday - Thursday & Sunday",
       displayOrder: 1,
       isActive: true
     },
