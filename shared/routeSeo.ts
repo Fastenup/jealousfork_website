@@ -86,6 +86,27 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
       robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       ogImage: DEFAULT_OG_IMAGE,
     },
+
+    "/menu.html": {
+      title: "Jealous Fork Menu: Pancakes, Brunch & Burgers",
+      description:
+        "See the Jealous Fork menu for pancakes, brunch plates, gourmet burgers, pickup, delivery, and Kendall reservations.",
+      canonical: `${SITE_ORIGIN}/full-menu`,
+      keywords:
+        "Jealous Fork menu, Jealous Fork pancakes, breakfast menu Kendall, brunch menu Kendall, gourmet burgers Miami",
+      robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      ogImage: DEFAULT_OG_IMAGE,
+    },
+    "/gallery": {
+      title: "Jealous Fork Photos: Pancakes & Brunch in Kendall",
+      description:
+        "See Jealous Fork photos of 4.7★ pancakes, brunch plates, burgers, and the Kendall Miami restaurant before you order pickup, delivery, or reserve.",
+      canonical: makeCanonical(pathname),
+      keywords:
+        "Jealous Fork photos, Jealous Fork gallery, pancakes photos Miami, brunch photos Kendall, Jealous Fork menu photos",
+      robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      ogImage: DEFAULT_OG_IMAGE,
+    },
     "/breakfast-near-me": {
       title: "Pancakes Near Me & Breakfast Near Me Kendall | Jealous Fork",
       description:

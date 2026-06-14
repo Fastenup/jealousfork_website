@@ -26,6 +26,15 @@ app.use((req, res, next) => {
     return res.redirect(301, `https://${host}${req.originalUrl || '/'}`);
   }
 
+  if (req.path === '/index.html') {
+    const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    return res.redirect(301, `/${query}`);
+  }
+
+  if (req.path === '/menu.html' || req.path === '/menu.html/') {
+    return res.redirect(301, '/full-menu');
+  }
+
   next();
 });
 

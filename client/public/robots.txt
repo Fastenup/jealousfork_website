@@ -8,6 +8,7 @@ Disallow: /admin/
 
 # Priority pages for crawling
 Allow: /full-menu
+Allow: /breakfast-near-me
 Allow: /burgers
 Allow: /near/
 Allow: /sitemap.xml

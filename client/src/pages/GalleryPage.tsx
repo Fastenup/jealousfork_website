@@ -51,7 +51,7 @@ const galleryJsonLd = {
   "@context": "https://schema.org",
   "@type": "ImageGallery",
   name: "Jealous Fork Photos",
-  description: "Photos of Jealous Fork pancakes, brunch plates, burgers, and the Kendall Miami restaurant.",
+  description: "Jealous Fork photos of pancakes, brunch plates, burgers, and the Kendall Miami restaurant.",
   url: "https://www.jealousfork.com/gallery",
   image: photos.map((photo) => `https://www.jealousfork.com${photo.src}`),
 };
@@ -60,8 +60,8 @@ export default function GalleryPage() {
   return (
     <>
       <SEOHead
-        title="Jealous Fork Photos | Pancakes & Brunch Gallery"
-        description="See Jealous Fork photos of 4.7★ pancakes, brunch plates, burgers, and the Kendall Miami restaurant before you order pickup, delivery, or reserve a table."
+        title="Jealous Fork Photos: Pancakes & Brunch in Kendall"
+        description="See Jealous Fork photos of 4.7★ pancakes, brunch plates, burgers, and the Kendall Miami restaurant before you order pickup, delivery, or reserve."
         canonical="https://www.jealousfork.com/gallery"
         ogImage="https://www.jealousfork.com/images/og/jealous-fork-og.jpg"
         keywords="Jealous Fork photos, Jealous Fork gallery, pancakes photos Miami, brunch photos Kendall, Jealous Fork menu photos"

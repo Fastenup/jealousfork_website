@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <>
       <SEOHead
-        title="Breakfast Near Me in Kendall + Pancakes Near Me | Jealous Fork"
-        description="Searching breakfast near me, pancakes near me, or brunch near me in Kendall? Jealous Fork serves 4.7★ artisan pancakes with pickup, delivery, and reservations."
+        title="Pancakes Near Me in Kendall | Jealous Fork Brunch"
+        description="Searching pancakes near me, breakfast near me, or brunch near me in Kendall? Jealous Fork serves 4.7★ artisan pancakes, pickup, delivery, and reservations."
         canonical="https://www.jealousfork.com/"
         ogImage="https://www.jealousfork.com/images/og/jealous-fork-og.jpg"
         keywords="best pancakes in miami, pancakes near me, breakfast near me, brunch near me, breakfast kendall, brunch kendall, best breakfast kendall, best pancakes miami, artisan pancakes Miami, fluffy pancakes miami, breakfast miami, brunch miami, gourmet burgers Miami, Jealous Fork, pancake restaurant miami"
