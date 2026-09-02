@@ -65,7 +65,7 @@ const categoryConfig: Record<string, CategoryInfo> = {
 };
 
 // Default fallback image
-const fallbackImage = 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop';
+const fallbackImage = '/images/food/oreo-chocolate-chip.jpg';
 
 export default function FullMenuPage() {
   const { addItem } = useCart();

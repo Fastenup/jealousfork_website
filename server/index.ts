@@ -35,6 +35,15 @@ app.use((req, res, next) => {
     return res.redirect(301, '/full-menu');
   }
 
+  // Legacy Weebly-era URLs (old site): consolidate to the homepage instead of
+  // serving soft-404s that keep dead pages indexed.
+  if (req.path === '/store' || req.path.startsWith('/store/')) {
+    return res.redirect(301, '/');
+  }
+  if (req.path.endsWith('.html') && !/^\/google[0-9a-f]+\.html$/i.test(req.path)) {
+    return res.redirect(301, '/');
+  }
+
   next();
 });
 
@@ -107,7 +116,10 @@ app.use((req, res, next) => {
   // Add static file serving for both development and production
   // Use process.cwd() for reliable path resolution in both dev and bundled production
   const publicPath = path.resolve(process.cwd(), "public");
-  app.use(express.static(publicPath));
+  // index: false is load-bearing — in the Docker image dist/public is merged
+  // into ./public, so without it this middleware serves the raw index.html for
+  // "/" and the per-route SEO injection in serveStatic() never runs.
+  app.use(express.static(publicPath, { index: false }));
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route

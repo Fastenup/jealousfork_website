@@ -31,7 +31,7 @@ interface MenuItem {
 }
 
 // Default fallback image for burgers
-const fallbackImage = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop&crop=center';
+const fallbackImage = '/images/food/jesse-james-burger.jpg';
 
 // Generate page-specific burger menu schema from menu data.
 // The site-wide Restaurant schema is managed by SEOHead; keep this as Menu/MenuItem only
@@ -193,7 +193,7 @@ export default function BurgersPage() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1920&h=1080&fit=crop)'
+            backgroundImage: 'url(/images/food/jesse-james-burger.jpg)'
           }}
         ></div>
         <div className="absolute inset-0 bg-black/60"></div>
@@ -391,7 +391,7 @@ export default function BurgersPage() {
             </div>
             <div className="h-80 rounded-xl overflow-hidden">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3594.123456789!2d-80.4168!3d25.7323!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDQzJzU2LjMiTiA4MMKwMjQnNTkuOSJX!5e0!3m2!1sen!2sus!4v1234567890"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3594.123456789!2d-80.4282!3d25.7295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDQzJzU2LjMiTiA4MMKwMjQnNTkuOSJX!5e0!3m2!1sen!2sus!4v1234567890"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

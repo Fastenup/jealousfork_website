@@ -13,8 +13,8 @@ export const localAreas: LocalArea[] = [
     slug: "kendall",
     description: "Located in the heart of Kendall at 14417 SW 42nd St, Jealous Fork is your neighborhood's favorite breakfast and brunch destination. We serve award-winning artisan pancakes, fluffy Japanese-style stacks, and gourmet burgers that have made us famous across Miami. Whether you're searching for the best pancakes near you or a perfect brunch spot in Kendall, we're right here in your community.",
     distance: "5 min",
-    seoTitle: "Best Pancakes in Kendall, Miami | Jealous Fork — Artisan Pancakes & Brunch",
-    seoDescription: "Best artisan pancakes in Kendall, Miami — Jealous Fork is your neighborhood's 4.7★ Google-rated pancake spot. 5 min away at 14417 SW 42nd St. Fluffy stacks & gourmet brunch!"
+    seoTitle: "Breakfast Kendall + Best Pancakes Miami | Jealous Fork",
+    seoDescription: "Searching breakfast Kendall or best pancakes Miami? Jealous Fork is Kendall's 4.7★ artisan pancake and brunch spot at 14417 SW 42nd St."
   },
   {
     name: "West Kendall",

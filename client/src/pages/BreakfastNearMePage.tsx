@@ -66,9 +66,9 @@ const reviews = [
 ];
 
 export default function BreakfastNearMePage() {
-  const title = "Pancakes Near Me & Breakfast Near Me Kendall | Jealous Fork"
+  const title = "Breakfast Near Me Kendall + Best Pancakes Miami | Jealous Fork"
   const description =
-    "Searching pancakes near me, best pancakes Miami, or breakfast Kendall? Jealous Fork serves 4.7★ brunch favorites with pickup, delivery, and reservations.";
+    "Searching breakfast near me, breakfast Kendall, or best pancakes Miami? Jealous Fork serves 4.7★ artisan pancakes, brunch favorites, pickup, delivery, and reservations.";
   const keywords =
     "breakfast near me, best breakfast near me, breakfast near me Kendall, breakfast near me Miami, breakfast places near me, pancakes near me, brunch near me, best breakfast Miami, breakfast restaurant Kendall";
 
@@ -92,7 +92,7 @@ export default function BreakfastNearMePage() {
             "@type": "Restaurant",
             name: "Jealous Fork",
             description:
-              "Miami's best breakfast restaurant in Kendall. Award-winning artisan pancakes, classic breakfast plates, and brunch served daily.",
+              "Miami's best breakfast restaurant in Kendall. Award-winning artisan pancakes, classic breakfast plates, and brunch served Tuesday through Sunday.",
             image:
               "https://www.jealousfork.com/images/og/jealous-fork-og.jpg",
             address: {
@@ -105,8 +105,8 @@ export default function BreakfastNearMePage() {
             },
             geo: {
               "@type": "GeoCoordinates",
-              latitude: 25.7323,
-              longitude: -80.4168,
+              latitude: 25.7295,
+              longitude: -80.4282,
             },
             url: "https://www.jealousfork.com/breakfast-near-me",
             telephone: "(305) 699-1430",
@@ -157,21 +157,21 @@ export default function BreakfastNearMePage() {
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage:
-                "url(https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080)",
+                "url(/images/food/banana-walnut-smoked-maple.jpg)",
             }}
           ></div>
           <div className="absolute inset-0 bg-black/55"></div>
 
           <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
             <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
-              Pancakes Near Me &amp; Best Breakfast Near Me
+              Breakfast Near Me Kendall &amp; Best Pancakes Miami
               <span className="block text-2xl md:text-3xl font-normal mt-2 text-yellow-300">
                 Kendall &amp; Miami, FL
               </span>
             </h1>
             <p className="text-lg md:text-xl mb-4 max-w-2xl mx-auto opacity-90">
               Award-winning artisan pancakes, classic breakfast plates, and the best brunch in
-              Kendall when you search breakfast near me or pancakes near me. Rated 4.7★ on Google with 400+ reviews.
+              Kendall when you search breakfast near me, breakfast Kendall, or best pancakes Miami. Rated 4.7★ on Google with 400+ reviews.
             </p>
             <p className="text-sm md:text-base mb-8 max-w-2xl mx-auto text-white/85">
               Order online for fast pickup, get delivery across Miami-Dade, or reserve a table for weekend brunch.
@@ -379,7 +379,7 @@ export default function BreakfastNearMePage() {
               <div className="rounded-xl overflow-hidden shadow-lg">
                 <iframe
                   title="Jealous Fork Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3596.4!2d-80.4168!3d25.7323!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9c1e7b7e7e7e7%3A0x0!2sJealous+Fork!5e0!3m2!1sen!2sus!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3596.4!2d-80.4282!3d25.7295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9c1e7b7e7e7e7%3A0x0!2sJealous+Fork!5e0!3m2!1sen!2sus!4v1234567890"
                   width="100%"
                   height="350"
                   style={{ border: 0 }}

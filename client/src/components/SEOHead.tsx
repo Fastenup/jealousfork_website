@@ -118,8 +118,8 @@ const restaurantSchema = {
   },
   "geo": {
     "@type": "GeoCoordinates",
-    "latitude": 25.7323,
-    "longitude": -80.4168
+    "latitude": 25.7295,
+    "longitude": -80.4282
   },
   "url": "https://www.jealousfork.com",
   "telephone": "(305) 699-1430",

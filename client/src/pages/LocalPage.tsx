@@ -43,7 +43,7 @@ export default function LocalPage() {
         <section className="relative h-screen flex items-center justify-center overflow-hidden">
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
-            style={{backgroundImage: 'url(https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080)'}}
+            style={{backgroundImage: 'url(/images/food/lemon-curd-blueberry.jpg)'}}
           ></div>
           <div className="absolute inset-0 bg-black/50"></div>
           
@@ -107,25 +107,25 @@ export default function LocalPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <img 
-                  src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                  src="/images/food/lemon-curd-blueberry.jpg" 
                   alt="Artisan pancakes" 
                   className="rounded-xl shadow-lg"
                   loading="lazy"
                 />
                 <img 
-                  src="https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                  src="/images/food/jesse-james-burger.jpg" 
                   alt="Gourmet burger" 
                   className="rounded-xl shadow-lg mt-8"
                   loading="lazy"
                 />
                 <img 
-                  src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                  src="/images/restaurant/interior.jpg" 
                   alt="Restaurant interior" 
                   className="rounded-xl shadow-lg -mt-8"
                   loading="lazy"
                 />
                 <img 
-                  src="https://images.unsplash.com/photo-1551218808-94e220e084d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400" 
+                  src="/images/food/brunch-and-still-hungover.jpg" 
                   alt="Fresh ingredients" 
                   className="rounded-xl shadow-lg"
                   loading="lazy"

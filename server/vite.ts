@@ -5,7 +5,8 @@ import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
 import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
-import { getRouteSeoMeta, isNoindexRoute } from "../shared/routeSeo";
+import { getRouteSeoMeta, isNoindexRoute, isKnownRoute } from "../shared/routeSeo";
+import { buildRestaurantJsonLd, RESTAURANT } from "../shared/restaurantSchema";
 
 const viteLogger = createLogger();
 const SITE_ORIGIN = "https://www.jealousfork.com";
@@ -42,6 +43,33 @@ function injectSeo(html: string, url: string): string {
   nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+name=["']twitter:description["'][^>]*>/i, `<meta name="twitter:description" content="${meta.description}" />`);
   nextHtml = injectOrReplaceTag(nextHtml, /<meta\s+name=["']twitter:image["'][^>]*>/i, `<meta name="twitter:image" content="${meta.ogImage || FALLBACK_OG_IMAGE}" />`);
   nextHtml = injectOrReplaceTag(nextHtml, /<link\s+rel=["']canonical["']\s+href=["'][^"']*["']\s*\/?>/i, `<link rel="canonical" href="${meta.canonical}" />`);
+
+  // Structured data in the served HTML: Bing/DuckDuckGo (and most AI crawlers)
+  // do not reliably execute JS, so client-side JSON-LD is invisible to them.
+  if (!meta.robots?.includes("noindex")) {
+    nextHtml = nextHtml.replace(
+      "</head>",
+      `  <script type="application/ld+json">${buildRestaurantJsonLd()}</script>\n</head>`,
+    );
+  }
+
+  // Crawler-visible page content inside #root. React's createRoot().render()
+  // replaces this on mount, so users see the full app; no-JS crawlers see
+  // real text (name, address, hours, page copy) instead of an empty shell.
+  const h1 = meta.title.split("|")[0].trim();
+  const staticShell = [
+    `<main style="max-width:720px;margin:40px auto;padding:0 16px;font-family:system-ui,sans-serif">`,
+    `<h1>${h1}</h1>`,
+    `<p>${meta.description}</p>`,
+    `<p><strong>${RESTAURANT.name}</strong> · ${RESTAURANT.street}, ${RESTAURANT.city}, ${RESTAURANT.region} ${RESTAURANT.postalCode} · <a href="tel:${RESTAURANT.phone}">${RESTAURANT.phoneDisplay}</a></p>`,
+    `<p>Hours: ${RESTAURANT.hoursText}</p>`,
+    `<nav><a href="/">Home</a> · <a href="/full-menu">Full Menu</a> · <a href="/breakfast-near-me">Breakfast Near Me</a> · <a href="/burgers">Jealous Burger</a> · <a href="/gallery">Gallery</a></nav>`,
+    `</main>`,
+  ].join("");
+  nextHtml = nextHtml.replace(
+    /<div id="root">\s*<\/div>/,
+    `<div id="root">${staticShell}</div>`,
+  );
 
   return nextHtml;
 }
@@ -102,7 +130,7 @@ export async function setupVite(app: Express, server: Server) {
       if (isNoindexRoute(url)) {
         res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
       }
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+      res.status(isKnownRoute(url) ? 200 : 404).set({ "Content-Type": "text/html" }).end(page);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
       next(e);
@@ -144,8 +172,10 @@ export function serveStatic(app: Express) {
       if (isNoindexRoute(req.originalUrl)) {
         res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
       }
+      // Real 404s for unknown paths: soft-404s kept dead Weebly-era URLs
+      // (e.g. /store/p2/...) indexed for years.
       res
-        .status(200)
+        .status(isKnownRoute(req.originalUrl) ? 200 : 404)
         .set({ "Content-Type": "text/html" })
         .send(injectSeo(html, req.originalUrl));
     } catch (error) {

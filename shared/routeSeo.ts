@@ -57,12 +57,12 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
 
   const routeMap: Record<string, RouteSeoMeta> = {
     "/": {
-      title: "Breakfast Near Me in Kendall + Pancakes Near Me | Jealous Fork",
+      title: "Breakfast Near Me Kendall + Best Pancakes Miami | Jealous Fork",
       description:
-        "Searching breakfast near me, pancakes near me, or brunch near me in Kendall? Jealous Fork serves 4.7★ brunch favorites with fast pickup and reservations.",
+        "Searching breakfast near me, breakfast Kendall, or best pancakes Miami? Jealous Fork serves 4.7★ artisan pancakes, brunch, pickup, and reservations in Kendall.",
       canonical: makeCanonical(pathname),
       keywords:
-        "best pancakes in miami, pancakes near me, breakfast near me, brunch near me, breakfast kendall, brunch kendall, best breakfast kendall, best pancakes miami, artisan pancakes Miami, breakfast miami, brunch miami, gourmet burgers Miami, Jealous Fork",
+        "best pancakes in miami, best pancakes miami, pancakes near me, breakfast near me, breakfast kendall, brunch kendall, best breakfast kendall, brunch near me, artisan pancakes Miami, breakfast miami, brunch miami, gourmet burgers Miami, Jealous Fork",
       robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       ogImage: DEFAULT_OG_IMAGE,
     },
@@ -108,12 +108,12 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
       ogImage: DEFAULT_OG_IMAGE,
     },
     "/breakfast-near-me": {
-      title: "Pancakes Near Me & Breakfast Near Me Kendall | Jealous Fork",
+      title: "Breakfast Near Me Kendall + Best Pancakes Miami | Jealous Fork",
       description:
-        "Searching pancakes near me, breakfast near me, or best brunch Kendall? Jealous Fork serves 4.7★ pancakes, eggs benedict, and brunch favorites.",
+        "Searching breakfast near me, breakfast Kendall, or best pancakes Miami? Jealous Fork serves 4.7★ artisan pancakes, eggs benedict, pickup, and brunch reservations.",
       canonical: makeCanonical(pathname),
       keywords:
-        "breakfast near me, pancakes near me, best brunch Kendall, breakfast Kendall, breakfast Miami, brunch near me, Jealous Fork",
+        "breakfast near me, breakfast Kendall, pancakes near me, best pancakes Miami, best brunch Kendall, breakfast Miami, brunch near me, Jealous Fork",
       robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       ogImage: BREAKFAST_OG_IMAGE,
     },
@@ -124,6 +124,16 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
       canonical: makeCanonical(pathname),
       keywords:
         "best burgers Kendall, gourmet burgers Miami, Jealous Burger, burger delivery Kendall, burger pickup Miami, Jesse James burger",
+      robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      ogImage: BURGER_OG_IMAGE,
+    },
+    "/best-affordable-burgers-miami": {
+      title: "Best Affordable Burgers in Miami | Jealous Burger Kendall",
+      description:
+        "Gourmet burgers in Miami without the gourmet price. Jealous Burger serves Kendall Friday and Saturday from 3 PM with pickup and delivery.",
+      canonical: makeCanonical(pathname),
+      keywords:
+        "affordable burgers Miami, cheap burgers Kendall, best burgers Miami, Jealous Burger, burger deals Miami",
       robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       ogImage: BURGER_OG_IMAGE,
     },
@@ -170,7 +180,56 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
     };
   }
 
-  return routeMap[pathname] || routeMap["/"];
+  if (pathname.startsWith("/menu/")) {
+    return routeMap["/menu"];
+  }
+
+  if (pathname === "/about") {
+    return { ...routeMap["/"], canonical: `${SITE_ORIGIN}/` };
+  }
+
+  if (routeMap[pathname]) {
+    return routeMap[pathname];
+  }
+
+  // Unknown route: real 404 meta so soft-404s stop carrying homepage meta.
+  return {
+    title: "Page Not Found | Jealous Fork",
+    description:
+      "That page does not exist. Visit Jealous Fork in Kendall, Miami for artisan pancakes, brunch, and gourmet burgers.",
+    canonical: `${SITE_ORIGIN}/`,
+    robots: "noindex, follow",
+    ogImage: DEFAULT_OG_IMAGE,
+  };
+}
+
+const KNOWN_EXACT_ROUTES = new Set([
+  "/",
+  "/full-menu",
+  "/menu",
+  "/menu.html",
+  "/gallery",
+  "/breakfast-near-me",
+  "/burgers",
+  "/best-affordable-burgers-miami",
+  "/privacy",
+  "/terms",
+  "/checkout",
+  "/admin",
+  "/about",
+]);
+
+/** True when the path maps to a real page (SPA route). Unknown paths get HTTP 404. */
+export function isKnownRoute(url: string): boolean {
+  const pathname = normalizePath(url);
+  if (KNOWN_EXACT_ROUTES.has(pathname)) return true;
+  if (pathname.startsWith("/order-confirmation/")) return true;
+  if (pathname.startsWith("/menu/")) return true;
+  if (pathname.startsWith("/near/")) {
+    const slug = pathname.replace(/^\/near\//, "");
+    return localAreas.some((entry) => entry.slug === slug);
+  }
+  return false;
 }
 
 export function isNoindexRoute(url: string): boolean {
