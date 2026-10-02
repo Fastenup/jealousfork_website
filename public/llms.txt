@@ -1,14 +1,13 @@
 # Jealous Fork
 
-> Award-winning artisan pancakes & gourmet burgers in Kendall, Miami FL.
+> Award-winning artisan pancakes, breakfast and brunch in Kendall, Miami FL.
 
-Jealous Fork is a Miami restaurant in Kendall serving award-winning artisan pancakes and gourmet burgers. 4.7-star Google rating. Featured on Telemundo. Open Tuesday–Sunday from 9 AM. Dine in or order online.
+Jealous Fork is a Miami restaurant in Kendall serving award-winning artisan pancakes, breakfast and brunch. 4.7-star Google rating. Featured on Telemundo. Open Tuesday–Thursday 9 AM–2 PM and Friday–Sunday 9 AM–3 PM. Closed Mondays. Dine in or order online.
 
 ## Key Pages
 
 - [Home](https://www.jealousfork.com/): Restaurant overview, hours, and location
 - [Full Menu](https://www.jealousfork.com/full-menu): Complete food and drink menu
-- [Burgers](https://www.jealousfork.com/burgers): Jealous Burger — gourmet burger menu
 - [Checkout](https://www.jealousfork.com/checkout): Online ordering
 - [Privacy Policy](https://www.jealousfork.com/privacy)
 - [Terms of Service](https://www.jealousfork.com/terms)
