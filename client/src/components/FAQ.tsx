@@ -13,7 +13,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "What are your operating hours and days?",
-    answer: "Jealous Fork operates Tuesday-Thursday 9AM-2PM and Sunday 9AM-3PM for breakfast and brunch. Jealous Burger expands our menu Friday-Saturday 3PM-9PM with gourmet burgers - and yes, pancakes are still available during burger hours! We're closed Mondays to ensure our team is rested and our ingredients are always fresh."
+    answer: "Jealous Fork is open Tuesday-Thursday 9AM-2PM and Friday-Sunday 9AM-3PM for breakfast and brunch. We're closed Mondays to ensure our team is rested and our ingredients are always fresh."
   },
   {
     question: "Do you take reservations for breakfast and brunch?",
@@ -26,10 +26,6 @@ const faqData: FAQItem[] = [
   {
     question: "Do you offer gluten-free or vegan pancake options?",
     answer: "Yes! We offer gluten-free pancake options and several vegan-friendly choices. Our kitchen is experienced in accommodating dietary restrictions. Please inform your server about any allergies or dietary needs when ordering."
-  },
-  {
-    question: "What's the difference between Jealous Fork and Jealous Burger?",
-    answer: "Jealous Fork is our breakfast and brunch concept (Tue-Thu 9AM-2PM and Sun 9AM-3PM) featuring artisan pancakes, gourmet breakfast items, and craft beverages. Jealous Burger is our evening concept (Fri-Sat 3PM-9PM) that expands our menu with 9 gourmet burgers crafted with the same creativity as our pancakes. During burger hours, you can order from BOTH menus!"
   },
   {
     question: "Do you have parking available?",
@@ -45,7 +41,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Can I order takeout or delivery?",
-    answer: "Yes! We offer takeout for both our breakfast/brunch and burger menus. We're also available on major delivery platforms including Uber Eats, DoorDash, and Grubhub for the Miami-Dade area."
+    answer: "Yes! We offer takeout for our full breakfast and brunch menu. We're also available on major delivery platforms including Uber Eats, DoorDash, and Grubhub for the Miami-Dade area."
   },
   {
     question: "Do you cater events or private parties?",
@@ -53,7 +49,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "What are your most popular menu items?",
-    answer: "Our signature artisan pancakes are our most popular items, especially our Instagram-worthy creations. For burgers, our gourmet beef patties and creative toppings are customer favorites. Our craft coffee and fresh juices are also highly rated."
+    answer: "Our signature artisan pancakes are our most popular items, especially our Instagram-worthy creations. Our craft coffee and fresh juices are also highly rated."
   },
   {
     question: "Do you have outdoor seating?",

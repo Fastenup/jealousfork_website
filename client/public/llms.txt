@@ -1,13 +1,13 @@
 # Jealous Fork - Miami's Original Artisan Pancake Restaurant
 # https://jealousfork.com
 
-> Jealous Fork is an award-winning artisan pancake and gourmet burger restaurant in Miami, Florida.
+> Jealous Fork is an award-winning artisan pancake, breakfast and brunch restaurant in Miami, Florida.
 > Founded by best friends Joaquin Ortiz and Henrik Telle, it evolved from the first artisan pancake food truck in the country.
 > Located at 14417 SW 42nd St, Miami, FL 33175 (Kendall area). Phone: (305) 699-1430
 
 ## Quick Facts
-- Type: Restaurant (Breakfast, Brunch, Burgers)
-- Cuisine: American, Artisan Pancakes, Gourmet Burgers
+- Type: Restaurant (Breakfast, Brunch)
+- Cuisine: American, Artisan Pancakes, Brunch
 - Price Range: $$ (Moderate, $13-$17 entrees)
 - Rating: 4.7 stars on Google (400+ reviews), 4.6 on Yelp
 - Reservations: Yes, via Resy or phone
@@ -30,24 +30,21 @@ Neighborhood: Kendall, Miami-Dade County
 - Tuesday: 9:00 AM - 2:00 PM (Jealous Fork - Pancakes)
 - Wednesday: 9:00 AM - 2:00 PM (Jealous Fork - Pancakes)
 - Thursday: 9:00 AM - 2:00 PM (Jealous Fork - Pancakes)
-- Friday: 9:00 AM - 9:00 PM (Pancakes all day, Burgers 3PM-9PM)
-- Saturday: 9:00 AM - 9:00 PM (Pancakes all day, Burgers 3PM-9PM)
+- Friday: 9:00 AM - 3:00 PM (Jealous Fork - Pancakes)
+- Saturday: 9:00 AM - 3:00 PM (Jealous Fork - Pancakes)
 - Sunday: 9:00 AM - 3:00 PM (Jealous Fork - Pancakes)
 - Monday: CLOSED
-
-Note: Jealous Burger operates Friday-Saturday 3PM-9PM alongside our pancake menu. You can order both pancakes AND burgers during burger hours!
 
 ## Contact
 - Phone: (305) 699-1430
 - Website: https://jealousfork.com
 - Menu: https://jealousfork.com/full-menu
-- Burgers: https://jealousfork.com/burgers
 - Reservations: Available through Resy or by phone
 
 ## Frequently Asked Questions
 
 Q: What are Jealous Fork's hours?
-A: Tuesday-Thursday 9AM-2PM and Sunday 9AM-3PM for pancakes. Friday-Saturday we're open 9AM-9PM and serve gourmet burgers from 3PM-9PM. Closed Mondays.
+A: Tuesday-Thursday 9AM-2PM and Friday-Sunday 9AM-3PM. Closed Mondays.
 
 Q: Where is Jealous Fork located?
 A: 14417 SW 42nd St, Miami, FL 33175, in the Kendall area of Miami-Dade County.
@@ -85,22 +82,8 @@ A: Yes, through major delivery platforms and online ordering at jealousfork.com.
 - Lemon Curd and Blueberry Pancake ($15) - Light pancakes topped with fresh blueberries and tangy lemon curd
 - Banana Walnut Pancake ($17) - Caramelized bananas, toasted walnuts, house-smoked maple syrup
 
-### Gourmet Burgers (Jealous Burger - Friday & Saturday 3PM-9PM)
-Miami's best gourmet burgers with classic patties (not smash burgers) and creative toppings. We brought the same creativity from our award-winning pancakes to craft 9 unique burgers. Pancakes still available during burger hours!
-
-- The Classic ($13) - Cheddar Cheese, That Secret Sauce, Tomato, Onion, Spring Greens
-- Jesse James ($16) - Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese
-- La La Land ($16) - Guac, Tomato, Cilantro, Sunflower Seeds, Dried Cranberries, White Cheddar, Spring Greens
-- The Devil's Advocate ($17) - Smokehouse Chili, Cheddar Cheese, Hot Hot Shake First, Fried Egg
-- Le French ($17) - Brie Cheese, Caramelized Onions, Framboise, Spring Greens
-- The OG JB ($17) - Pickled Onions, Smoked Gouda, Tomato-Poblano Jam
-- Billie Holiday ($16) - Maytag Blue Cheese, Caramelized Onions, Spring Greens
-- Que Bola Meng ($16) - Guava & Queso, Caramelized Onions, Papitas (Miami-inspired!)
-- VEGburger ($16) - Black Bean-Chipotle Patty, Aged White Cheddar, Tomato, Onion, Spring Greens (Vegetarian)
-
 ## Dietary Options
 - Gluten-free pancakes available
-- Vegetarian burger option (VEGburger - black bean-chipotle patty)
 - Vegan options available upon request
 - Allergy accommodations - please inform your server
 
@@ -145,11 +128,10 @@ We serve all Miami-Dade County neighborhoods. Distance from our restaurant:
 - TikTok: @jealousfork
 
 ## Keywords
-Miami pancakes, best pancakes in Miami, best pancakes in Kendall, artisan pancakes Florida, fluffy pancakes Miami, gourmet burgers Miami, best burgers Miami, burger restaurant Miami FL, classic burgers Miami, Friday night burgers, Instagram food Miami, brunch Miami, breakfast Miami, Jealous Fork restaurant, Jealous Burger, pancakes near me, breakfast near me, brunch near me, breakfast Kendall, brunch Kendall, best breakfast Miami, gluten-free pancakes Miami, dog-friendly restaurant Miami, family restaurant Miami
+Miami pancakes, best pancakes in Miami, best pancakes in Kendall, artisan pancakes Florida, fluffy pancakes Miami, Instagram food Miami, brunch Miami, breakfast Miami, Jealous Fork restaurant, pancakes near me, breakfast near me, brunch near me, breakfast Kendall, brunch Kendall, best breakfast Miami, gluten-free pancakes Miami, dog-friendly restaurant Miami, family restaurant Miami
 
 ## Landing Pages
 - Homepage: https://jealousfork.com
 - Full Menu: https://jealousfork.com/full-menu
-- Burgers: https://jealousfork.com/burgers
 - Kendall: https://jealousfork.com/near/kendall
 - West Kendall: https://jealousfork.com/near/west-kendall

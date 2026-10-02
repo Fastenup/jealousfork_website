@@ -122,8 +122,8 @@ export default function BreakfastNearMePage() {
               { "@type": "OpeningHoursSpecification", dayOfWeek: "Tuesday", opens: "09:00", closes: "14:00" },
               { "@type": "OpeningHoursSpecification", dayOfWeek: "Wednesday", opens: "09:00", closes: "14:00" },
               { "@type": "OpeningHoursSpecification", dayOfWeek: "Thursday", opens: "09:00", closes: "14:00" },
-              { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: "09:00", closes: "21:00" },
-              { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "09:00", closes: "21:00" },
+              { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: "09:00", closes: "15:00" },
+              { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "09:00", closes: "15:00" },
               { "@type": "OpeningHoursSpecification", dayOfWeek: "Sunday", opens: "09:00", closes: "15:00" },
             ],
             hasMenu: {
@@ -351,17 +351,10 @@ export default function BreakfastNearMePage() {
                     <span className="font-medium">9:00 AM – 2:00 PM</span>
                   </li>
                   <li className="flex justify-between">
-                    <span>Friday – Saturday</span>
-                    <span className="font-medium">9:00 AM – 9:00 PM</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>Sunday</span>
+                    <span>Friday – Sunday</span>
                     <span className="font-medium">9:00 AM – 3:00 PM</span>
                   </li>
                 </ul>
-                <p className="text-sm text-gray-500 mt-4">
-                  🍔 Jealous Burger menu available Fri &amp; Sat from 3 PM.
-                </p>
 
                 <h3 className="text-xl font-bold mt-8 mb-4">Getting Here</h3>
                 <address className="text-gray-700 not-italic">

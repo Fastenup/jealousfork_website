@@ -23,8 +23,8 @@ export default function StructuredData() {
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "14:00" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "14:00" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "14:00" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "21:00" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "21:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "15:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "15:00" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "09:00", "closes": "15:00" }
     ],
     "servesCuisine": ["American", "Breakfast", "Brunch", "Pancakes", "Burgers"],
@@ -41,12 +41,12 @@ export default function StructuredData() {
     "hasMenu": {
       "@type": "Menu",
       "name": "Jealous Fork Menu",
-      "description": "Artisan pancakes, gourmet burgers, and specialty beverages",
+      "description": "Artisan pancakes, brunch plates, and specialty beverages",
       "hasMenuSection": [
         {
           "@type": "MenuSection",
           "name": "Signature Pancakes",
-          "description": "Award-winning artisan pancakes - Available Tue-Thu 9AM-2PM and Sun 9AM-3PM",
+          "description": "Award-winning artisan pancakes - Available Tue-Thu 9AM-2PM and Fri-Sun 9AM-3PM",
           "hasMenuItem": [
             {
               "@type": "MenuItem",
@@ -71,31 +71,6 @@ export default function StructuredData() {
               "name": "Lemon Curd and Blueberry Pancake",
               "description": "Fresh blueberries and tangy lemon curd",
               "offers": { "@type": "Offer", "price": "15", "priceCurrency": "USD" }
-            }
-          ]
-        },
-        {
-          "@type": "MenuSection",
-          "name": "Gourmet Burgers (Jealous Burger)",
-          "description": "Available Friday-Saturday 3PM-9PM",
-          "hasMenuItem": [
-            {
-              "@type": "MenuItem",
-              "name": "The Classic",
-              "description": "Cheddar Cheese, That Secret Sauce, Tomato, Onion, Spring Greens",
-              "offers": { "@type": "Offer", "price": "13", "priceCurrency": "USD" }
-            },
-            {
-              "@type": "MenuItem",
-              "name": "Jesse James",
-              "description": "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese",
-              "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" }
-            },
-            {
-              "@type": "MenuItem",
-              "name": "Que Bola Meng",
-              "description": "Guava & Queso, Caramelized Onions, Papitas",
-              "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" }
             }
           ]
         }
@@ -127,12 +102,6 @@ export default function StructuredData() {
         "position": 2,
         "name": "Menu",
         "item": "https://www.jealousfork.com/full-menu"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Burgers",
-        "item": "https://www.jealousfork.com/burgers"
       }
     ]
   };

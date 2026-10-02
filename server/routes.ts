@@ -92,8 +92,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { urls } = req.body;
       const urlList = urls || [
         'https://jealousfork.com/',
-        'https://jealousfork.com/full-menu',
-        'https://jealousfork.com/burgers'
+        'https://jealousfork.com/full-menu'
       ];
 
       // Submit to Bing IndexNow

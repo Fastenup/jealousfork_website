@@ -2,7 +2,7 @@
  * Canonical restaurant facts + JSON-LD builder.
  * Single source of truth for NAP/geo/hours used by server-side head injection.
  * Keep in sync with Google Business Profile: Mon closed, Tue-Thu 9-2,
- * Fri-Sat 9-9 (Jealous Burger menu from 3 PM), Sun 9-3.
+ * Fri-Sun 9-3.
  */
 
 export const RESTAURANT = {
@@ -17,15 +17,15 @@ export const RESTAURANT = {
   latitude: 25.7295,
   longitude: -80.4282,
   origin: "https://www.jealousfork.com",
-  hoursText: "Mon closed · Tue–Thu 9 AM–2 PM · Fri–Sat 9 AM–9 PM · Sun 9 AM–3 PM",
+  hoursText: "Mon closed · Tue–Thu 9 AM–2 PM · Fri–Sun 9 AM–3 PM",
 } as const;
 
 const OPENING_HOURS = [
   { dayOfWeek: "Tuesday", opens: "09:00", closes: "14:00" },
   { dayOfWeek: "Wednesday", opens: "09:00", closes: "14:00" },
   { dayOfWeek: "Thursday", opens: "09:00", closes: "14:00" },
-  { dayOfWeek: "Friday", opens: "09:00", closes: "21:00" },
-  { dayOfWeek: "Saturday", opens: "09:00", closes: "21:00" },
+  { dayOfWeek: "Friday", opens: "09:00", closes: "15:00" },
+  { dayOfWeek: "Saturday", opens: "09:00", closes: "15:00" },
   { dayOfWeek: "Sunday", opens: "09:00", closes: "15:00" },
 ];
 
@@ -36,7 +36,7 @@ export function buildRestaurantJsonLd(): string {
     "@id": `${RESTAURANT.origin}/#restaurant`,
     name: RESTAURANT.name,
     description:
-      "Award-winning artisan pancakes & gourmet burgers in Kendall, Miami. Miami's original artisan pancake restaurant. Open Tuesday-Sunday from 9 AM; Jealous Burger menu Friday and Saturday from 3 PM.",
+      "Award-winning artisan pancakes, breakfast and brunch in Kendall, Miami. Miami's original artisan pancake restaurant. Open Tuesday-Sunday from 9 AM.",
     url: RESTAURANT.origin,
     telephone: RESTAURANT.phone,
     image: `${RESTAURANT.origin}/images/og/jealous-fork-og.jpg`,

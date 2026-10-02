@@ -39,7 +39,7 @@ const faqSchema = {
       "name": "What are Jealous Fork's hours?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Jealous Fork is open Tuesday-Thursday 9AM-2PM and Sunday 9AM-3PM for pancakes and breakfast. On Friday and Saturday, we're open 9AM-9PM and serve Jealous Burger (gourmet burgers from 3PM-9PM). You can order both pancakes AND burgers during evening hours. We are closed on Mondays."
+        "text": "Jealous Fork is open Tuesday-Thursday 9AM-2PM and Friday-Sunday 9AM-3PM for pancakes, breakfast and brunch. We are closed on Mondays."
       }
     },
     {
@@ -89,14 +89,6 @@ const faqSchema = {
         "@type": "Answer",
         "text": "Yes! Jealous Fork offers breakfast delivery across Miami through Uber Eats, DoorDash, and Grubhub. You can also order online for pickup directly from our website at jealousfork.com. We deliver to Kendall, West Kendall, Westchester, Coral Gables, Doral, and most of Miami-Dade County."
       }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the best burgers in Kendall?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Jealous Burger at Jealous Fork serves some of the best gourmet burgers in Kendall every Friday and Saturday from 3PM-9PM. Top picks include the Jesse James (applewood bacon, BBQ, cheddar), Que Bola Meng (guava & queso — a true Miami flavor), Lé French (brie, caramelized onions), and The OG JB (smoked gouda, tomato-poblano jam). Prices range from $13-$17. You can still order pancakes during burger hours!"
-      }
     }
   ]
 };
@@ -131,8 +123,8 @@ const restaurantSchema = {
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "14:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "14:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "14:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "21:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "21:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "15:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "15:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "09:00", "closes": "15:00" }
   ],
   "aggregateRating": {
@@ -155,21 +147,6 @@ const restaurantSchema = {
           { "@type": "MenuItem", "name": "Hot Maple Flatbread", "description": "Cup and char pepperoni, double cream mozzarella, and red chili-black pepper maple", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
           { "@type": "MenuItem", "name": "Chocolate Oreo Chip Pancake", "description": "Crushed Oreos, chocolate chips, Oreo whipped cream, chocolate ganache", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
           { "@type": "MenuItem", "name": "Peanut Butter Cup Pancake", "description": "Reese's cups, nutter butter whipped cream, peanut butter maple syrup", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } }
-        ]
-      },
-      {
-        "@type": "MenuSection",
-        "name": "Gourmet Burgers",
-        "hasMenuItem": [
-          { "@type": "MenuItem", "name": "The Classic", "description": "Cheddar Cheese, That Secret Sauce, Tomato, Onion, Spring Greens", "offers": { "@type": "Offer", "price": "13", "priceCurrency": "USD" } },
-          { "@type": "MenuItem", "name": "Jesse James", "description": "Applewood Smoked Bacon, Crispy Onions, BBQ Sauce, Cheddar Cheese", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
-          { "@type": "MenuItem", "name": "La La Land", "description": "Guac, Tomato, Cilantro, Sunflower Seeds, Dried Cranberries, White Cheddar, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
-          { "@type": "MenuItem", "name": "The Devil's Advocate", "description": "Smokehouse Chili, Cheddar Cheese, Hot Hot Shake First, Fried Egg", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
-          { "@type": "MenuItem", "name": "Lé French", "description": "Brie Cheese, Caramelized Onions, Framboise, Spring Greens", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
-          { "@type": "MenuItem", "name": "The OG JB", "description": "Pickled Onions, Smoked Gouda, Tomato-Poblano Jam", "offers": { "@type": "Offer", "price": "17", "priceCurrency": "USD" } },
-          { "@type": "MenuItem", "name": "Billie Holiday", "description": "Maytag Blue Cheese, Caramelized Onions, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
-          { "@type": "MenuItem", "name": "Que Bola Meng", "description": "Guava & Queso, Caramelized Onions, Papitas", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } },
-          { "@type": "MenuItem", "name": "VEGburger", "description": "Black Bean-Chipotle Patty, Aged White Cheddar, Tomato, Onion, Spring Greens", "offers": { "@type": "Offer", "price": "16", "priceCurrency": "USD" } }
         ]
       }
     ]

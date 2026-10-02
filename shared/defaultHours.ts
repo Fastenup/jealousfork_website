@@ -4,9 +4,9 @@
 export interface DayHours {
   dayOfWeek: string;
   opens: string | null;  // "09:00" format, null if closed
-  closes: string | null; // "21:00" format, null if closed
+  closes: string | null; // "15:00" format, null if closed
   isClosed: boolean;
-  note?: string;  // e.g., "Burgers 3PM-9PM"
+  note?: string;  // optional display note for the day
 }
 
 export interface OperatingHoursData {
@@ -21,8 +21,8 @@ export const DEFAULT_HOURS: OperatingHoursData = {
     { dayOfWeek: "Tuesday", opens: "09:00", closes: "14:00", isClosed: false },
     { dayOfWeek: "Wednesday", opens: "09:00", closes: "14:00", isClosed: false },
     { dayOfWeek: "Thursday", opens: "09:00", closes: "14:00", isClosed: false },
-    { dayOfWeek: "Friday", opens: "09:00", closes: "21:00", isClosed: false, note: "Burgers 3PM-9PM" },
-    { dayOfWeek: "Saturday", opens: "09:00", closes: "21:00", isClosed: false, note: "Burgers 3PM-9PM" },
+    { dayOfWeek: "Friday", opens: "09:00", closes: "15:00", isClosed: false },
+    { dayOfWeek: "Saturday", opens: "09:00", closes: "15:00", isClosed: false },
     { dayOfWeek: "Sunday", opens: "09:00", closes: "15:00", isClosed: false },
   ],
   lastSynced: null,

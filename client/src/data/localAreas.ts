@@ -233,7 +233,7 @@ export const localAreas: LocalArea[] = [
   {
     name: "Cutler Bay",
     slug: "cutler-bay",
-    description: "Bringing Miami's original artisan pancake experience to Cutler Bay. Our award-winning pancakes, creative breakfast dishes, and Friday-Saturday gourmet burgers are worth the drive from Cutler Bay.",
+    description: "Bringing Miami's original artisan pancake experience to Cutler Bay. Our award-winning pancakes and creative breakfast dishes are worth the drive from Cutler Bay.",
     distance: "30 min"
   }
 ];

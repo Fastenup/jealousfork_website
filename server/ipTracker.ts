@@ -95,8 +95,7 @@ class IPTracker {
 
     // Fallback to hardcoded hours if cache is empty
     // Store hours:
-    // Jealous Fork (day menu): Tue-Thu, Sun 9AM-2PM
-    // Jealous Burger (evening menu): Fri-Sat 3PM-9PM (pancakes still available!)
+    // Tue-Thu 9AM-2PM, Fri-Sun 9AM-3PM
     // Closed Mondays
 
     // Monday (day 1) - Closed
@@ -113,20 +112,11 @@ class IPTracker {
       }
     }
 
-    // Sunday - Day menu (9AM-3PM)
-    if (day === 0) { // Sun
+    // Friday-Sunday - Day menu (9AM-3PM)
+    if (day === 0 || day === 5 || day === 6) { // Fri-Sun
       const dayMenuStart = 9 * 60; // 9AM
       const dayMenuEnd = 15 * 60; // 3PM
       if (currentTime >= dayMenuStart && currentTime < dayMenuEnd) {
-        return true;
-      }
-    }
-
-    // Friday-Saturday - Full hours (9AM-9PM, burgers from 3PM)
-    if (day === 5 || day === 6) { // Fri-Sat
-      const openTime = 9 * 60; // 9AM
-      const closeTime = 21 * 60; // 9PM
-      if (currentTime >= openTime && currentTime < closeTime) {
         return true;
       }
     }

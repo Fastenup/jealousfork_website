@@ -14,13 +14,13 @@ export default function LocalPage() {
   const areaInfo = localAreas.find(loc => loc.slug === area) || {
     name: area?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Miami Area',
     slug: area || 'miami',
-    description: `Experience Miami's best artisan pancakes and gourmet burgers in ${area?.replace(/-/g, ' ')}. Jealous Fork delivers exceptional dining experiences across all Miami neighborhoods.`,
+    description: `Experience Miami's best artisan pancakes and brunch in ${area?.replace(/-/g, ' ')}. Jealous Fork delivers exceptional dining experiences across all Miami neighborhoods.`,
     distance: "nearby"
   };
 
   // SEO-optimized title targeting "pancakes [neighborhood]" searches - use custom title if available
   const title = areaInfo.seoTitle || `Best Breakfast & Brunch Near ${areaInfo.name} | Jealous Fork`;
-  const description = areaInfo.seoDescription || `Looking for breakfast near me in ${areaInfo.name}? Jealous Fork serves artisan pancakes, brunch, and burgers in Miami. Rated 4.7★ on Google. Open Tue-Sun.`;
+  const description = areaInfo.seoDescription || `Looking for breakfast near me in ${areaInfo.name}? Jealous Fork serves artisan pancakes and brunch in Miami. Rated 4.7★ on Google. Open Tue-Sun.`;
 
   // Location-specific keywords targeting actual GSC search queries
   const keywords = `breakfast ${areaInfo.name.toLowerCase()}, brunch ${areaInfo.name.toLowerCase()}, best breakfast ${areaInfo.name.toLowerCase()}, best brunch ${areaInfo.name.toLowerCase()}, pancakes near ${areaInfo.name.toLowerCase()}, breakfast near me, pancakes near me, brunch near me, best pancakes ${areaInfo.name.toLowerCase()}, restaurants ${areaInfo.name.toLowerCase()}, breakfast places ${areaInfo.name.toLowerCase()}`;
@@ -155,7 +155,7 @@ export default function LocalPage() {
                   What are Jealous Fork's hours for {areaInfo.name} residents?
                 </h3>
                 <p className="text-gray-600">
-                  We're open Tuesday through Thursday from 9AM to 2PM and Sunday from 9AM to 3PM for breakfast and brunch. On Friday and Saturday, we extend our hours to 9PM and also serve Jealous Burger (gourmet burgers from 3PM-9PM). You can enjoy both pancakes AND burgers during evening hours. We're closed on Mondays.
+                  We're open Tuesday through Thursday from 9AM to 2PM and Friday through Sunday from 9AM to 3PM for breakfast and brunch. We're closed on Mondays.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-sm">
@@ -194,17 +194,11 @@ export default function LocalPage() {
             <h2 className="font-playfair text-3xl font-bold mb-8 text-center text-gray-900">
               Order From Jealous Fork
             </h2>
-            <div className="grid sm:grid-cols-3 gap-6 mb-12">
+            <div className="grid sm:grid-cols-2 gap-6 mb-12">
               <Link href="/full-menu">
                 <a className="block p-6 bg-gray-50 rounded-xl text-center hover:bg-gray-100 transition-colors">
                   <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-2">Order Breakfast & Brunch</h3>
                   <p className="text-gray-600">Award-winning artisan pancakes, starters, sandwiches, and craft beverages for pickup or delivery</p>
-                </a>
-              </Link>
-              <Link href="/burgers">
-                <a className="block p-6 bg-gray-50 rounded-xl text-center hover:bg-gray-100 transition-colors">
-                  <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-2">Gourmet Burgers</h3>
-                  <p className="text-gray-600">Jealous Burger — creative gourmet burgers every Friday & Saturday 3-9PM</p>
                 </a>
               </Link>
               <Link href="/">

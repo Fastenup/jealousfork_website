@@ -49,7 +49,7 @@ export default function Footer() {
                 Jealous Fork
               </button>
               <p className="mt-4 text-gray-400 leading-relaxed">
-                Miami's original artisan pancake restaurant. From our humble beginnings as a food truck to our current restaurant, we continue to serve Instagram-worthy pancakes and gourmet burgers with passion and creativity.
+                Miami's original artisan pancake restaurant. From our humble beginnings as a food truck to our current restaurant, we continue to serve Instagram-worthy pancakes and brunch with passion and creativity.
               </p>
               <div className="mt-6 p-4 bg-gray-800 rounded-lg">
                 <h4 className="font-semibold text-white mb-2">Hours</h4>
@@ -86,11 +86,6 @@ export default function Footer() {
                 <li>
                   <Link href="/full-menu">
                     <a className="text-gray-400 hover:text-gray-200 transition-colors">Breakfast Menu</a>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/burgers">
-                    <a className="text-gray-400 hover:text-gray-200 transition-colors">Gourmet Burgers</a>
                   </Link>
                 </li>
                 <li>

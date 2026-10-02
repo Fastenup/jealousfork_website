@@ -1,5 +1,5 @@
 import { useOperatingHours, getGroupedHours, formatTodayHours, isCurrentlyOpen } from '@/hooks/useOperatingHours';
-import type { OperatingHoursData } from '../../../shared/defaultHours';
+import type { OperatingHoursData, DayHours } from '../../../shared/defaultHours';
 
 interface OperatingHoursProps {
   variant?: 'full' | 'compact' | 'footer';
@@ -85,17 +85,16 @@ function FooterHours({ hours, className }: { hours: OperatingHoursData; classNam
   const tueThu = hours.regular.find(d => d.dayOfWeek === 'Tuesday');
   const friSat = hours.regular.find(d => d.dayOfWeek === 'Friday');
   const sunday = hours.regular.find(d => d.dayOfWeek === 'Sunday');
+  const fmt = (d?: DayHours) => d && !d.isClosed
+    ? `${formatTime12h(d.opens)} - ${formatTime12h(d.closes)}`
+    : 'Closed';
+  const sundayMatchesFriSat = fmt(sunday) === fmt(friSat);
 
   return (
     <div className={`space-y-1 text-sm ${className}`}>
-      <p>Tue-Thu, Sun: {tueThu && !tueThu.isClosed
-        ? `${formatTime12h(tueThu.opens)} - ${formatTime12h(tueThu.closes)}`
-        : 'Closed'
-      }</p>
-      <p>Fri-Sat: {friSat && !friSat.isClosed
-        ? `${formatTime12h(friSat.opens)} - ${formatTime12h(friSat.closes)}`
-        : 'Closed'
-      }</p>
+      <p>Tue-Thu: {fmt(tueThu)}</p>
+      <p>{sundayMatchesFriSat ? 'Fri-Sun' : 'Fri-Sat'}: {fmt(friSat)}</p>
+      {!sundayMatchesFriSat && <p>Sun: {fmt(sunday)}</p>}
       {friSat?.note && (
         <p className="text-xs text-gray-500">({friSat.note})</p>
       )}

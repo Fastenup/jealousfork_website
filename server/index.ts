@@ -35,6 +35,11 @@ app.use((req, res, next) => {
     return res.redirect(301, '/full-menu');
   }
 
+  // Jealous Burger (Fri-Sat evening concept) was retired Oct 2026.
+  if (/^\/(burgers|best-affordable-burgers-miami)\/?$/.test(req.path)) {
+    return res.redirect(301, '/full-menu');
+  }
+
   // Legacy Weebly-era URLs (old site): consolidate to the homepage instead of
   // serving soft-404s that keep dead pages indexed.
   if (req.path === '/store' || req.path.startsWith('/store/')) {

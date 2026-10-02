@@ -63,7 +63,7 @@ function injectSeo(html: string, url: string): string {
     `<p>${meta.description}</p>`,
     `<p><strong>${RESTAURANT.name}</strong> · ${RESTAURANT.street}, ${RESTAURANT.city}, ${RESTAURANT.region} ${RESTAURANT.postalCode} · <a href="tel:${RESTAURANT.phone}">${RESTAURANT.phoneDisplay}</a></p>`,
     `<p>Hours: ${RESTAURANT.hoursText}</p>`,
-    `<nav><a href="/">Home</a> · <a href="/full-menu">Full Menu</a> · <a href="/breakfast-near-me">Breakfast Near Me</a> · <a href="/burgers">Jealous Burger</a> · <a href="/gallery">Gallery</a></nav>`,
+    `<nav><a href="/">Home</a> · <a href="/full-menu">Full Menu</a> · <a href="/breakfast-near-me">Breakfast Near Me</a> · <a href="/gallery">Gallery</a></nav>`,
     `</main>`,
   ].join("");
   nextHtml = nextHtml.replace(

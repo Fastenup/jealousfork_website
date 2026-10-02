@@ -43,11 +43,7 @@ const categoryConfig: Record<string, CategoryInfo> = {
   // Jealous Fork Food Categories
   'starters & shareable': { id: 'starters', name: 'Starters & Shareable', description: 'Perfect for sharing or starting your meal' },
   'award-winning pancakes': { id: 'pancakes', name: 'Award-Winning Pancakes', description: 'Our signature pancakes that made us famous' },
-  'sandwiches, buns, & bread': { id: 'sandwiches', name: 'Sandwiches, Buns & Bread', description: 'Hearty sandwiches and gourmet burgers' },
-  // Jealous Burger Categories (Fri-Sat 3PM-9PM)
-  'apps': { id: 'apps', name: 'Appetizers', description: 'Start your evening right', operatingHours: '3PM-9PM', operatingDays: 'Fri-Sat' },
-  'burgers': { id: 'burgers', name: 'Gourmet Burgers', description: 'Our signature evening burgers', operatingHours: '3PM-9PM', operatingDays: 'Fri-Sat' },
-  'fries': { id: 'fries', name: 'Fries', description: 'Perfect sides for any burger', operatingHours: '3PM-9PM', operatingDays: 'Fri-Sat' },
+  'sandwiches, buns, & bread': { id: 'sandwiches', name: 'Sandwiches, Buns & Bread', description: 'Hearty sandwiches, burgers and French toast' },
   // Beverage Categories
   'cocktails': { id: 'cocktails', name: 'Cocktails', description: 'Unique sake-based cocktails and classic favorites' },
   'hot & cold n/a bev': { id: 'na-bev', name: 'Hot & Cold Beverages', description: 'Coffee, tea, and non-alcoholic drinks' },
@@ -86,9 +82,13 @@ export default function FullMenuPage() {
 
   const menuItems: MenuItem[] = menuData?.items || [];
 
+  // Retired Jealous Burger evening categories still exist in Square; never show them.
+  const HIDDEN_CATEGORIES = new Set(['apps', 'burgers', 'fries']);
+
   // Group items by category
   const categorizedItems = menuItems.reduce<Record<string, MenuItem[]>>((acc, item) => {
     const category = item.category?.toLowerCase() || 'other';
+    if (HIDDEN_CATEGORIES.has(category)) return acc;
     if (!acc[category]) {
       acc[category] = [];
     }
@@ -98,10 +98,8 @@ export default function FullMenuPage() {
 
   // Get ordered categories that have items - matches actual Square category names (lowercased)
   const orderedCategories = [
-    // Jealous Fork Food (Tue-Sun daytime)
+    // Food
     'starters & shareable', 'award-winning pancakes', 'sandwiches, buns, & bread',
-    // Jealous Burger (Fri-Sat evening)
-    'apps', 'burgers', 'fries',
     // Beverages
     'cocktails', 'hot & cold n/a bev',
     // Beer
@@ -225,7 +223,6 @@ export default function FullMenuPage() {
   const quickOrderSections = [
     { category: 'award-winning pancakes', label: 'Sweet Pancakes' },
     { category: 'sandwiches, buns, & bread', label: 'Brunch Favorites' },
-    { category: 'burgers', label: 'Weekend Burgers' },
     { category: 'hot & cold n/a bev', label: 'Coffee & Drinks' },
   ].filter(({ category }) => activeCategories.includes(category));
 
@@ -244,9 +241,9 @@ export default function FullMenuPage() {
     <>
       <SEOHead
         title="Menu — Best Pancakes & Breakfast in Miami | Jealous Fork Kendall"
-        description="See our full menu: artisan pancakes from $15, gourmet burgers (Fri-Sat), flatbreads, craft beverages & more. ★4.7 Google. Real-time pricing. Order online for pickup or dine in at Jealous Fork Kendall!"
+        description="See our full menu: artisan pancakes from $15, flatbreads, brunch favorites, craft beverages & more. ★4.7 Google. Real-time pricing. Order online for pickup or dine in at Jealous Fork Kendall!"
         canonical="https://www.jealousfork.com/full-menu"
-        keywords="Jealous Fork menu, best pancakes Miami menu, breakfast menu Kendall, pancakes near me, gourmet burgers menu Miami, artisan pancakes, breakfast Miami, brunch menu Miami"
+        keywords="Jealous Fork menu, best pancakes Miami menu, breakfast menu Kendall, pancakes near me, artisan pancakes, breakfast Miami, brunch menu Miami"
       />
 
       <div className="min-h-screen bg-gray-50">
@@ -475,21 +472,15 @@ export default function FullMenuPage() {
         <section className="bg-gray-900 text-white py-8 sm:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h3 className="text-xl sm:text-2xl font-bold mb-6 text-center">Operating Hours</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 text-center max-w-3xl mx-auto">
               <div className="p-4">
                 <h4 className="text-base sm:text-lg font-semibold text-green-400 mb-2">Jealous Fork</h4>
-                <p className="text-gray-300 text-sm sm:text-base">Tuesday - Thursday & Sunday</p>
+                <p className="text-gray-300 text-sm sm:text-base">Tuesday - Sunday</p>
                 <p className="text-gray-300 text-sm sm:text-base">Tue-Thu 9:00 AM - 2:00 PM</p>
-                <p className="text-gray-300 text-sm sm:text-base">Sun 9:00 AM - 3:00 PM</p>
+                <p className="text-gray-300 text-sm sm:text-base">Fri-Sun 9:00 AM - 3:00 PM</p>
                 <p className="text-xs sm:text-sm text-gray-400 mt-2">Artisan Pancakes & Breakfast</p>
               </div>
               <div className="p-4">
-                <h4 className="text-base sm:text-lg font-semibold text-green-400 mb-2">Jealous Burger</h4>
-                <p className="text-gray-300 text-sm sm:text-base">Friday - Saturday</p>
-                <p className="text-gray-300 text-sm sm:text-base">3:00 PM - 9:00 PM</p>
-                <p className="text-xs sm:text-sm text-gray-400 mt-2">Gourmet Burgers + Pancakes</p>
-              </div>
-              <div className="p-4 sm:col-span-2 lg:col-span-1">
                 <h4 className="text-base sm:text-lg font-semibold text-green-400 mb-2">Beverages</h4>
                 <p className="text-gray-300 text-sm sm:text-base">Tuesday - Sunday</p>
                 <p className="text-gray-300 text-sm sm:text-base">During operating hours</p>

@@ -107,26 +107,20 @@ export function getGroupedHours(hours: OperatingHoursData): { days: string; hour
     tueThu.forEach(d => result.push({ days: dayAbbrev[d.dayOfWeek], hours: formatDayHours(d) }));
   }
 
-  // Friday & Saturday (extended hours)
-  const friSat = hours.regular.filter(d =>
-    ['Friday', 'Saturday'].includes(d.dayOfWeek) && !d.isClosed
+  // Friday - Sunday (grouped when the hours match)
+  const friSun = hours.regular.filter(d =>
+    ['Friday', 'Saturday', 'Sunday'].includes(d.dayOfWeek) && !d.isClosed
   );
-  if (friSat.length === 2 && friSat.every(d => d.opens === friSat[0].opens && d.closes === friSat[0].closes)) {
-    result.push({
-      days: 'Fri & Sat',
-      hours: formatDayHours(friSat[0]),
-      note: friSat[0].note
-    });
+  if (friSun.length === 3 && friSun.every(d => d.opens === friSun[0].opens && d.closes === friSun[0].closes)) {
+    result.push({ days: 'Fri - Sun', hours: formatDayHours(friSun[0]), note: friSun[0].note });
   } else {
-    friSat.forEach(d => result.push({ days: dayAbbrev[d.dayOfWeek], hours: formatDayHours(d), note: d.note }));
-  }
-
-  // Sunday
-  const sunday = hours.regular.find(d => d.dayOfWeek === 'Sunday');
-  if (sunday && !sunday.isClosed) {
-    result.push({ days: 'Sunday', hours: formatDayHours(sunday) });
-  } else if (sunday?.isClosed) {
-    result.push({ days: 'Sunday', hours: 'Closed' });
+    hours.regular
+      .filter(d => ['Friday', 'Saturday', 'Sunday'].includes(d.dayOfWeek))
+      .forEach(d => result.push({
+        days: dayAbbrev[d.dayOfWeek],
+        hours: d.isClosed ? 'Closed' : formatDayHours(d),
+        note: d.note,
+      }));
   }
 
   return result;

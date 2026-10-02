@@ -11,7 +11,6 @@ export interface RouteSeoMeta {
 
 const SITE_ORIGIN = "https://www.jealousfork.com";
 const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/images/og/jealous-fork-og.jpg`;
-const BURGER_OG_IMAGE = DEFAULT_OG_IMAGE;
 const BREAKFAST_OG_IMAGE = DEFAULT_OG_IMAGE;
 
 function normalizePath(url: string): string {
@@ -69,31 +68,31 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
     "/full-menu": {
       title: "Menu — Best Pancakes & Breakfast in Miami | Jealous Fork Kendall",
       description:
-        "See our full menu: artisan pancakes, gourmet burgers, flatbreads, brunch favorites, and drinks. Order online for pickup or delivery from Jealous Fork in Kendall.",
+        "See our full menu: artisan pancakes, flatbreads, brunch favorites, and drinks. Order online for pickup or delivery from Jealous Fork in Kendall.",
       canonical: makeCanonical(pathname),
       keywords:
-        "Jealous Fork menu, best pancakes Miami menu, breakfast menu Kendall, order breakfast online Miami, brunch menu Kendall, gourmet burgers menu Miami",
+        "Jealous Fork menu, best pancakes Miami menu, breakfast menu Kendall, order breakfast online Miami, brunch menu Kendall",
       robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       ogImage: DEFAULT_OG_IMAGE,
     },
     "/menu": {
       title: "Menu — Best Pancakes & Breakfast in Miami | Jealous Fork Kendall",
       description:
-        "See our full menu: artisan pancakes, gourmet burgers, flatbreads, brunch favorites, and drinks. Order online for pickup or delivery from Jealous Fork in Kendall.",
+        "See our full menu: artisan pancakes, flatbreads, brunch favorites, and drinks. Order online for pickup or delivery from Jealous Fork in Kendall.",
       canonical: `${SITE_ORIGIN}/full-menu`,
       keywords:
-        "Jealous Fork menu, best pancakes Miami menu, breakfast menu Kendall, order breakfast online Miami, brunch menu Kendall, gourmet burgers menu Miami",
+        "Jealous Fork menu, best pancakes Miami menu, breakfast menu Kendall, order breakfast online Miami, brunch menu Kendall",
       robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       ogImage: DEFAULT_OG_IMAGE,
     },
 
     "/menu.html": {
-      title: "Jealous Fork Menu: Pancakes, Brunch & Burgers",
+      title: "Jealous Fork Menu: Pancakes, Brunch & Drinks",
       description:
-        "See the Jealous Fork menu for pancakes, brunch plates, gourmet burgers, pickup, delivery, and Kendall reservations.",
+        "See the Jealous Fork menu for pancakes, brunch plates, drinks, pickup, delivery, and Kendall reservations.",
       canonical: `${SITE_ORIGIN}/full-menu`,
       keywords:
-        "Jealous Fork menu, Jealous Fork pancakes, breakfast menu Kendall, brunch menu Kendall, gourmet burgers Miami",
+        "Jealous Fork menu, Jealous Fork pancakes, breakfast menu Kendall, brunch menu Kendall",
       robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       ogImage: DEFAULT_OG_IMAGE,
     },
@@ -116,26 +115,6 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
         "breakfast near me, breakfast Kendall, pancakes near me, best pancakes Miami, best brunch Kendall, breakfast Miami, brunch near me, Jealous Fork",
       robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       ogImage: BREAKFAST_OG_IMAGE,
-    },
-    "/burgers": {
-      title: "Best Gourmet Burgers in Kendall & Miami FL | Jealous Burger | Fri-Sat 3PM-9PM",
-      description:
-        "Order gourmet burgers from Jealous Burger in Kendall. Friday and Saturday only, 3PM-9PM, with pickup, delivery, and fan-favorite burgers like Jesse James and Que Bola Meng.",
-      canonical: makeCanonical(pathname),
-      keywords:
-        "best burgers Kendall, gourmet burgers Miami, Jealous Burger, burger delivery Kendall, burger pickup Miami, Jesse James burger",
-      robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-      ogImage: BURGER_OG_IMAGE,
-    },
-    "/best-affordable-burgers-miami": {
-      title: "Best Affordable Burgers in Miami | Jealous Burger Kendall",
-      description:
-        "Gourmet burgers in Miami without the gourmet price. Jealous Burger serves Kendall Friday and Saturday from 3 PM with pickup and delivery.",
-      canonical: makeCanonical(pathname),
-      keywords:
-        "affordable burgers Miami, cheap burgers Kendall, best burgers Miami, Jealous Burger, burger deals Miami",
-      robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-      ogImage: BURGER_OG_IMAGE,
     },
     "/privacy": {
       title: "Privacy Policy | Jealous Fork Miami",
@@ -196,7 +175,7 @@ export function getRouteSeoMeta(url: string): RouteSeoMeta {
   return {
     title: "Page Not Found | Jealous Fork",
     description:
-      "That page does not exist. Visit Jealous Fork in Kendall, Miami for artisan pancakes, brunch, and gourmet burgers.",
+      "That page does not exist. Visit Jealous Fork in Kendall, Miami for artisan pancakes and brunch.",
     canonical: `${SITE_ORIGIN}/`,
     robots: "noindex, follow",
     ogImage: DEFAULT_OG_IMAGE,
@@ -210,8 +189,6 @@ const KNOWN_EXACT_ROUTES = new Set([
   "/menu.html",
   "/gallery",
   "/breakfast-near-me",
-  "/burgers",
-  "/best-affordable-burgers-miami",
   "/privacy",
   "/terms",
   "/checkout",

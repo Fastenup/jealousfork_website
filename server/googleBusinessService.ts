@@ -128,12 +128,6 @@ function parseGoogleHours(regularHours: GoogleRegularHours | undefined): DayHour
           closes: convertTime(period.closeTime),
           isClosed: false,
         };
-
-        // Add note for extended Friday/Saturday hours (burger hours)
-        if ((dayName === 'Friday' || dayName === 'Saturday') &&
-            period.closeTime.hours >= 21) {
-          hoursMap[dayName].note = 'Burgers 3PM-9PM';
-        }
       }
     }
   }

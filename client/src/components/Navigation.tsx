@@ -66,11 +66,6 @@ export default function Navigation() {
                   Menu
                 </a>
               </Link>
-              <Link href="/burgers">
-                <a className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors">
-                  Burgers
-                </a>
-              </Link>
               <button
                 onClick={() => scrollToSection('testimonials')}
                 className="px-2 xl:px-3 py-2 text-sm xl:text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
@@ -145,14 +140,6 @@ export default function Navigation() {
                 className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left cursor-pointer rounded-lg transition-colors"
               >
                 Menu
-              </span>
-            </Link>
-            <Link href="/burgers">
-              <span
-                onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 w-full text-left cursor-pointer rounded-lg transition-colors"
-              >
-                Burgers
               </span>
             </Link>
             <button
