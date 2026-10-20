@@ -536,9 +536,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             });
           }
 
-          const items = data.objects?.map((item: any) => {
+          const { isItemSellable, getSellableVariations } = await import('./squareMenuSync');
+          const items = data.objects?.filter((item: any) => isItemSellable(item)).map((item: any) => {
             const itemData = item.item_data;
-            const firstVariation = itemData?.variations?.[0];
+            const firstVariation = getSellableVariations(item)[0];
             const price = firstVariation?.item_variation_data?.price_money?.amount || 0;
 
             // Get category name from Square categories
@@ -1936,6 +1937,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Immediately acknowledge receipt to Square to prevent retries
       res.status(200).json({ message: 'Webhook received successfully' });
+
+      // Catalog changed in Square (item added/archived/sold out/hidden): drop menu cache so the next request refetches
+      if (req.body?.type === 'catalog.version.updated') {
+        import('./squareMenuSync').then(m => m.invalidateMenuCache()).catch(() => {});
+      }
       
       // Add to processed webhooks cache
       if (eventId) {
