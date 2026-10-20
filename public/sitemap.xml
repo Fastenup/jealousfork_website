@@ -13,7 +13,7 @@
   <!-- Full Menu -->
   <url>
     <loc>https://www.jealousfork.com/full-menu</loc>
-    <lastmod>2026-03-15</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -22,7 +22,7 @@
   <!-- Breakfast Near Me Landing Page -->
   <url>
     <loc>https://www.jealousfork.com/breakfast-near-me</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
     <image:image>
@@ -51,7 +51,7 @@
   <!-- Terms of Service -->
   <url>
     <loc>https://www.jealousfork.com/terms</loc>
-    <lastmod>2026-03-15</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

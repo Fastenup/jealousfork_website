@@ -463,39 +463,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
           : 'https://connect.squareup.com';
 
         // Fetch items, categories, images, and modifier lists in parallel
+        // Square /catalog/list returns ~100 objects per page; follow the cursor so nothing is truncated
+        const listAllCatalog = async (type: string) => {
+          const objects: any[] = [];
+          let cursor: string | undefined;
+          do {
+            const res = await fetch(`${baseUrl}/v2/catalog/list?types=${type}` + (cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''), {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Square-Version': '2024-06-04',
+                'Content-Type': 'application/json'
+              }
+            });
+            if (!res.ok) return { ok: false, json: async () => ({ objects: [] as any[] }) };
+            const page: any = await res.json();
+            objects.push(...(page.objects || []));
+            cursor = page.cursor;
+          } while (cursor);
+          return { ok: true, json: async () => ({ objects }) };
+        };
         const [itemsResponse, categoriesResponse, imagesResponse, modifierListsResponse] = await Promise.all([
-          fetch(`${baseUrl}/v2/catalog/list?types=ITEM`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Square-Version': '2024-06-04',
-              'Content-Type': 'application/json'
-            }
-          }),
-          fetch(`${baseUrl}/v2/catalog/list?types=CATEGORY`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Square-Version': '2024-06-04',
-              'Content-Type': 'application/json'
-            }
-          }),
-          fetch(`${baseUrl}/v2/catalog/list?types=IMAGE`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Square-Version': '2024-06-04',
-              'Content-Type': 'application/json'
-            }
-          }),
-          fetch(`${baseUrl}/v2/catalog/list?types=MODIFIER_LIST`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Square-Version': '2024-06-04',
-              'Content-Type': 'application/json'
-            }
-          })
+          listAllCatalog('ITEM'),
+          listAllCatalog('CATEGORY'),
+          listAllCatalog('IMAGE'),
+          listAllCatalog('MODIFIER_LIST')
         ]);
 
         if (itemsResponse.ok) {

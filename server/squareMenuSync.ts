@@ -54,55 +54,41 @@ export class SquareMenuSyncService {
       : 'https://connect.squareup.com';
   }
 
+  // Square /catalog/list returns ~100 objects per page; follow the cursor to get everything
+  private async listAll(type: string): Promise<{ objects: any[] }> {
+    const objects: any[] = [];
+    let cursor: string | undefined;
+    do {
+      const url = `${this.baseUrl}/v2/catalog/list?types=${type}` + (cursor ? `&cursor=${encodeURIComponent(cursor)}` : '');
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`,
+          'Square-Version': '2024-06-04',
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!res.ok) throw new Error(`Square API error: ${res.status} (${type})`);
+      const data = await res.json();
+      objects.push(...(data.objects || []));
+      cursor = data.cursor;
+    } while (cursor);
+    return { objects };
+  }
+
   // Fetch all menu items from Square catalog with images, categories, and modifiers
   async fetchSquareMenuItems(): Promise<SquareMenuItem[]> {
     try {
       // Fetch items, images, categories, and modifier lists in parallel
-      const [itemsResponse, imagesResponse, categoriesResponse, modifierListsResponse] = await Promise.all([
-        fetch(`${this.baseUrl}/v2/catalog/list?types=ITEM`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${this.accessToken}`,
-            'Square-Version': '2024-06-04',
-            'Content-Type': 'application/json'
-          }
-        }),
-        fetch(`${this.baseUrl}/v2/catalog/list?types=IMAGE`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${this.accessToken}`,
-            'Square-Version': '2024-06-04',
-            'Content-Type': 'application/json'
-          }
-        }),
-        fetch(`${this.baseUrl}/v2/catalog/list?types=CATEGORY`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${this.accessToken}`,
-            'Square-Version': '2024-06-04',
-            'Content-Type': 'application/json'
-          }
-        }),
-        fetch(`${this.baseUrl}/v2/catalog/list?types=MODIFIER_LIST`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${this.accessToken}`,
-            'Square-Version': '2024-06-04',
-            'Content-Type': 'application/json'
-          }
-        })
+      const [itemsData, imagesData, categoriesData, modifierListsData] = await Promise.all([
+        this.listAll('ITEM'),
+        this.listAll('IMAGE'),
+        this.listAll('CATEGORY'),
+        this.listAll('MODIFIER_LIST')
       ]);
-
-      if (!itemsResponse.ok) {
-        throw new Error(`Square API error: ${itemsResponse.status}`);
-      }
-
-      const itemsData = await itemsResponse.json();
 
       // Build image map from Square images
       const imageMap = new Map<string, string>();
-      if (imagesResponse.ok) {
-        const imagesData = await imagesResponse.json();
+      {
         (imagesData.objects || []).forEach((image: any) => {
           if (image.image_data?.url) {
             imageMap.set(image.id, image.image_data.url);
@@ -113,8 +99,7 @@ export class SquareMenuSyncService {
 
       // Build category map from Square categories
       const categoryMap = new Map<string, string>();
-      if (categoriesResponse.ok) {
-        const categoriesData = await categoriesResponse.json();
+      {
         (categoriesData.objects || []).forEach((cat: any) => {
           if (cat.category_data?.name) {
             categoryMap.set(cat.id, cat.category_data.name);
@@ -125,8 +110,8 @@ export class SquareMenuSyncService {
 
       // Build modifier list map from Square modifier lists
       const modifierListMap = new Map<string, ModifierList>();
-      if (modifierListsResponse.ok) {
-        const modListData = await modifierListsResponse.json();
+      {
+        const modListData = modifierListsData;
         (modListData.objects || []).forEach((modList: any) => {
           const modListInfo = modList.modifier_list_data;
           if (modListInfo) {
@@ -391,7 +376,7 @@ export async function syncMenuWithSquare() {
       syncedItems: syncResult.syncedItems.length,
       message: 'Menu items synced successfully'
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Square menu sync failed:', error);
     return {
       success: false,
