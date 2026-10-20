@@ -376,7 +376,7 @@ export async function syncMenuWithSquare() {
       syncedItems: syncResult.syncedItems.length,
       message: 'Menu items synced successfully'
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Square menu sync failed:', error);
     return {
       success: false,

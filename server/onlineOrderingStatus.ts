@@ -115,7 +115,10 @@ async function getSquareOnlineSiteUrls(): Promise<string[]> {
       })
       .map((site: any) => ({ domain: String(site.domain), isPublished: site.is_published ?? site.isPublished }));
 
-    const unpublished = domains.find((site: any) => site.isPublished === false);
+    // An unpublished Square Online site only pauses ordering when explicitly opted in via
+    // SQUARE_ONLINE_SITE_DOMAIN (a stale, never-published site must not block our own checkout).
+    const optedIn = Boolean(process.env.SQUARE_ONLINE_SITE_DOMAIN?.trim());
+    const unpublished = optedIn ? domains.find((site: any) => site.isPublished === false) : undefined;
     if (unpublished) {
       throw disabledStatus('square_online_site', customerClosureReason());
     }
