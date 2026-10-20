@@ -42,6 +42,53 @@ export interface LocalMenuItem {
   lastSync?: string;
 }
 
+
+// ---- Availability filtering (what is actually sellable at our Square location) ----
+const MENU_CACHE_TTL_MS = 5 * 60 * 1000; // auto-refresh: at most 5 min stale
+
+function presentAt(obj: any, locationId?: string): boolean {
+  if (!locationId) return true;
+  if (obj.is_deleted) return false;
+  if (obj.present_at_all_locations) {
+    return !(obj.absent_at_location_ids || []).includes(locationId);
+  }
+  return (obj.present_at_location_ids || []).includes(locationId);
+}
+
+function variationSoldOut(v: any, locationId?: string): boolean {
+  return (v.item_variation_data?.location_overrides || []).some(
+    (o: any) => (!locationId || o.location_id === locationId) && o.sold_out === true
+  );
+}
+
+// Variations a guest can actually order right now (present at location, not sold out)
+export function getSellableVariations(item: any, locationId = process.env.SQUARE_LOCATION_ID): any[] {
+  return (item.item_data?.variations || []).filter(
+    (v: any) => presentAt(v, locationId) && !variationSoldOut(v, locationId)
+  );
+}
+
+// Item shows on the website only if live in Square: not deleted/archived, present at our
+// location, not hidden from online (ecom_visibility), has a real name, and at least one
+// variation is present and not sold out.
+export function isItemSellable(item: any, locationId = process.env.SQUARE_LOCATION_ID): boolean {
+  const d = item?.item_data;
+  if (!d || item.is_deleted || d.is_archived) return false;
+  if (!presentAt(item, locationId)) return false;
+  if (d.ecom_visibility === 'HIDDEN' || d.ecom_visibility === 'UNAVAILABLE') return false;
+  const name = (d.name || '').trim();
+  if (name.length < 2 || /^[.\-_\s]+$/.test(name)) return false;
+  return getSellableVariations(item, locationId).length > 0;
+}
+
+let menuCache: { items: SquareMenuItem[]; ts: number } | null = null;
+let menuInflight: Promise<SquareMenuItem[]> | null = null;
+
+// Called by the Square catalog.version.updated webhook so changes show up immediately
+export function invalidateMenuCache() {
+  menuCache = null;
+}
+
 export class SquareMenuSyncService {
   private accessToken: string;
   private baseUrl: string;
@@ -77,6 +124,19 @@ export class SquareMenuSyncService {
 
   // Fetch all menu items from Square catalog with images, categories, and modifiers
   async fetchSquareMenuItems(): Promise<SquareMenuItem[]> {
+    if (menuCache && Date.now() - menuCache.ts < MENU_CACHE_TTL_MS) return menuCache.items;
+    if (menuInflight) return menuInflight;
+    menuInflight = this.fetchSquareMenuItemsUncached()
+      .then(items => { menuCache = { items, ts: Date.now() }; return items; })
+      .catch(err => {
+        if (menuCache) { console.error('Square fetch failed, serving last good menu:', err); return menuCache.items; }
+        throw err;
+      })
+      .finally(() => { menuInflight = null; });
+    return menuInflight;
+  }
+
+  private async fetchSquareMenuItemsUncached(): Promise<SquareMenuItem[]> {
     try {
       // Fetch items, images, categories, and modifier lists in parallel
       const [itemsData, imagesData, categoriesData, modifierListsData] = await Promise.all([
@@ -141,9 +201,13 @@ export class SquareMenuSyncService {
         });
       }
 
-      return (itemsData.objects || []).map((item: any) => {
+      const sellable = (itemsData.objects || []).filter((item: any) => isItemSellable(item));
+      console.log(`Square menu: ${sellable.length} sellable of ${(itemsData.objects || []).length} catalog items`);
+
+      return sellable.map((item: any) => {
         const itemData = item.item_data;
-        const firstVariation = itemData?.variations?.[0];
+        const liveVariations = getSellableVariations(item);
+        const firstVariation = liveVariations[0];
         const price = firstVariation?.item_variation_data?.price_money?.amount || 0;
 
         // Find the first image URL from imageIds
@@ -192,7 +256,7 @@ export class SquareMenuSyncService {
           price: price / 100, // Convert from cents
           category: categoryName,
           categoryId: categoryId,
-          variations: itemData?.variations || [],
+          variations: liveVariations,
           inStock: true, // Default to in stock, check inventory separately
           imageUrl: realImageUrl || itemData?.image_url, // Use Square image first, fallback to any existing URL
           imageIds: imageIds,
