@@ -1,9 +1,10 @@
 import { serverCache } from './cache';
+import { DEFAULT_HOURS, formatTime } from '../shared/defaultHours';
 
 export interface OnlineOrderingStatus {
   acceptingOrders: boolean;
   reason?: string;
-  source: 'manual_override' | 'pause_until' | 'square_online_site' | 'square_online_page' | 'square_location' | 'default' | 'error';
+  source: 'manual_override' | 'pause_until' | 'outside_hours' | 'square_online_site' | 'square_online_page' | 'square_location' | 'default' | 'error';
   checkedAt: string;
   pausedUntil?: string;
 }
@@ -49,6 +50,31 @@ function currentMiamiDate(): string {
     month: '2-digit',
     day: '2-digit',
   }).format(new Date());
+}
+
+// Wall-clock day and HH:MM in Miami, so opening hours stay right across DST changes.
+function miamiNow(): { dayOfWeek: string; time: string } {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    weekday: 'long',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find((part) => part.type === type)?.value || '';
+  return { dayOfWeek: get('weekday'), time: `${get('hour')}:${get('minute')}` };
+}
+
+function checkOpeningHours(): OnlineOrderingStatus | null {
+  const { dayOfWeek, time } = miamiNow();
+  const today = DEFAULT_HOURS.regular.find((day) => day.dayOfWeek === dayOfWeek);
+  if (!today || today.isClosed || !today.opens || !today.closes) {
+    return disabledStatus('outside_hours', 'We are closed today. Online ordering is available during our opening hours.');
+  }
+  if (time < today.opens || time >= today.closes) {
+    return disabledStatus('outside_hours', `Online ordering is available during our opening hours, ${formatTime(today.opens)} to ${formatTime(today.closes)} today.`);
+  }
+  return null;
 }
 
 function customerClosureReason(): string {
@@ -182,11 +208,12 @@ export async function getOnlineOrderingStatus(options: { forceRefresh?: boolean 
     if (!Number.isNaN(pausedUntil.valueOf()) && pausedUntil > new Date()) {
       status = disabledStatus('pause_until', customerClosureReason(), pausedUntil.toISOString());
     } else {
-      status = enabledStatus('default');
+      status = checkOpeningHours() || enabledStatus('default');
     }
   } else {
     try {
       status =
+        checkOpeningHours() ||
         (await checkSquareOnlinePage()) ||
         (await checkSquareLocation()) ||
         enabledStatus('default');
